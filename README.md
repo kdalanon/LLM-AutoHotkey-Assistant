@@ -4,11 +4,11 @@
 
 # LLM AutoHotkey Assistant
 
-</div>
-
 An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai/) to seamlessly integrate Large Language Models into your daily workflow. Process texts with customizable prompts by pressing a hotkey and interact with multiple AI models simultaneously.
 
 ![Download](https://img.shields.io/github/v/release/kdalanon/LLM-AutoHotkey-Assistant?color=green&label=Download&style=for-the-badge)
+
+</div>
 
 ## Key Features
 
