@@ -10,36 +10,6 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](openrouter.ai/) to se
 
 </div>
 
-## Table of Contents
-
-- [Key Features](#key-features)
-  - [Text Processing with Hotkeys](#text-processing-with-hotkeys)
-    - [Summarize](#summarize)
-    - [Translate](#translate)
-    - [Define](#define)
-  - [Customizable Prompts](#customizable-prompts)
-    - [Type custom prompts manually](#type-custom-prompts-manually)
-  - [Interactive Response Window](#interactive-response-window)
-    - [Chat](#chat)
-    - [Copy](#copy)
-    - [Retry](#retry)
-    - [Chat History and Latest Response](#chat-history-and-latest-response)
-  - [Auto-Paste Option](#auto-paste-option)
-  - [Multi-Model Support](#multi-model-support)
-    - [Reply to all option](#reply-to-all-option)
-    - [Conversing with 4 models](#conversing-with-4-models)
-  - [Web search](#web-search)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Set up](#set-up)
-  - [Basic Usage](#basic-usage)
-- [Hotkeys](#hotkeys)
-- [Customization](#customization)
-  - [Adding Custom Prompts](#adding-custom-prompts)
-- [Contributing](#contributing)
-- [Credits](#credits)
-- [Libraries used](#libraries-used)
-
 ## Key Features
 
 ### Text Processing with Hotkeys
