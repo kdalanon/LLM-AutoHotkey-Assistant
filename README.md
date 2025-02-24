@@ -102,7 +102,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ![image](https://github.com/user-attachments/assets/de0fee67-8118-42a1-80d6-c435ad177b03)
   
-2. Edit your prompts list, and other options that you may need. See [Customization](#customization) below.
+2. Edit your prompts list and other options that you may need. See [Customization](#customization) below.
 
 ![image](https://github.com/user-attachments/assets/461364ea-f77f-488d-a364-18abde22da08)
 
@@ -135,7 +135,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ### Adding Custom Prompts
 
-Edit the `prompts` array in the script to add your own prompts:
+Edit the `prompts` array in the script to add your own prompts.
 
 ```autohotkey
 prompts := [{
@@ -202,6 +202,7 @@ Contributions are welcome! Feel free to report bugs and suggest features.
 
 - [AutoHotkey](https://www.autohotkey.com/)
 - [OpenRouter](https://openrouter.ai/)
+- [Icon by Smashicons](https://www.flaticon.com/free-icon/bot_4712027)
 - <a href="https://www.flaticon.com/free-icons/bot" title="bot icons">Bot icons created by Smashicons - Flaticon</a>
 
 ## Libraries used
