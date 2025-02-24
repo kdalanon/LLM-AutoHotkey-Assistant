@@ -66,8 +66,6 @@ https://github.com/user-attachments/assets/3723bb99-c44a-4431-8612-394d97fccf45
 
 ### Multi-Model Support
 
-Use multiple AI models simultaneously.
-
 https://github.com/user-attachments/assets/056f487f-d400-4772-9bb2-889bc1fa8a42
 
 #### Reply to all option
@@ -110,7 +108,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 2. Press the backtick key to bring up the prompt menu.
 3. Select a prompt to process the text.
 4. View and interact with the AI response in the Response Window.
-5. If you want to use the backtick character, you can press `CapsLock + Backtick` to suspend the script. A message will be displayed at the bottom indicating that the app is suspended.
+5. If you want to use the backtick character, you can press `CapsLock + Backtick` to suspend and unsuspend the script. A message will be displayed at the bottom indicating that the app is suspended.
 
 ![image](https://github.com/user-attachments/assets/e8611390-5fb3-4916-ac8f-774210b5a14d)
 
@@ -159,7 +157,7 @@ Some example models:
 - `google/gemini-2.0-flash-001`
 - `deepseek/deepseek-r1`
 
-In addition, you can also append `:online` to *any* model so that it will have the capability to do a web search. More on how it works [here](https://openrouter.ai/docs/features/web-search).
+In addition, you can also append `:online` to *any* model so that it will have the capability to do a web search. Check [here](https://openrouter.ai/docs/features/web-search) to learn how it works.
 
 - `openai/o3-mini-high:online`
 - `anthropic/claude-3.5-sonnet:online`
@@ -180,9 +178,9 @@ Special feature from OpenRouter: [Auto Router](https://openrouter.ai/openrouter/
 
 Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The APIModel is `openrouter/auto`
 
-**isAutoPaste:** Setting this to `isAutoPaste: true` will paste the response from the LLM directly. Remove it if you don't need Auto Paste functionality.
+`isAutoPaste` Setting this to `isAutoPaste: true` will paste the response from the LLM directly. Remove it if you don't need Auto Paste functionality.
 
-**isCustomPrompt:** Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom messages. Remove it if you don't need Custom Prompt functionality.
+`isCustomPrompt` Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom messages. Remove it if you don't need Custom Prompt functionality.
 
 **⚠ Important:** Make sure to add a comma at the end of the line before the Auto Paste or Custom Prompt functionality, like so:
 
