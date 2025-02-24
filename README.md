@@ -104,15 +104,15 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ### Set up
 
-1. **Provide your API key:** Open the `lib` folder and edit the `SharedResources.ahk` script, then paste your API key.
+1. Open the `lib` folder and edit the `SharedResources.ahk` script, then paste your API key.
 
 ![image](https://github.com/user-attachments/assets/de0fee67-8118-42a1-80d6-c435ad177b03)
   
-2. **Customize:** Edit your prompts list, and other options that you may need. See [Customization](#customization) below.
+2. Edit your prompts list, and other options that you may need. See [Customization](#customization) below.
 
 ![image](https://github.com/user-attachments/assets/461364ea-f77f-488d-a364-18abde22da08)
 
-3. **Run the Script:** Double-click `LLM AutoHotkey Assistant.ahk` to run the script. The app icon will appear in your system tray.
+3. Double-click `LLM AutoHotkey Assistant.ahk` to run the script. The app icon will appear in your system tray and will indicate that the script is running in the background.
 
 ![image](https://github.com/user-attachments/assets/93fa2fed-3222-494a-974c-5a037cf7e60d)
 
@@ -125,6 +125,10 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 5. If you want to use the backtick character, you can press `CapsLock + Backtick` to suspend the script. A message will be displayed at the bottom indicating that the app is suspended.
 
 ![image](https://github.com/user-attachments/assets/e8611390-5fb3-4916-ac8f-774210b5a14d)
+
+6. You can directly open the script or the `SharedResources` file through Notepad by right-clicking the tray icon.
+
+![image](https://github.com/user-attachments/assets/f680e787-d048-4e20-9ccf-b25dbdb54e5a)
 
 ## Hotkeys
 
@@ -184,9 +188,13 @@ This will also enable the `Send message to all models` menu option after pressin
 
 ![image](https://github.com/user-attachments/assets/93e3e62a-6fc7-4c0b-8f70-8d4416600ef4)
 
-**isAutoPaste:** Setting this to `isAutoPaste:true` will paste the response from the LLM directly. Remove it if you don't need Auto Paste functionality.
+Special feature from OpenRouter: Auto Router
 
-**isCustomPrompt:** Setting this to `isCustomPrompt:true` will allow the prompt to show an input box to write custom messages. Remove it if you don't need Custom Prompt functionality.
+As per their [documentation](https://openrouter.ai/openrouter/auto): Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The APIModel is `openrouter/auto`
+
+**isAutoPaste:** Setting this to `isAutoPaste: true` will paste the response from the LLM directly. Remove it if you don't need Auto Paste functionality.
+
+**isCustomPrompt:** Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom messages. Remove it if you don't need Custom Prompt functionality.
 
 **⚠ Important:** Make sure to add a comma at the end of the line before the Auto Paste or Custom Prompt functionality, like so:
 
