@@ -203,7 +203,7 @@ Contributions are welcome! Feel free to report bugs and suggest features.
 - [GroggyOtter/jsongo_AHKv2](https://github.com/GroggyOtter/jsongo_AHKv2) - JSON support for AHKv2 written completely in AHK
 - [nperovic/DarkMsgBox](https://github.com/nperovic/DarkMsgBox) - Apply dark theme to your built-in MsgBox and InputBox
 - [nperovic/SystemThemeAwareToolTip](https://github.com/nperovic/SystemThemeAwareToolTip/) - Make your ToolTip style conform to the current system theme
-- [nperovic/ToolTipEx](https://github.com/nperovic/ToolTipEx) by nperovic -  Enable the ToolTip to track the mouse cursor smoothly and permit the ToolTip to be moved by dragging
+- [nperovic/ToolTipEx](https://github.com/nperovic/ToolTipEx) - Enable the ToolTip to track the mouse cursor smoothly and permit the ToolTip to be moved by dragging
 
 ## Inspiration - Similar apps with the same functionality written in AutoHotkey v2
 
