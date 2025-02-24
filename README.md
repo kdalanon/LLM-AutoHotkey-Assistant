@@ -72,9 +72,9 @@ https://github.com/user-attachments/assets/056f487f-d400-4772-9bb2-889bc1fa8a42
 
 https://github.com/user-attachments/assets/bf717dc8-387a-48e0-a48d-f1be2fbaa21b
 
-#### Conversing with 4 models
+#### Conversing with 10 models
 
-https://github.com/user-attachments/assets/4653274f-a0d3-43eb-ab59-7d2d8cb4ce67
+https://github.com/user-attachments/assets/4e8a27cd-5a9f-4066-8bbd-3010dc635948
 
 ### Web search
 
