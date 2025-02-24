@@ -30,8 +30,6 @@ https://github.com/user-attachments/assets/a9b43770-f7a3-4c24-9cfd-c9391be0abf6
 
 #### Type custom prompts manually
 
-Need to quickly type a prompt? Just choose the option to do so.
-
 ##### With copied text
 
 https://github.com/user-attachments/assets/34da227d-e3ec-40e1-9084-432f75e3f99c
