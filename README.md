@@ -150,13 +150,13 @@ prompts := [{
 }]
 ```
 
-**`promptName`:** The name of the prompt. This will also be the Response Window title.
+**`promptName`** The name of the prompt. This will also be the Response Window title.
 
-**`menuText`:** The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (&) indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected. In the example above, pressing the hotkey to bring up the menu (backtick) and then pressing number 1 will select that prompt.
+**`menuText`** The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (&) indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected. In the example above, pressing the hotkey to bring up the menu (backtick) and then pressing number 1 will select that prompt.
 
-**`systemPrompt`:** This will be the initial prompt and will set the tone of the conversation.
+**`systemPrompt`** This will be the initial prompt and will set the tone of the conversation.
 
-**`APIModel`:** Get your desired model from the [OpenRouter models website](https://openrouter.ai/models), click on the little clipboard icon beside the name, and paste it here.
+**`APIModel`** Get your desired model from the [OpenRouter models website](https://openrouter.ai/models), click on the little clipboard icon beside the name, and paste it here.
 
 ![image](https://github.com/user-attachments/assets/64f46a06-80ca-48b9-94bc-a57d3682a113)
 
@@ -174,9 +174,11 @@ In addition, you can also append `:online` to *any* model so that it will have t
 - `google/gemini-2.0-flash-001:online`
 - `deepseek/deepseek-r1:online`
 
-To enable multi-modal functionality, you can specify different API models, separating them with a comma and a space. Again, we'll use the models from above as examples:
+To enable multi-modal functionality, you can specify different API models, separating them with a comma and a space. We'll use the models from above as examples:
 
-`openai/o3-mini-high, anthropic/claude-3.5-sonnet, google/gemini-2.0-flash-001, deepseek/deepseek-r1`
+`openai/o3-mini-high, anthropic/claude-3.5-sonnet, google/gemini-2.0-flash-001:online, deepseek/deepseek-r1:online`
+
+![image](https://github.com/user-attachments/assets/d878c9ab-6145-4aa3-a73c-463fee923459)
 
 This will also enable the `Send message to all models` menu option after pressing the backtick hotkey.
 
