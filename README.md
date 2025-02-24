@@ -6,7 +6,7 @@
 
 An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai/) to seamlessly integrate Large Language Models into your daily workflow. Process texts with customizable prompts by pressing a hotkey and interact with multiple AI models simultaneously.
 
-![Release version](https://img.shields.io/github/v/release/kdalanon/LLM-AutoHotkey-Assistant?color=green&label=Download&style=for-the-badge)
+![Download](https://img.shields.io/github/v/release/kdalanon/LLM-AutoHotkey-Assistant?color=green&label=Download&style=for-the-badge)
 
 </div>
 
@@ -199,8 +199,14 @@ Contributions are welcome! Feel free to report bugs and suggest features.
 ## Libraries used
 
 - [AutoXYWH](https://www.autohotkey.com/boards/viewtopic.php?t=1079) - Move control automatically when GUI resized ([converted to v2](https://www.autohotkey.com/boards/viewtopic.php?style=19&t=114445) by [Relayer](https://www.autohotkey.com/boards/memberlist.php?style=19&mode=viewprofile&u=97) and code improvements by [autoexec](https://www.autohotkey.com/boards/memberlist.php?style=19&mode=viewprofile&u=156305))
-- [WebViewToo](https://github.com/The-CoDingman/WebViewToo/tree/main) by The-CoDingman -  Allows for use of the WebView2 Framework within AHK to create Web-based GUIs
-- [DarkMsgBox](https://github.com/nperovic/DarkMsgBox) by nperovic -  Apply dark theme to your built-in MsgBox and InputBox
-- [jsongo for AHKv2](https://github.com/GroggyOtter/jsongo_AHKv2) by GroggyOtter - JSON support for AHKv2 written completely in AHK
-- [SystemThemeAwareToolTip](https://github.com/nperovic/SystemThemeAwareToolTip/) by nperovic - Make your ToolTip style conform to the current system theme
-- [ToolTipEx](https://github.com/nperovic/ToolTipEx) by nperovic -  Enable the ToolTip to track the mouse cursor smoothly and permit the ToolTip to be moved by dragging
+- [The-CoDingman/WebViewToo](https://github.com/The-CoDingman/WebViewToo/tree/main) - Allows for use of the WebView2 Framework within AHK to create Web-based GUIs
+- [GroggyOtter/jsongo_AHKv2](https://github.com/GroggyOtter/jsongo_AHKv2) - JSON support for AHKv2 written completely in AHK
+- [nperovic/DarkMsgBox](https://github.com/nperovic/DarkMsgBox) - Apply dark theme to your built-in MsgBox and InputBox
+- [nperovic/SystemThemeAwareToolTip](https://github.com/nperovic/SystemThemeAwareToolTip/) - Make your ToolTip style conform to the current system theme
+- [nperovic/ToolTipEx](https://github.com/nperovic/ToolTipEx) by nperovic -  Enable the ToolTip to track the mouse cursor smoothly and permit the ToolTip to be moved by dragging
+
+## Inspiration - Similar apps with the same functionality written in AutoHotkey v2
+
+- [overflowy/chat-key](https://github.com/overflowy/chat-key) - Supercharge your productivity with ChatGPT and AutoHotkey 🚀
+- [ecornell/ai-tools-ahk](https://github.com/ecornell/ai-tools-ahk) - AI Tools - AutoHotkey - Enable global hotkeys to run custom OpenAI prompts on text in any window.
+- [kdalanon/ChatGPT-AutoHotkey-Utility](https://github.com/kdalanon/ChatGPT-AutoHotkey-Utility) - An AutoHotkey script that uses ChatGPT API to process text.
