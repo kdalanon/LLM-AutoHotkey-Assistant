@@ -90,7 +90,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ### Set up
 
-1. Open the `lib` folder and edit the `SharedResources.ahk` script, then paste your API key inside the quotes.
+1. Open the `lib` folder and edit the `SharedResources.ahk` script, then paste your API key inside the quotes. Save the file afterwards.
 
 ![image](https://github.com/user-attachments/assets/de0fee67-8118-42a1-80d6-c435ad177b03)
   
@@ -102,7 +102,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ![image](https://github.com/user-attachments/assets/93fa2fed-3222-494a-974c-5a037cf7e60d)
 
-### Basic Usage
+### Usage
 
 1. Highlight any text.
 2. Press the backtick key to bring up the prompt menu.
