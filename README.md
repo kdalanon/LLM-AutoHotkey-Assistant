@@ -152,7 +152,7 @@ prompts := [{
 
 **`promptName`** The name of the prompt. This will also be the Response Window title.
 
-**`menuText`** The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (&) indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected. In the example above, pressing the hotkey to bring up the menu (backtick) and then pressing number 1 will select that prompt.
+**`menuText`** The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (`&`) indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected. In the example above, pressing the hotkey to bring up the menu (backtick) and then pressing number 1 will select that prompt.
 
 **`systemPrompt`** This will be the initial prompt and will set the tone of the conversation.
 
@@ -167,14 +167,14 @@ Some example models:
 - `google/gemini-2.0-flash-001`
 - `deepseek/deepseek-r1`
 
-In addition, you can also append `:online` to *any* model so that it will have the capability to do a web search. More on how it works [here](https://openrouter.ai/docs/features/web-search). We'll use the models from above as examples:
+In addition, you can also append `:online` to *any* model so that it will have the capability to do a web search. More on how it works [here](https://openrouter.ai/docs/features/web-search).
 
 - `openai/o3-mini-high:online`
 - `anthropic/claude-3.5-sonnet:online`
 - `google/gemini-2.0-flash-001:online`
 - `deepseek/deepseek-r1:online`
 
-To enable multi-modal functionality, you can specify different API models, separating them with a comma and a space. We'll use the models from above as examples:
+To enable multi-modal functionality, you can specify different API models, separating them with a comma and a space.
 
 `openai/o3-mini-high, anthropic/claude-3.5-sonnet, google/gemini-2.0-flash-001:online, deepseek/deepseek-r1:online`
 
