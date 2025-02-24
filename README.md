@@ -40,8 +40,6 @@ https://github.com/user-attachments/assets/5d1a16e6-0331-40a7-8490-8db0d8e5a19e
 
 ### Interactive Response Window
 
-Chat with AI models, copy responses, retry requests, and view conversation history.
-
 #### Chat
 
 https://github.com/user-attachments/assets/2ffaf8e8-d07b-4ea1-a0e3-5c5fb850da4b
@@ -59,8 +57,6 @@ https://github.com/user-attachments/assets/0eb69c79-ede3-4a7c-a813-010caa7fc7d7
 https://github.com/user-attachments/assets/af0ba481-eea2-47d2-a6d2-ec33026fd3d6
 
 ### Auto-Paste Option
-
-Automatically paste AI responses for seamless workflow integration.
 
 https://github.com/user-attachments/assets/3818b83b-d1a1-4ca9-a1c2-adbae54f48d0
 
