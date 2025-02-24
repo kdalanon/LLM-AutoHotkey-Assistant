@@ -104,7 +104,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ### Set up
 
-1. Open the `lib` folder and edit the `SharedResources.ahk` script, then paste your API key.
+1. Open the `lib` folder and edit the `SharedResources.ahk` script, then paste your API key inside the quotes.
 
 ![image](https://github.com/user-attachments/assets/de0fee67-8118-42a1-80d6-c435ad177b03)
   
@@ -160,7 +160,7 @@ prompts := [{
 
 **`systemPrompt`** This will be the initial prompt and will set the tone of the conversation.
 
-**`APIModel`** Get your desired model from the [OpenRouter models website](https://openrouter.ai/models), click on the little clipboard icon beside the name, and paste it here.
+**`APIModel`** Get your desired model from the [OpenRouter models website](https://openrouter.ai/models), click on the clipboard icon beside the name, and paste it here.
 
 ![image](https://github.com/user-attachments/assets/64f46a06-80ca-48b9-94bc-a57d3682a113)
 
@@ -188,9 +188,9 @@ This will also enable the `Send message to all models` menu option after pressin
 
 ![image](https://github.com/user-attachments/assets/93e3e62a-6fc7-4c0b-8f70-8d4416600ef4)
 
-Special feature from OpenRouter: Auto Router
+Special feature from OpenRouter: [Auto Router](https://openrouter.ai/openrouter/auto)
 
-As per their [documentation](https://openrouter.ai/openrouter/auto): Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The APIModel is `openrouter/auto`
+Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The APIModel is `openrouter/auto`
 
 **isAutoPaste:** Setting this to `isAutoPaste: true` will paste the response from the LLM directly. Remove it if you don't need Auto Paste functionality.
 
