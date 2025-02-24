@@ -28,12 +28,6 @@ https://github.com/user-attachments/assets/b8f01752-0791-4332-a3ac-fac4b82bb74d
 
 https://github.com/user-attachments/assets/a9b43770-f7a3-4c24-9cfd-c9391be0abf6
 
-### Customizable Prompts
-
-Create and modify prompts tailored to your specific needs.
-
-![image](https://github.com/user-attachments/assets/6ec771e2-e88d-486a-aeb2-7521b077ae41)
-
 #### Type custom prompts manually
 
 Need to quickly type a prompt? Just choose the option to do so.
