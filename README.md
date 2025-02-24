@@ -176,7 +176,7 @@ This will also enable the `Send message to all models` menu option after pressin
 
 Special feature from OpenRouter: [Auto Router](https://openrouter.ai/openrouter/auto)
 
-Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The APIModel is `openrouter/auto`
+Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The `APIModel` is `openrouter/auto`
 
 `isAutoPaste` Setting this to `isAutoPaste: true` will paste the response from the LLM directly. Remove it if you don't need Auto Paste functionality.
 
