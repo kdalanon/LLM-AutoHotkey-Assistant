@@ -14,7 +14,7 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai
 
 ### Text Processing with Hotkeys
 
-Simply highlight any text and press a hotkey to access AI-powered text processing.
+Simply highlight any text and press [a hotkey](#hotkeys) to access AI-powered text processing.
 
 #### Summarize
 
