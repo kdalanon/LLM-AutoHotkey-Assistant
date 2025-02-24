@@ -56,7 +56,7 @@ https://github.com/user-attachments/assets/2ffaf8e8-d07b-4ea1-a0e3-5c5fb850da4b
 
 #### Copy
 
-https://github.com/user-attachments/assets/957f711c-9a4c-4960-a232-6ee90aab0b54
+https://github.com/user-attachments/assets/4a718621-bb1c-4249-83bb-67f779d820c0
 
 #### Retry
 
