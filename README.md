@@ -104,7 +104,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ### Set up
 
-1. **Provide your API key:** Open the `SharedResources.ahk` and paste your API key.
+1. **Provide your API key:** Open the `lib` folder and edit the `SharedResources.ahk` script, then paste your API key.
 
 ![image](https://github.com/user-attachments/assets/de0fee67-8118-42a1-80d6-c435ad177b03)
   
