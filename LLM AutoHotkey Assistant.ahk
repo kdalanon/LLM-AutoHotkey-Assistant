@@ -27,8 +27,7 @@ prompts := [{
     promptName: "Summarize",
     menuText: "&2 - Summarize",
     systemPrompt: "Your task is to summarize the following article in English to ensure clarity, conciseness, and a natural flow. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The summary should preserve the tone, style, and formatting of the original text, and should be in its original language. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModel: "google/gemini-2.0-flash-001",
-    isAutoPaste: true
+    APIModel: "google/gemini-2.0-flash-001"
 }, {
     promptName: "Translate to English",
     menuText: "&3 - Translate to English",
