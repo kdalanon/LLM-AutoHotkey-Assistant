@@ -71,7 +71,7 @@ https://github.com/user-attachments/assets/3723bb99-c44a-4431-8612-394d97fccf45
 
 https://github.com/user-attachments/assets/056f487f-d400-4772-9bb2-889bc1fa8a42
 
-#### Reply to all option
+#### "Send message to all models" feature
 
 https://github.com/user-attachments/assets/bf717dc8-387a-48e0-a48d-f1be2fbaa21b
 
