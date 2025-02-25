@@ -8,6 +8,9 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai
 
 ![Download](https://img.shields.io/github/v/release/kdalanon/LLM-AutoHotkey-Assistant?color=green&label=Download%20Here&style=for-the-badge)
 
+> [!NOTE] 
+> Want to chat with this app? Download an LLM-friendly text file of our full documentation and include it in your system prompt.
+
 </div>
 
 ## Key Features
@@ -94,7 +97,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ![image](https://github.com/user-attachments/assets/de0fee67-8118-42a1-80d6-c435ad177b03)
   
-2. Edit your prompts list and other options that you may need. See [Customization](#customization) below.
+2. Edit your prompts list and other options that you may need. See [Editing prompts](#editing-prompts) below.
 
 ![image](https://github.com/user-attachments/assets/461364ea-f77f-488d-a364-18abde22da08)
 
@@ -123,9 +126,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 - `CapsLock + backtick` Suspend/resume hotkeys
 - `ESC` Cancel ongoing requests
 
-## Customization
-
-### Adding Custom Prompts
+## Editing prompts
 
 Edit the `prompts` array in the script to add your own prompts.
 
@@ -140,13 +141,25 @@ prompts := [{
 }]
 ```
 
-**`promptName`** The name of the prompt. This will also be the Response Window title.
+### promptName
 
-**`menuText`** The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (`&`) indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected. In the example above, pressing the hotkey to bring up the menu (backtick) and then pressing number 1 will select that prompt.
+The name of the prompt. This will also be the Response Window title, in addition to the chosen API model.
 
-**`systemPrompt`** This will be the initial prompt and will set the tone of the conversation.
+![image](https://github.com/user-attachments/assets/130f2147-352f-4bb1-8dd7-6788c58c2853)
 
-**`APIModel`** Get your desired model from the [OpenRouter models website](https://openrouter.ai/models), click on the clipboard icon beside the name, and paste it here.
+### menuText
+
+The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (`&`) is a shortcut key and indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected. In the example above, pressing the hotkey to bring up the menu (backtick) and then pressing number 1 will select that prompt.
+
+### systemPrompt
+
+This will be the initial prompt and will set the tone of the conversation.
+
+### APIModel
+
+The API model that will be used to process the prompt.
+
+Get your desired model from the [OpenRouter models website](https://openrouter.ai/models), click on the clipboard icon beside the name, and paste it here.
 
 ![image](https://github.com/user-attachments/assets/64f46a06-80ca-48b9-94bc-a57d3682a113)
 
