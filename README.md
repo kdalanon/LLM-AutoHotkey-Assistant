@@ -199,11 +199,11 @@ Your prompt will be processed by a meta-model and [routed to one of dozens of mo
 
 Setting this to `isAutoPaste: true` will paste the response from the model directly in Markdown format. Remove it if you don't need Auto Paste functionality.
 
-Difference from the `Copy` button from the Response Window:
+Difference between `isAutoPaste: true` and `Copy`:
 
 | Setting             | Format        |
 |----------------------|---------------|
-| `Copy` button from Response Window | HTML          |
+| `Copy` button from the Response Window | HTML          |
 | `isAutoPaste: true`  | Markdown      |
 
 ### isCustomPrompt
