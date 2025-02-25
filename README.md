@@ -89,7 +89,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 - [AutoHotkey v2](https://autohotkey.com/download/) (requires version `2.0.18` or later)
 - Windows OS
-- API key from [OpenRouter](https://openrouter.ai/settings/keys)
+- [API key](https://openrouter.ai/settings/keys) from [OpenRouter.ai](https://openrouter.ai)
 
 ### Set up
 
