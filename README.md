@@ -178,13 +178,52 @@ Special feature from OpenRouter: [Auto Router](https://openrouter.ai/openrouter/
 
 Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The `APIModel` is `openrouter/auto`
 
-`isAutoPaste` Setting this to `isAutoPaste: true` will paste the response from the LLM directly. Remove it if you don't need Auto Paste functionality.
+`isAutoPaste` Setting this to `isAutoPaste: true` will paste the response from the model directly in Markdown format. Remove it if you don't need Auto Paste functionality.
+
+Difference from the `Copy` button from the Response Window:
+
+| Setting             | Format        |
+|----------------------|---------------|
+| `Copy` button from Response Window | HTML          |
+| `isAutoPaste: true`  | Markdown      |
 
 `isCustomPrompt` Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom messages. Remove it if you don't need Custom Prompt functionality.
+
+![image](https://github.com/user-attachments/assets/951a3133-bf21-44e6-8959-b98ab26bbbb1)
 
 **⚠ Important:** Make sure to add a comma at the end of the line before the Auto Paste or Custom Prompt functionality, like so:
 
 ![image](https://github.com/user-attachments/assets/ca0ce9a1-77ac-40a9-9eef-17de255ca599)
+
+## Privacy policy
+
+The app does not collect logs, prompts, or copied text. It simply bundles up the conversation between you and your chosen API model and sends the request to [OpenRouter.ai](https://openrouter.ai/). See their privacy policy [here](https://openrouter.ai/privacy).
+
+4 temporary files are written to the `temp` folder (C:\Users\username\AppData\Local\Temp) for each API model:
+
+![image](https://github.com/user-attachments/assets/a465eee3-de7d-4a20-9c89-e9e62e985318)
+
+- `chatHistoryJSONRequest` contains the conversation between you and the model.
+
+![image](https://github.com/user-attachments/assets/619fb67d-1ff4-44d3-9150-c50ff852368d)
+
+- `cURLOutput` contains the model's response.
+
+![image](https://github.com/user-attachments/assets/d66e709b-679a-44b9-bb80-80d1b9a1d72c)
+
+- `responseWindowData` contains the data needed for Response Window to display and interact with the model's response.
+
+![image](https://github.com/user-attachments/assets/8909cc50-7fe9-434a-ba40-fa2ae5556bce)
+
+- `cURLCommand` contains the cURL command that will be executed to the API.
+
+![image](https://github.com/user-attachments/assets/16daecd5-4b46-46ae-b375-951d8c1857d5)
+
+These files will be kept open while the Response Window is active, and will be deleted after performing the following actions:
+
+- Pasting the response when `isAutoPaste: true` is set
+- Pressing `ESC` key *after* processing the first request but *before* getting the model's response (e.g. Response Window is not opened for the first time)
+- Closing the Response Window
 
 ## Contributing
 
