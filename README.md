@@ -215,7 +215,7 @@ In addition, you can also append `:online` to *any* model so that it will have t
 - `google/gemini-2.0-flash-001:online`
 - `deepseek/deepseek-r1:online`
 
-To enable multi-modal functionality, you can specify different API models, separating them with a comma and a space.
+To enable multi-model functionality, you can specify different API models, separating them with a comma and a space.
 
 `openai/o3-mini-high, anthropic/claude-3.5-sonnet, google/gemini-2.0-flash-001:online, deepseek/deepseek-r1:online`
 
