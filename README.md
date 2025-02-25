@@ -219,7 +219,7 @@ Setting this to `isCustomPrompt: true` will allow the prompt to show an input bo
 
 The app does not collect logs, prompts, or copied text. It simply bundles up the conversation between you and your chosen API model and sends the request to [OpenRouter.ai](https://openrouter.ai/). See their privacy policy [here](https://openrouter.ai/privacy). Adjust your OpenRouter privacy settings [here](https://openrouter.ai/settings/privacy).
 
-4 temporary files are written to the `temp` folder (`C:\Users\username\AppData\Local\Temp`) for each API model:
+4 temporary files are written to the `temp` folder (`C:\Users\username\AppData\Local\Temp`) after selecting a prompt for each API model:
 
 ![image](https://github.com/user-attachments/assets/a465eee3-de7d-4a20-9c89-e9e62e985318)
 
