@@ -1,4 +1,5 @@
 #Requires AutoHotkey v2.0.18+
+#NoTrayIcon
 #SingleInstance Off
 #Include <jsongo.v2> ; For JSON parsing
 #Include <SharedResources> ; Resources used by both LLM AutoHotkey Assistant and Response Window
