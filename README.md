@@ -213,7 +213,7 @@ To enable multi-modal functionality, you can specify different API models, separ
 
 ![image](https://github.com/user-attachments/assets/d878c9ab-6145-4aa3-a73c-463fee923459)
 
-This will also enable the `Send message to all models` menu option after pressing the backtick hotkey.
+This will also enable the `Send message to all models` menu option after pressing the backtick hotkey. The shortcut key is `S`.
 
 ![image](https://github.com/user-attachments/assets/93e3e62a-6fc7-4c0b-8f70-8d4416600ef4)
 
