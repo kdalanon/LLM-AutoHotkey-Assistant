@@ -183,6 +183,8 @@ prompts := [{
 }]
 ```
 
+![image](https://github.com/user-attachments/assets/b3a78e61-f117-4ad0-af87-3c11a259e168)
+
 #### APIModel
 
 The API model that will be used to process the prompt.
