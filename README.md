@@ -189,11 +189,13 @@ This will also enable the `Send message to all models` menu option after pressin
 
 Since this app uses [OpenRouter.ai](https://openrouter.ai/) service, you get access to the latest models as soon as they're available.
 
-Special feature from OpenRouter: [Auto Router](https://openrouter.ai/openrouter/auto)
+#### Auto Router
 
-Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The `APIModel` is `openrouter/auto`
+Your prompt will be processed by a meta-model and [routed to one of dozens of models](https://openrouter.ai/openrouter/auto), optimizing for the best possible output. To use it, just enter `openrouter/auto` in the `APIModel` field.
 
-`isAutoPaste` Setting this to `isAutoPaste: true` will paste the response from the model directly in Markdown format. Remove it if you don't need Auto Paste functionality.
+### isAutoPaste
+
+Setting this to `isAutoPaste: true` will paste the response from the model directly in Markdown format. Remove it if you don't need Auto Paste functionality.
 
 Difference from the `Copy` button from the Response Window:
 
@@ -202,11 +204,14 @@ Difference from the `Copy` button from the Response Window:
 | `Copy` button from Response Window | HTML          |
 | `isAutoPaste: true`  | Markdown      |
 
-`isCustomPrompt` Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom messages. Remove it if you don't need Custom Prompt functionality.
+### isCustomPrompt
+
+Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom messages. Remove it if you don't need Custom Prompt functionality.
 
 ![image](https://github.com/user-attachments/assets/951a3133-bf21-44e6-8959-b98ab26bbbb1)
 
-**⚠ Important:** Make sure to add a comma at the end of the line before the Auto Paste or Custom Prompt functionality, like so:
+> [!IMPORTANT]  
+> Make sure to add a comma at the end of the line before the Auto Paste or Custom Prompt functionality:
 
 ![image](https://github.com/user-attachments/assets/ca0ce9a1-77ac-40a9-9eef-17de255ca599)
 
