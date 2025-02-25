@@ -227,6 +227,9 @@ Your prompt will be processed by a meta-model and [routed to one of dozens of mo
 
 Setting this to `isAutoPaste: true` will paste the response from the model directly in Markdown format. Remove it if you don't need Auto Paste functionality.
 
+> [!NOTE]  
+> The app will automatically disable the Auto Paste functionality if it detects more than one model.
+
 Difference between `isAutoPaste: true` and `Copy`:
 
 | Setting             | Format        |
