@@ -126,6 +126,14 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 - `CapsLock + backtick` Suspend/resume hotkeys
 - `ESC` Cancel ongoing requests
 
+### Running the script at startup
+
+You can automatically run the script at startup by following the steps below:
+
+1. Copy `LLM AutoHotkey Assistant.ahk`
+2. Enter `shell:startup` at the File Explorer address bar and press `enter`.
+3. Right-click ➡ Paste shortcut
+
 ### Editing prompts
 
 Edit the `prompts` array in the script to add your own prompts.
