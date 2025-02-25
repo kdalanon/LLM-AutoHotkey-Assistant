@@ -157,6 +157,32 @@ The name of the prompt that will appear when your press the hotkey to bring up t
 
 This will be the initial prompt and will set the tone of the conversation.
 
+##### Splitting a long prompt into a series of multiple lines
+
+Long prompts can be divided into new lines to improve readability.
+
+```autohotkey
+prompts := [{
+    promptName: "Long prompt here",
+    menuText: "&1 - Long prompt here",
+    systemPrompt: "
+    (
+    This prompt is broken down into multiple lines.
+
+    Here is the second sentence.
+
+    And the third one.
+
+    As long as the prompt is inside the quotes and the opening and closing parenthesis,
+
+    it will be valid.
+
+    The end.
+    )",
+    APIModel: "openrouter/auto"
+}]
+```
+
 #### APIModel
 
 The API model that will be used to process the prompt.
