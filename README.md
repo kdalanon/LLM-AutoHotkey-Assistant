@@ -13,9 +13,9 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai
 > [!NOTE] 
 > Want to ask questions on how to use this app? [Download](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/raw/refs/heads/main/README.md) this documentation and include it in your prompt when using your preferred AI chat app.
 
-## Key Features
+## 🔑 Key Features
 
-### Text Processing with Hotkeys
+### 1️⃣ Text Processing with Keyboard Hotkeys
 
 Simply highlight any text and press [a hotkey](#hotkeys) to access AI-powered text processing.
 
@@ -41,7 +41,7 @@ https://github.com/user-attachments/assets/34da227d-e3ec-40e1-9084-432f75e3f99c
 
 https://github.com/user-attachments/assets/5d1a16e6-0331-40a7-8490-8db0d8e5a19e
 
-### Interactive Response Window
+### 2️⃣ Interactive Response Window
 
 #### Chat
 
@@ -59,7 +59,7 @@ https://github.com/user-attachments/assets/0eb69c79-ede3-4a7c-a813-010caa7fc7d7
 
 https://github.com/user-attachments/assets/af0ba481-eea2-47d2-a6d2-ec33026fd3d6
 
-### Auto-Paste Option
+### 3️⃣ Auto-Paste Option
 
 https://github.com/user-attachments/assets/3818b83b-d1a1-4ca9-a1c2-adbae54f48d0
 
@@ -67,7 +67,7 @@ https://github.com/user-attachments/assets/3818b83b-d1a1-4ca9-a1c2-adbae54f48d0
 
 https://github.com/user-attachments/assets/3723bb99-c44a-4431-8612-394d97fccf45
 
-### Multi-Model Support
+### 4️⃣ Multi-Model Support
 
 https://github.com/user-attachments/assets/056f487f-d400-4772-9bb2-889bc1fa8a42
 
@@ -79,11 +79,11 @@ https://github.com/user-attachments/assets/bf717dc8-387a-48e0-a48d-f1be2fbaa21b
 
 https://github.com/user-attachments/assets/4e8a27cd-5a9f-4066-8bbd-3010dc635948
 
-### Web search
+### 5️⃣ Web search
 
 https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -105,7 +105,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ![image](https://github.com/user-attachments/assets/93fa2fed-3222-494a-974c-5a037cf7e60d)
 
-### Usage
+## 🖱️ Usage
 
 1. Highlight any text.
 2. Press the backtick key to bring up the prompt menu.
@@ -119,14 +119,14 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ![image](https://github.com/user-attachments/assets/f680e787-d048-4e20-9ccf-b25dbdb54e5a)
 
-## Hotkeys
+### Hotkeys
 
 - `Backtick` Show prompt menu
 - `Ctrl + S` Will automatically save and reload the script when editing in Notepad
 - `CapsLock + backtick` Suspend/resume hotkeys
 - `ESC` Cancel ongoing requests
 
-## Editing prompts
+### Editing prompts
 
 Edit the `prompts` array in the script to add your own prompts.
 
@@ -141,7 +141,7 @@ prompts := [{
 }]
 ```
 
-### promptName
+#### promptName
 
 The name of the prompt. This will also be the Response Window title, in addition to the chosen API model.
 
@@ -153,11 +153,11 @@ The name of the prompt that will appear when your press the hotkey to bring up t
 
 ![image](https://github.com/user-attachments/assets/36e9e74e-0885-42ae-9122-0f0a04d973b1)
 
-### systemPrompt
+#### systemPrompt
 
 This will be the initial prompt and will set the tone of the conversation.
 
-### APIModel
+#### APIModel
 
 The API model that will be used to process the prompt.
 
@@ -191,11 +191,11 @@ This will also enable the `Send message to all models` menu option after pressin
 
 Since this app uses [OpenRouter.ai](https://openrouter.ai/) service, you get access to the latest models as soon as they're available.
 
-#### Auto Router
+##### Auto Router
 
 Your prompt will be processed by a meta-model and [routed to one of dozens of models](https://openrouter.ai/openrouter/auto), optimizing for the best possible output. To use it, just enter `openrouter/auto` in the `APIModel` field.
 
-### isAutoPaste
+#### isAutoPaste
 
 Setting this to `isAutoPaste: true` will paste the response from the model directly in Markdown format. Remove it if you don't need Auto Paste functionality.
 
@@ -206,7 +206,7 @@ Difference between `isAutoPaste: true` and `Copy`:
 | `Copy` button from the Response Window | HTML          |
 | `isAutoPaste: true`  | Markdown      |
 
-### isCustomPrompt
+#### isCustomPrompt
 
 Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom prompts. Remove it if you don't need Custom Prompt functionality.
 
@@ -217,7 +217,7 @@ Setting this to `isCustomPrompt: true` will allow the prompt to show an input bo
 
 ![image](https://github.com/user-attachments/assets/ca0ce9a1-77ac-40a9-9eef-17de255ca599)
 
-## Privacy policy
+## 🔒 Privacy policy
 
 The app does not collect logs, prompts, or copied text. It simply bundles up the conversation between you and your chosen API model and sends the request to [OpenRouter.ai](https://openrouter.ai/). See their privacy policy [here](https://openrouter.ai/privacy). Adjust your OpenRouter privacy settings [here](https://openrouter.ai/settings/privacy).
 
@@ -247,7 +247,7 @@ These files will be kept open while the Response Window is active, and will be d
 - Pressing `ESC` key *after* processing the first request but *before* getting the model's response (e.g. Response Window is not opened for the first time)
 - Closing the Response Window
 
-## Features planned on future releases
+## ✅ Features planned on future releases
 
 - Timestamp messages in Chat History
 - File upload (e.g. `md`, `txt`, images, etc.)
@@ -256,17 +256,17 @@ These files will be kept open while the Response Window is active, and will be d
 - Conversation log viewer
 - Delete individual messages
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Feel free to report bugs and suggest features.
 
-## Credits
+## 🏅 Credits
 
 - [AutoHotkey](https://www.autohotkey.com/)
 - [OpenRouter](https://openrouter.ai/)
 - [Icon by Smashicons](https://www.flaticon.com/free-icon/bot_4712027)
 
-## Libraries used
+## 📦 Libraries used
 
 - [AutoXYWH](https://www.autohotkey.com/boards/viewtopic.php?t=1079) - Move control automatically when GUI resizes ([converted to v2](https://www.autohotkey.com/boards/viewtopic.php?style=19&t=114445) by [Relayer](https://www.autohotkey.com/boards/memberlist.php?style=19&mode=viewprofile&u=97) and code improvements by [autoexec](https://www.autohotkey.com/boards/memberlist.php?style=19&mode=viewprofile&u=156305))
 - [The-CoDingman/WebViewToo](https://github.com/The-CoDingman/WebViewToo/tree/main) - Allows for use of the WebView2 Framework within AHK to create Web-based GUIs
@@ -275,7 +275,7 @@ Contributions are welcome! Feel free to report bugs and suggest features.
 - [nperovic/SystemThemeAwareToolTip](https://github.com/nperovic/SystemThemeAwareToolTip/) - Make your ToolTip style conform to the current system theme
 - [nperovic/ToolTipEx](https://github.com/nperovic/ToolTipEx) - Enable the ToolTip to track the mouse cursor smoothly and permit the ToolTip to be moved by dragging
 
-## Inspiration - Similar apps with the same functionality written in AutoHotkey v2
+## 💡 Inspiration - Similar apps with the same functionality written in AutoHotkey v2
 
 - [overflowy/chat-key](https://github.com/overflowy/chat-key) - Supercharge your productivity with ChatGPT and AutoHotkey 🚀
 - [ecornell/ai-tools-ahk](https://github.com/ecornell/ai-tools-ahk) - AI Tools - AutoHotkey - Enable global hotkeys to run custom OpenAI prompts on text in any window.
