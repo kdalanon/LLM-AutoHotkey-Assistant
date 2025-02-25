@@ -151,6 +151,8 @@ The name of the prompt. This will also be the Response Window title, in addition
 
 The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (`&`) is a shortcut key and indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected. In the example above, pressing the hotkey to bring up the menu (backtick) and then pressing number 1 will select that prompt.
 
+![image](https://github.com/user-attachments/assets/36e9e74e-0885-42ae-9122-0f0a04d973b1)
+
 ### systemPrompt
 
 This will be the initial prompt and will set the tone of the conversation.
