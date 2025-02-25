@@ -290,7 +290,7 @@ These files will be kept open while the Response Window is active, and will be d
 
 - Timestamp messages in Chat History
 - File upload (e.g. `md`, `txt`, images, etc.)
-- Have an option to select an area of the screen to automatically upload to chat window as image
+- Have an option to select an area of the screen to automatically upload to Response Window as image
 - Importing and exporting conversations
 - Conversation log viewer
 - Delete individual messages
