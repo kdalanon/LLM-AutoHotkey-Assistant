@@ -122,7 +122,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 ## Hotkeys
 
 - `Backtick` Show prompt menu
-- `Ctrl + S` Save and reload script (when editing)
+- `Ctrl + S` Will automatically save and reload the script when editing in Notepad
 - `CapsLock + backtick` Suspend/resume hotkeys
 - `ESC` Cancel ongoing requests
 
