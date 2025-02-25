@@ -8,10 +8,10 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai
 
 ![Download](https://img.shields.io/github/v/release/kdalanon/LLM-AutoHotkey-Assistant?color=green&label=Download%20Here&style=for-the-badge)
 
-> [!NOTE] 
-> Want to chat with this app? Download an LLM-friendly text file of our full documentation and include it in your system prompt.
-
 </div>
+
+> [!NOTE] 
+> Want to ask questions on how to use this app? Download an LLM-friendly text file of this documentation and include it in your system prompt.
 
 ## Key Features
 
