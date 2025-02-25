@@ -174,6 +174,8 @@ This will also enable the `Send message to all models` menu option after pressin
 
 ![image](https://github.com/user-attachments/assets/93e3e62a-6fc7-4c0b-8f70-8d4416600ef4)
 
+Since this app uses [OpenRouter.ai](https://openrouter.ai/) service, you get access to the latest models as soon as they're available.
+
 Special feature from OpenRouter: [Auto Router](https://openrouter.ai/openrouter/auto)
 
 Your prompt will be processed by a meta-model and routed to one of dozens of models, optimizing for the best possible output. The `APIModel` is `openrouter/auto`
@@ -197,9 +199,9 @@ Difference from the `Copy` button from the Response Window:
 
 ## Privacy policy
 
-The app does not collect logs, prompts, or copied text. It simply bundles up the conversation between you and your chosen API model and sends the request to [OpenRouter.ai](https://openrouter.ai/). See their privacy policy [here](https://openrouter.ai/privacy).
+The app does not collect logs, prompts, or copied text. It simply bundles up the conversation between you and your chosen API model and sends the request to [OpenRouter.ai](https://openrouter.ai/). See their privacy policy [here](https://openrouter.ai/privacy). Adjust your OpenRouter privacy settings [here](https://openrouter.ai/settings/privacy).
 
-4 temporary files are written to the `temp` folder (C:\Users\username\AppData\Local\Temp) for each API model:
+4 temporary files are written to the `temp` folder (`C:\Users\username\AppData\Local\Temp`) for each API model:
 
 ![image](https://github.com/user-attachments/assets/a465eee3-de7d-4a20-9c89-e9e62e985318)
 
@@ -224,6 +226,15 @@ These files will be kept open while the Response Window is active, and will be d
 - Pasting the response when `isAutoPaste: true` is set
 - Pressing `ESC` key *after* processing the first request but *before* getting the model's response (e.g. Response Window is not opened for the first time)
 - Closing the Response Window
+
+## Features planned on future releases
+
+- Timestamp messages in Chat History
+- File upload (e.g. md, txt, image, etc.)
+- Have an option to select an area of the screen to automatically upload to chat window as image
+- Importing and exporting conversations
+- Conversation log viewer
+- Delete individual messages
 
 ## Contributing
 
