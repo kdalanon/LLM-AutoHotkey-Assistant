@@ -1,11 +1,6 @@
-#Requires AutoHotkey v2.0.18+
-#NoTrayIcon
+#Include <Configs_and_Classes>
 #SingleInstance Off
-#Include <jsongo.v2> ; For JSON parsing
-#Include <SharedResources> ; Resources used by both LLM AutoHotkey Assistant and Response Window
-#Include <Dark_MsgBox> ; Enables dark mode MsgBox and InputBox. Remove this if you want light mode MsgBox and InputBox
-#Include <WebViewToo> ; Allows for use of the WebView2 Framework within AHK to create Web-based GUIs
-DetectHiddenWindows true ; Enables detection of hidden windows for inter-process communication
+#NoTrayIcon
 
 ; ----------------------------------------------------
 ; Read data from main script and start loading cursor
