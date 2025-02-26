@@ -330,10 +330,8 @@ sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
 
         switch role {
             case "system": chatHistory .= "**🔧 System Prompt**`n`n" content
-            case "user": chatHistory .= "`n`n---`n`n**🔵 You**`n`n" content "`n`n---`n`n"
-            case "assistant":
-                chatHistory .= "**🟡 " manageState("model", "get")[modelIndex] "**`n`n" content
-                modelIndex++
+            case "user": chatHistory .= "`n`n---`n`n**🔵 You**`n`n" content
+            case "assistant": chatHistory .= "`n`n---`n`n**🟡 " manageState("model", "get")[modelIndex++] "**`n`n" content
         }
     }
 
