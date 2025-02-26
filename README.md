@@ -156,7 +156,7 @@ The name of the prompt. This will also be shown in the tooltip and the Response 
 
 ![image](https://github.com/user-attachments/assets/5bb775b0-3309-4395-9ea7-7075da490107)
 
-![image](https://github.com/user-attachments/assets/176d8d72-8853-40a5-bddd-8ec38d9ae184)
+![image](https://github.com/user-attachments/assets/af1c530c-7354-43f7-a62a-192d6d023e24)
 
 ### menuText
 
@@ -227,7 +227,7 @@ To enable multi-model functionality, you can specify different API models, separ
 
 This will also enable the `Send message to all models` menu option after pressing the backtick hotkey. The shortcut key is `S`.
 
-![image](https://github.com/user-attachments/assets/93e3e62a-6fc7-4c0b-8f70-8d4416600ef4)
+![image](https://github.com/user-attachments/assets/a450ea0e-8954-41d0-b25f-34b8a9c2e213)
 
 Since this app uses [OpenRouter.ai](https://openrouter.ai/) service, you get access to the latest models as soon as they're available.
 
