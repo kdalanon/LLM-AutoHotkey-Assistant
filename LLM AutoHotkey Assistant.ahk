@@ -112,7 +112,6 @@ hotkeyFunctions(action) {
         case "saveScriptAndReload": WinActive("LLM AutoHotkey Assistant.ahk") ? Reload() : ""
         case "suspendHotkey":
             KeyWait "CapsLock", "L"
-            KeyWait "``", "L"
             SetCapsLockState "Off"
             toggleSuspend(A_IsSuspended)
     }
