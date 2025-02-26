@@ -162,7 +162,10 @@ The name of the prompt. This will also be shown in the tooltip and the Response 
 
 The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (`&`) is a shortcut key and indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected.
 
-![image](https://github.com/user-attachments/assets/36e9e74e-0885-42ae-9122-0f0a04d973b1)
+![image](https://github.com/user-attachments/assets/309c7959-250c-4178-8b1f-94a62f913ee1)
+
+> [!NOTE]
+> You can have duplicate shortcut keys for the prompts. Pressing the shortcut key will highlight the first prompt, and pressing the shortcut key again will highlight the second prompt. Pressing `Enter` afterwards will select the prompt and initiate the request.
 
 #### systemPrompt
 
@@ -286,6 +289,40 @@ These files will be kept open while the Response Window is active, and will be d
 - Pasting the response when `isAutoPaste: true` is set
 - Pressing `ESC` key *after* processing the first request but *before* getting the model's response (e.g. Response Window is not opened for the first time)
 - Closing the Response Window
+
+## 💭 Frequently-asked questions
+
+### Can I use my Anthropic/OpenAI/Google/Other provider's API?
+
+Yes, you can use your own keys, but there is a caveat: You _must_ use OpenRouter's API keys in the app, _then_ configure your provider's API settings on the [Integrations](https://openrouter.ai/settings/integrations) page. This ensures OpenRouter will prioritize using your key.
+
+![Image](https://github.com/user-attachments/assets/506c2cf7-f056-43e2-b418-740254482e24)
+
+![Image](https://github.com/user-attachments/assets/c0aadd8a-2757-4e07-8145-62cfe111fecf)
+
+![Image](https://github.com/user-attachments/assets/a5345e61-9149-4bf1-b66f-122d727f79d6)
+
+More information [here](https://openrouter.ai/docs/use-cases/byok).
+
+### How much is the usage cost per prompt?
+
+The usage costs varies per model. The model's input/output token price is indicated below its name.
+
+![image](https://github.com/user-attachments/assets/67ac3208-4f82-4267-b967-923c80cfc09d)
+
+> [!TIP]
+> Search for [free models](https://openrouter.ai/models?q=free) to avoid any charges on your credits when using the app. These free models are particularly helpful when you want to explore the app’s features or experiment with different models.
+
+### Are there any rate limits?
+
+See [OpenRouter's documentation](https://openrouter.ai/docs/api-reference/limits) for their limits.
+
+> [!NOTE]
+> Negative credit balance: If your account has a negative credit balance, you may receive 402 errors, even when using free models. Add credits to bring your balance above zero to resolve this and regain access.
+
+### Inquiries regarding OpenRouter's service
+
+Check out their [documentation](https://openrouter.ai/docs/quickstart) to learn more about their service.
 
 ## ✅ Features planned on future releases
 
