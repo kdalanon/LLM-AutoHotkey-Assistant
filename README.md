@@ -290,7 +290,7 @@ These files will be kept open while the Response Window is active, and will be d
 - Pressing `ESC` key *after* processing the first request but *before* getting the model's response (e.g. Response Window is not opened for the first time)
 - Closing the Response Window
 
-## 💭 Frequently-asked questions
+## 💬 Frequently-asked questions
 
 ### Can I use my Anthropic/OpenAI/Google/Other provider's API?
 
@@ -319,6 +319,10 @@ See [OpenRouter's documentation](https://openrouter.ai/docs/api-reference/limits
 
 > [!NOTE]
 > Negative credit balance: If your account has a negative credit balance, you may receive 402 errors, even when using free models. Add credits to bring your balance above zero to resolve this and regain access.
+
+### Can I connect it with my local AI?
+
+Maybe? I don't have any local AI set up on my machine to test, so I am not sure. However, there’s a good chance it will work if your local AI uses the same format as the OpenAI SDK. The [OpenRouter documentation](https://openrouter.ai/docs/quickstart) is what I followed in order for my app to connect to their API. Open the `Configs_and_Classes.ahk` script (`Menu` ➡ `Options` ➡ `Add API key`) to learn how my app processes the OpenRouter API. 
 
 ### Inquiries regarding OpenRouter's service
 
