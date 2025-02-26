@@ -1,33 +1,26 @@
-#Requires AutoHotkey v2.0.18+
+#Include <Configs_and_Classes>
 #SingleInstance
-#Include <jsongo.v2> ; For JSON parsing
-#Include <SharedResources> ; Resources used by both LLM AutoHotkey Assistant and Response Window
-#Include <SystemThemeAwareToolTip> ; Enables dark mode tooltips. Remove this if you want light mode tooltips
-#Include <Dark_MsgBox> ; Enables dark mode MsgBox and InputBox. Remove this if you want light mode MsgBox and InputBox
-#Include <Dark_Menu> ; Enables dark mode Menu. Remove this if you want light mode Menu
-#Include <ToolTipEx> ; Enables the tooltip to track the mouse cursor smoothly and permit the tooltip to be moved by dragging
-DetectHiddenWindows true ; Enables detection of hidden windows for inter-process communication
 
 ; ----------------------------------------------------
 ; Prompts
 ; ----------------------------------------------------
 
 prompts := [{
-    promptName: "Custom prompt",
-    menuText: "&0 - Custom prompt",
+    promptName: "Multi-model custom prompt",
+    menuText: "&0 - Multi-model custom prompt",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
-    APIModel: "openrouter/auto",
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free, openai/gpt-4o, google/gemini-exp-1206:free, anthropic/claude-3.7-sonnet",
     isCustomPrompt: true
 }, {
     promptName: "Rephrase",
     menuText: "&1 - Rephrase",
     systemPrompt: "Your task is to rephrase the following text or paragraph in English to ensure clarity, conciseness, and a natural flow. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The revision should preserve the tone, style, and formatting of the original text. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModel: "anthropic/claude-3.7-sonnet"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free"
 }, {
     promptName: "Summarize",
     menuText: "&2 - Summarize",
     systemPrompt: "Your task is to summarize the following article in English to ensure clarity, conciseness, and a natural flow. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The summary should preserve the tone, style, and formatting of the original text, and should be in its original language. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModel: "google/gemini-2.0-flash-001"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free"
 }, {
     promptName: "Translate to English",
     menuText: "&3 - Translate to English",
@@ -37,52 +30,40 @@ prompts := [{
     promptName: "Define",
     menuText: "&4 - Define",
     systemPrompt: "Provide and explain the definition of the following, providing analogies if needed. In addition, answer follow-up questions if asked:",
-    APIModel: "openai/chatgpt-4o-latest"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free"
 }, {
-    promptName: "Web search",
-    menuText: "&5 - Search for this topic online",
-    systemPrompt: "Your task is to search for the following topic online:",
-    APIModel: "perplexity/r1-1776:online"
-}, {
-    promptName: "Web search (Custom prompt)",
-    menuText: "&6 - Web search (Custom prompt)",
-    systemPrompt: "Your task is to search for the following topic online:",
-    APIModel: "perplexity/r1-1776:online",
-    isCustomPrompt: true
-}, {
-    promptName: "Auto Paste",
-    menuText: "&7 - Auto Paste query here",
+    promptName: "Auto-paste custom prompt",
+    menuText: "&5 - Auto-paste custom prompt",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask.",
-    APIModel: "google/gemini-2.0-flash-001",
-    isAutoPaste: true
-}, {
-    promptName: "Auto Paste (Custom prompt)",
-    menuText: "&8 - Auto Paste (Custom prompt) query here",
-    systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask.",
-    APIModel: "google/gemini-2.0-flash-001",
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free",
     isCustomPrompt: true,
     isAutoPaste: true
 }, {
-    promptName: "Two models (Custom prompt)",
-    menuText: "&9 - Two models (Custom prompt) query here",
+    promptName: "Web search",
+    menuText: "&6 - Web search",
+    systemPrompt: "Provide the latest information and answer follow-up questions that I will ask. My first query is the following:",
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free:online"
+}, {
+    promptName: "Web search custom prompt",
+    menuText: "&7 - Web search custom prompt",
+    systemPrompt: "Provide the latest information and answer follow-up questions that I will ask. My first query is the following:",
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free:online",
+    isCustomPrompt: true
+}, {
+    promptName: "Deep thinking multi-model custom prompt",
+    menuText: "&8 - Deep thinking multi-model custom prompt",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free, anthropic/claude-3.7-sonnet",
+    APIModel: "perplexity/r1-1776, openai/o3-mini-high, anthropic/claude-3.7-sonnet:thinking, google/gemini-2.0-flash-thinking-exp:free",
     isCustomPrompt: true
 }, {
-    promptName: "Two models (Custom prompt) web search",
-    menuText: "&Q - Two models (Custom prompt) web search query here",
-    systemPrompt: "Your task is to search for the following topic online:",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free:online, anthropic/claude-3.7-sonnet:online",
+    promptName: "Deep thinking multi-model web search custom prompt",
+    menuText: "&9 - Deep thinking multi-model custom prompt web search",
+    systemPrompt: "Provide information about the following. In addition, answer follow-up questions that I will ask or follow any instructions that I may provide:",
+    APIModel: "perplexity/r1-1776:online, openai/o3-mini-high:online, anthropic/claude-3.7-sonnet:thinking:online, google/gemini-2.0-flash-thinking-exp:free:online",
     isCustomPrompt: true
 }, {
-    promptName: "Deep thinking (Custom prompt)",
-    menuText: "&W - Deep thinking (Custom prompt) query here",
-    systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
-    APIModel: "perplexity/r1-1776, openai/o3-mini-high, openai/o1, google/gemini-2.0-flash-thinking-exp:free",
-    isCustomPrompt: true
-}, {
-    promptName: "Long prompt here",
-    menuText: "&E - Long prompt here",
+    promptName: "Multi-line prompt example",
+    menuText: "Multi-line prompt example",
     systemPrompt: "
     (
     This prompt is broken down into multiple lines.
@@ -94,10 +75,8 @@ prompts := [{
     As long as the prompt is inside the quotes and the opening and closing parenthesis,
 
     it will be valid.
-
-    The end.
     )",
-    APIModel: "openrouter/auto"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free"
 }]
 
 ; ----------------------------------------------------
@@ -114,23 +93,21 @@ CapsLock & `:: hotkeyFunctions("suspendHotkey")
 hotkeyFunctions(action) {
     switch action {
         case "showPromptMenu":
+            promptMenu := Menu()
             if (getActiveModels().Count > 1) {
-
-                ; Adds a menu that includes "Send message to all models"
-                ; in addition to existing prompt menu
-                sendToAllModelsMenu := Menu()
-                sendToAllModelsMenu.Add("&Send message to all models", (*) => sendToAllModelsInputWindow.showInputWindow())
-                sendToAllModelsMenu.Add()
-
-                ; Copy the existing prompt menu
-                for index, prompt in managePromptState("prompts", "get") {
-                    sendToAllModelsMenu.Add(prompt.menuText, promptMenuHandler.Bind(index))
-                }
-
-                sendToAllModelsMenu.Show()
-            } else {
-                promptMenu.Show()
+                promptMenu.Add("&Send message to all models", (*) => sendToAllModelsInputWindow.showInputWindow())
+                promptMenu.Add()
             }
+
+            for index, prompt in managePromptState("prompts", "get") {
+                promptMenu.Add(prompt.menuText, promptMenuHandler.Bind(index))
+            }
+
+            promptMenu.Add()
+            promptMenu.Add("&Options", optionsMenu := Menu())
+            optionsMenu.Add("&Edit prompts", (*) => Run("Notepad " A_ScriptFullPath))
+            optionsMenu.Add("&Add API key", (*) => Run("Notepad " A_ScriptDir "\lib\Configs_and_Classes.ahk"))
+            promptMenu.Show()
 
         case "saveScriptAndReload": WinActive("LLM AutoHotkey Assistant.ahk") ? Reload() : ""
         case "suspendHotkey":
@@ -146,12 +123,6 @@ hotkeyFunctions(action) {
 ; ----------------------------------------------------
 
 trayMenuItems := [{
-    menuText: "Op&en this AHK script in Notepad",
-    function: (*) => Run("Notepad " A_ScriptFullPath)
-}, {
-    menuText: "Open SharedResources AHK script in Notepad",
-    function: (*) => Run("Notepad 'lib\SharedResources.ahk'")
-}, {
     menuText: "&Reload Script",
     function: (*) => Reload()
 }, {
@@ -266,10 +237,10 @@ toggleSuspend(*) {
 ; to pass the index to the handler function
 ; ----------------------------------------------------
 
-promptMenu := Menu()
-for index, prompt in managePromptState("prompts", "get") {
-    promptMenu.Add(prompt.menuText, promptMenuHandler.Bind(index))
-}
+; promptMenu := Menu()
+; for index, prompt in managePromptState("prompts", "get") {
+;     promptMenu.Add(prompt.menuText, promptMenuHandler.Bind(index))
+; }
 
 ; ----------------------------------------------------
 ; Prompt menu handler function
@@ -379,8 +350,9 @@ processInitialRequest(promptName, menuText, systemPrompt, APIModel, isAutoPaste,
         cURLCommand := router.buildcURLCommand(chatHistoryJSONRequestFile, cURLOutputFile)
         FileOpen(cURLCommandFile, "w").Write(cURLCommand)
 
-        ; Maintain a reference in the global map to use with sendToAllModelsSendButtonAction
+        ; Maintain a reference in the global map
         getActiveModels()[uniqueID] := {
+            promptName: promptName,
             name: singleAPIModel,
             provider: router,
             JSONFile: chatHistoryJSONRequestFile,
@@ -412,7 +384,7 @@ processInitialRequest(promptName, menuText, systemPrompt, APIModel, isAutoPaste,
             "[\/\\:*?`"<>|]", "")
         FileOpen(dataObjToJSONStrFile, "w", "UTF-8-RAW").Write(dataObjToJSONStr)
         getActiveModels()[uniqueID].JSONFile := chatHistoryJSONRequestFile
-        Run "Response Window.ahk " "`"" dataObjToJSONStrFile
+        Run(A_ScriptDir "\Response Window.ahk " "`"" dataObjToJSONStrFile)
     }
 }
 
@@ -486,7 +458,7 @@ manageCursorAndToolTip(action) {
                 return
             }
 
-            toolTipMessage := "Retrieving response from the following model"
+            toolTipMessage := "Retrieving response for the following prompt"
 
             ; Singular and plural forms of the word "model"
             if (activeCount > 1) {
@@ -496,7 +468,7 @@ manageCursorAndToolTip(action) {
             toolTipMessage .= " (Press ESC to cancel):"
             for key, data in getActiveModels() {
                 if (data.isLoading) {
-                    toolTipMessage .= "`n- " data.name
+                    toolTipMessage .= "`n- " data.promptName " [" data.name "]"
                 }
             }
 
