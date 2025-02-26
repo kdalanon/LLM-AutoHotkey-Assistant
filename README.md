@@ -156,7 +156,7 @@ The name of the prompt. This will also be shown in the tooltip and the Response 
 
 ![image](https://github.com/user-attachments/assets/5bb775b0-3309-4395-9ea7-7075da490107)
 
-![image](https://github.com/user-attachments/assets/130f2147-352f-4bb1-8dd7-6788c58c2853)
+![image](https://github.com/user-attachments/assets/176d8d72-8853-40a5-bddd-8ec38d9ae184)
 
 ### menuText
 
