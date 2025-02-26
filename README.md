@@ -93,31 +93,32 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ### Set up
 
-1. Open the `lib` folder and edit the `SharedResources.ahk` script, then paste your API key inside the quotes. Save the file afterwards.
+1. Run the `LLM AutoHotkey Assistant.ahk` script and press the `backtick` hotkey.
+2. Select `Options` ➡ `Add API Key`
 
-![image](https://github.com/user-attachments/assets/de0fee67-8118-42a1-80d6-c435ad177b03)
-  
-2. Edit your prompts list and other options that you may need. See [Editing prompts](#editing-prompts) below.
+![image](https://github.com/user-attachments/assets/2aabef64-9695-410e-8f33-0058163ebad3)
 
-![image](https://github.com/user-attachments/assets/461364ea-f77f-488d-a364-18abde22da08)
+3. Paste your [OpenRouter.ai API key](https://openrouter.ai/settings/keys) inside the quotes. Save the file afterwards.
 
-3. Double-click `LLM AutoHotkey Assistant.ahk` to run the script. The app icon will appear in your system tray and will indicate that the script is running in the background.
+![image](https://github.com/user-attachments/assets/13b2a4e8-afcb-4929-9055-5850a0ad7566)
+
+4. You can now use the app! If you want to further enhance your experience and customize your prompts, press the `backtick` hotkey and select `Options` ➡ `Edit prompts`. See [Editing prompts](#editing-prompts) for more info.
+
+> [!NOTE]
+> The app icon will appear in your system tray and will indicate that the script is running in the background.
+> To termninate the script, right-click the icon and select `Exit`.
 
 ![image](https://github.com/user-attachments/assets/93fa2fed-3222-494a-974c-5a037cf7e60d)
 
 ## 🖱️ Usage
 
 1. Highlight any text.
-2. Press the backtick key to bring up the prompt menu.
+2. Press the `backtick` hotkey to bring up the prompt menu.
 3. Select a prompt to process the text.
 4. View and interact with the AI response in the Response Window.
-5. If you want to use the backtick character, you can press `CapsLock + Backtick` to suspend and unsuspend the script. A message will be displayed at the bottom indicating that the app is suspended.
+5. If you want to use the `backtick` character, you can press `CapsLock + Backtick` to suspend and unsuspend the script. A message will be displayed at the bottom indicating that the app is suspended.
 
 ![image](https://github.com/user-attachments/assets/e8611390-5fb3-4916-ac8f-774210b5a14d)
-
-6. You can directly open the script or the `SharedResources` file through Notepad by right-clicking the tray icon.
-
-![image](https://github.com/user-attachments/assets/f680e787-d048-4e20-9ccf-b25dbdb54e5a)
 
 ### Hotkeys
 
@@ -151,7 +152,7 @@ prompts := [{
 
 #### promptName
 
-The name of the prompt. This will also be the Response Window title, in addition to the chosen API model.
+The name of the prompt. This will also be shown in the tooltip and the Response Window title, in addition to the chosen API model.
 
 ![image](https://github.com/user-attachments/assets/130f2147-352f-4bb1-8dd7-6788c58c2853)
 
