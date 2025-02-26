@@ -154,6 +154,8 @@ prompts := [{
 
 The name of the prompt. This will also be shown in the tooltip and the Response Window title, in addition to the chosen API model.
 
+![image](https://github.com/user-attachments/assets/5bb775b0-3309-4395-9ea7-7075da490107)
+
 ![image](https://github.com/user-attachments/assets/130f2147-352f-4bb1-8dd7-6788c58c2853)
 
 ### menuText
@@ -172,8 +174,8 @@ Long prompts can be divided into new lines to improve readability.
 
 ```autohotkey
 prompts := [{
-    promptName: "Long prompt here",
-    menuText: "&1 - Long prompt here",
+    promptName: "Multi-line prompt here",
+    menuText: "&1 - Multi-line prompt here",
     systemPrompt: "
     (
     This prompt is broken down into multiple lines.
@@ -185,14 +187,12 @@ prompts := [{
     As long as the prompt is inside the quotes and the opening and closing parenthesis,
 
     it will be valid.
-
-    The end.
     )",
     APIModel: "openrouter/auto"
 }]
 ```
 
-![image](https://github.com/user-attachments/assets/b3a78e61-f117-4ad0-af87-3c11a259e168)
+![image](https://github.com/user-attachments/assets/8f9b16a4-8e07-4618-9b6c-ea9122766f3f)
 
 #### APIModel
 
