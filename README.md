@@ -11,7 +11,7 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai
 </div>
 
 > [!TIP] 
-> Want to ask questions on how to use this app? [Download this documentation](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/raw/refs/heads/main/README.md) and include it in your prompt when using your preferred AI chat app.
+> Want to ask questions on how to use this app? [Download this documentation](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/raw/refs/heads/main/README.md) and include it in your prompt when using your preferred AI chat app!
 
 ## 🔑 Key Features
 
