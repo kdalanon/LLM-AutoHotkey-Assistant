@@ -106,7 +106,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 > [!NOTE]
 > The app icon will appear in your system tray and will indicate that the script is running in the background.
-> To termninate the script, right-click the icon and select `Exit`.
+> To terminate the script, right-click the icon and select `Exit`.
 
 ![image](https://github.com/user-attachments/assets/93fa2fed-3222-494a-974c-5a037cf7e60d)
 
