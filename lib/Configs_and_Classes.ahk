@@ -1,6 +1,12 @@
 #Requires AutoHotkey v2.0.18+
+#Include <Dark_MsgBox> ; Enables dark mode MsgBox and InputBox. Remove this if you want light mode MsgBox and InputBox
+#Include <Dark_Menu> ; Enables dark mode Menu. Remove this if you want light mode Menu
+#Include <SystemThemeAwareToolTip> ; Enables dark mode tooltips. Remove this if you want light mode tooltips
+#Include <WebViewToo> ; Allows for use of the WebView2 Framework within AHK to create Web-based GUIs
 #Include <jsongo.v2> ; For JSON parsing
 #Include <AutoXYWH> ; Enables auto-resizing of GUI controls. Does not include resizing of Response Window GUI elements, as it is handled by HTML and CSS
+#Include <ToolTipEx> ; Enables the tooltip to track the mouse cursor smoothly and permit the tooltip to be moved by dragging
+DetectHiddenWindows true ; Enables detection of hidden windows for inter-process communication
 
 ; ----------------------------------------------------
 ; OpenRouter
