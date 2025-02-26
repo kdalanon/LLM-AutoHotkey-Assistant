@@ -329,15 +329,12 @@ sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
         content := message.content
 
         switch role {
-            case "system": displayName := "🔧 System Prompt"
-            case "user": displayName := "🔵 You"
+            case "system": chatHistory .= "**🔧 System Prompt**`n`n" content
+            case "user": chatHistory .= "`n`n---`n`n**🔵 You**`n`n" content "`n`n---`n`n"
             case "assistant":
-                currentModels := manageState("model", "get")
-                displayName := "🟡 " currentModels[modelIndex]
+                chatHistory .= "**🟡 " manageState("model", "get")[modelIndex] "**`n`n" content
                 modelIndex++
         }
-
-        chatHistory .= "**" displayName "**`n`n" content "`n`n---`n"
     }
 
     ; Latest Response - Iterate backwards over each message in the 'messages' array to find the last assistant message
