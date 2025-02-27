@@ -374,5 +374,6 @@ Contributions are welcome! Feel free to report bugs and suggest features.
 ## 💡 Inspiration - Similar apps with the same functionality written in AutoHotkey v2
 
 - [overflowy/chat-key](https://github.com/overflowy/chat-key) - Supercharge your productivity with ChatGPT and AutoHotkey 🚀
+- [htadashi/GPT3-AHK](https://github.com/htadashi/GPT3-AHK) - An AutoHotKey script that enables you to use GPT3 in any input field on your computer 
 - [ecornell/ai-tools-ahk](https://github.com/ecornell/ai-tools-ahk) - AI Tools - AutoHotkey - Enable global hotkeys to run custom OpenAI prompts on text in any window.
 - [kdalanon/ChatGPT-AutoHotkey-Utility](https://github.com/kdalanon/ChatGPT-AutoHotkey-Utility) - An AutoHotkey script that uses ChatGPT API to process text.
