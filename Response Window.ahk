@@ -43,7 +43,14 @@ buttonClickAction(action) {
 
     switch action {
         case "Chat": chatInputWindow.showInputWindow()
-        case "Copy": postWebMessage("responseWindowCopyButtonAction")
+        case "Copy":
+            if requestParams["copyAsMarkdown"] {
+                chatState := manageState("chat", "get")
+                A_Clipboard := (chatHistoryButtonText = "Chat History") ? chatState.latestResponse : chatState.chatHistory
+            }
+
+            postWebMessage("responseWindowCopyButtonAction", requestParams["copyAsMarkdown"])
+
         case "Retry":
             manageState("model", "remove")
             postWebMessage("responseWindowButtonsEnabled", false)
