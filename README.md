@@ -145,6 +145,7 @@ prompts := [{
     menuText: "&1 - Menu Text",
     systemPrompt: "Your system prompt",
     APIModel: "model-name",
+    copyAsMarkdown: true,
     isAutoPaste: true,
     isCustomPrompt: true,
     customPromptInitialMessage: "Initial message that will show on Custom Prompt window"
@@ -236,9 +237,13 @@ Since this app uses [OpenRouter.ai](https://openrouter.ai/) service, you get acc
 
 Your prompt will be processed by a meta-model and [routed to one of dozens of models](https://openrouter.ai/openrouter/auto), optimizing for the best possible output. To use it, just enter `openrouter/auto` in the `APIModel` field.
 
+#### copyAsMarkdown
+
+Setting `copyAsMarkdown: true` will enable the `Copy` button in the Response Window to copy content in Markdown format. If you prefer to copy the response as normal or HTML text, remove this setting.
+
 #### isAutoPaste
 
-Setting this to `isAutoPaste: true` will paste the response from the model directly in Markdown format. Remove it if you don't need Auto Paste functionality.
+Enabling `isAutoPaste: true` will automatically paste the model's response in Markdown format. Disable this feature if you do not require auto-paste functionality.
 
 > [!NOTE]  
 > The app will automatically disable the Auto Paste functionality if more than one model is set, and will show the Response Window instead.
