@@ -257,7 +257,7 @@ Enabling `isAutoPaste: true` will automatically paste the model's response in Ma
 > [!NOTE]  
 > The app will automatically disable the Auto Paste functionality if more than one model is set, and will show the Response Window instead.
 
-Difference between `isAutoPaste: true` and `Copy`:
+Default behavior of copied content between `isAutoPaste: true` and `Copy`:
 
 | Setting             | Format        |
 |----------------------|---------------|
