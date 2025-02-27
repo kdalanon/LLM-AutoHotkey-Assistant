@@ -160,8 +160,8 @@ customPromptSendButtonAction(*) {
 
     selectedPrompt := managePromptState("selectedPrompt", "get")
     processInitialRequest(selectedPrompt.promptName, selectedPrompt.menuText, selectedPrompt.systemPrompt,
-        selectedPrompt.APIModel, selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste,
-        customPromptInputWindow.EditControl.Value)
+        selectedPrompt.APIModel, selectedPrompt.HasProp("copyAsMarkdown") && selectedPrompt.copyAsMarkdown,
+        selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste, customPromptInputWindow.EditControl.Value)
 }
 
 ; ----------------------------------------------------
@@ -247,7 +247,8 @@ promptMenuHandler(index, *) {
         }
     } else {
         processInitialRequest(selectedPrompt.promptName, selectedPrompt.menuText, selectedPrompt.systemPrompt,
-            selectedPrompt.APIModel, selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste)
+            selectedPrompt.APIModel, selectedPrompt.HasProp("copyAsMarkdown") && selectedPrompt.copyAsMarkdown,
+            selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste)
     }
 }
 
@@ -279,7 +280,8 @@ managePromptState(component, action, data := {}) {
 ; Connect to LLM API and process request
 ; ----------------------------------------------------
 
-processInitialRequest(promptName, menuText, systemPrompt, APIModel, isAutoPaste, customPromptMessage := unset) {
+processInitialRequest(promptName, menuText, systemPrompt, APIModel, copyAsMarkdown, isAutoPaste, customPromptMessage :=
+    unset) {
 
     ; Handle the copied text
     clipboardBeforeCopy := A_Clipboard
@@ -358,6 +360,7 @@ processInitialRequest(promptName, menuText, systemPrompt, APIModel, isAutoPaste,
             cURLCommandFile: cURLCommandFile,
             cURLOutputFile: cURLOutputFile,
             providerName: providerName,
+            copyAsMarkdown: copyAsMarkdown,
             isAutoPaste: isAutoPaste,
             mainScripthWnd: A_ScriptHwnd,
             responseWindowTitle: promptName " [" singleAPIModel "]",
