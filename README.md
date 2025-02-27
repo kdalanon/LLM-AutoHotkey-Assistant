@@ -6,7 +6,9 @@
 
 An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai/) to seamlessly integrate Large Language Models into your daily workflow. Process texts with customizable prompts by pressing a hotkey and interact with multiple AI models simultaneously.
 
-[![Download](https://img.shields.io/github/v/release/kdalanon/LLM-AutoHotkey-Assistant?color=green&label=Download%20Here!&style=for-the-badge)](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/releases/latest)
+![Download](https://img.shields.io/github/v/release/kdalanon/LLM-AutoHotkey-Assistant?style=for-the-badge&color=blue&label=Download%20here!)
+
+![Total Downloads](https://img.shields.io/github/downloads/kdalanon/LLM-AutoHotkey-Assistant/total?style=for-the-badge&color=blue&label=Total%20Downloads)
 
 </div>
 
@@ -248,7 +250,9 @@ Your prompt will be processed by a meta-model and [routed to one of dozens of mo
 
 #### copyAsMarkdown
 
-Setting `copyAsMarkdown: true` will enable the `Copy` button in the Response Window to copy content in Markdown format. If you prefer to copy the response as normal text or HTML-formatted text, remove this setting.
+Setting `copyAsMarkdown: true` will enable the `Copy` button in the Response Window to copy content in Markdown format. This is especially useful for responses that need markdown content such as codes for programming.
+
+If you’d rather copy the response as plain text or HTML-formatted text (default behavior), simply remove this setting.
 
 #### isAutoPaste
 
