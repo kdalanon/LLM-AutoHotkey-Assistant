@@ -322,7 +322,6 @@ sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
     totalMessages := messages.Length
 
     ; Chat History - Iterate over each message in the 'messages' array
-    chatHistory := ""
     modelIndex := 1
     for index, message in messages {
         role := message.role
