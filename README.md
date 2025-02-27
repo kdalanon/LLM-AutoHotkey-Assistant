@@ -15,6 +15,10 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai
 > [!TIP] 
 > Want to ask questions on how to use this app? [Download this documentation](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/raw/refs/heads/main/README.md) and include it in your prompt when using your preferred AI chat app!
 
+> [!TIP]
+> Navigate through this page by clicking on the menu button at the upper-right corner.
+> ![image](https://github.com/user-attachments/assets/553c369a-630a-4c30-9fee-a73cfd5be0d8)
+
 ## 🔑 Key Features
 
 ### 1️⃣ Text Processing with Keyboard Hotkeys
