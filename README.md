@@ -245,7 +245,7 @@ The `APIModel: "google/gemini-2.0-flash-thinking-exp:free"` above `isCustomPromp
 This is also applicable to all the values inside the `prompts` array, such as `promptName`, `menuText`, `systemPrompt`, etc.
 
 > [!TIP]
-> Feeling overwhelmed by the number of models to choose from? Take a look at [OpenRouter.ai's ranking page](https://openrouter.ai/rankings) to discover the best models for each task. You can also find model benchmarks across various models at [LiveBench.ai](https://livebench.ai/#/).
+> Feeling overwhelmed by the number of models to choose from? Take a look at [OpenRouter.ai's ranking page](https://openrouter.ai/rankings) to discover the best models for each task. You can also find benchmarks across various models at [LiveBench.ai](https://livebench.ai/#/).
 
 ##### Auto Router
 
