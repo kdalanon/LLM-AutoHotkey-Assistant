@@ -337,7 +337,7 @@ See [OpenRouter's documentation](https://openrouter.ai/docs/api-reference/limits
 
 I'm uncertain if it will work, as I don't have a local AI setup on my machine to test it myself. However, it's highly likely to work if your local AI uses the same format as the `OpenAI SDK`. OpenRouter relies on the `OpenAI SDK` for request processing. I followed the [OpenRouter documentation](https://openrouter.ai/docs/quickstart) to configure the app to connect to their API.
 
-To understand how the app sends and receives requests through the OpenRouter API (Application Programming Interface), open the `Configs_and_Classes.ahk` script (`Menu` ➡ `Options` ➡ `Add API key`). If you successfully set up the app to connect to your local LLM, please let me know, and I will update this information.
+To understand how the app sends and receives requests through the OpenRouter API, open the `Configs_and_Classes.ahk` script (`Menu` ➡ `Options` ➡ `Add API key`). If you successfully set up the app to connect to your local LLM, please let me know, and I will update this information.
 
 ### Inquiries regarding OpenRouter's service
 
