@@ -8,7 +8,7 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai
 
 [![Download](https://img.shields.io/github/v/release/kdalanon/LLM-AutoHotkey-Assistant?style=for-the-badge&color=blue&label=Download%20here!)](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/releases/latest)
 
-[![Total Downloads](https://img.shields.io/github/downloads/kdalanon/LLM-AutoHotkey-Assistant/total?style=for-the-badge&color=blue&label=Total%20Downloads)]
+![Total Downloads](https://img.shields.io/github/downloads/kdalanon/LLM-AutoHotkey-Assistant/total?style=for-the-badge&color=blue&label=Total%20Downloads)]
 
 </div>
 
