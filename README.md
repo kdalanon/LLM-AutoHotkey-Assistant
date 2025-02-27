@@ -283,7 +283,7 @@ https://github.com/user-attachments/assets/d8f70927-2544-4c8e-a856-b4569d89263e
 > See [Splitting a long prompt into a series of multiple lines](#Splitting-a-long-prompt-into-a-series-of-multiple-lines) for more info.
 
 > [!IMPORTANT]  
-> Make sure to add a comma at the end of the line before the Auto Paste or Custom Prompt functionality:
+> Make sure to add a comma at the end of the line before the Auto Paste, Custom Prompt, or `copyAsMarkdown` functionality:
 
 ![image](https://github.com/user-attachments/assets/ca0ce9a1-77ac-40a9-9eef-17de255ca599)
 
