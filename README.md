@@ -146,7 +146,8 @@ prompts := [{
     systemPrompt: "Your system prompt",
     APIModel: "model-name",
     isAutoPaste: true,
-    isCustomPrompt: true
+    isCustomPrompt: true,
+    customPromptInitialMessage: "Initial message that will show on Custom Prompt window"
 }]
 ```
 
@@ -254,6 +255,18 @@ Difference between `isAutoPaste: true` and `Copy`:
 Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom prompts. Remove it if you don't need Custom Prompt functionality.
 
 ![image](https://github.com/user-attachments/assets/951a3133-bf21-44e6-8959-b98ab26bbbb1)
+
+##### customPromptInitialMessage
+
+An optional message that you can set to be displayed when the Custom Prompt window is shown.
+
+![image](https://github.com/user-attachments/assets/7aeb1a40-8bbd-4aae-bf44-fb417c5f366c)
+
+https://github.com/user-attachments/assets/d8f70927-2544-4c8e-a856-b4569d89263e
+
+> [!TIP]
+> You can also split a long message into a series of multiple lines.
+> See [Splitting a long prompt into a series of multiple lines](#Splitting-a-long-prompt-into-a-series-of-multiple-lines) for more info.
 
 > [!IMPORTANT]  
 > Make sure to add a comma at the end of the line before the Auto Paste or Custom Prompt functionality:
