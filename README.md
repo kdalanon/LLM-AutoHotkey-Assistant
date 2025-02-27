@@ -17,7 +17,7 @@ An AutoHotkey v2 application that utilizes [OpenRouter.ai](https://openrouter.ai
 
 > [!TIP]
 > Navigate through this page by clicking on the menu button at the upper-right corner.
-> ![image](https://github.com/user-attachments/assets/553c369a-630a-4c30-9fee-a73cfd5be0d8)
+> ![image](https://github.com/user-attachments/assets/eddb0216-f0db-4ecf-9231-81592d4aa454)
 
 ## 🔑 Key Features
 
