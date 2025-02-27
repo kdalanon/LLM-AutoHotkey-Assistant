@@ -28,7 +28,7 @@ class OpenRouter {
         this.APIKey := APIKey
     }
 
-    createJSONRequest(APIModel, systemPrompt, copiedText) {
+    createJSONRequest(APIModel, systemPrompt, userPrompt) {
         requestObj := {}
         requestObj.model := APIModel
         requestObj.messages := [{
@@ -36,7 +36,7 @@ class OpenRouter {
             content: systemPrompt
         }, {
             role: "user",
-            content: copiedText
+            content: userPrompt
         }]
         return jsongo.Stringify(requestObj)
     }
@@ -124,8 +124,8 @@ class InputWindow {
         }
     }
 
-    showInputWindow(*) {
-        this.EditControl.Value := ""
+    showInputWindow(message := "") {
+        this.EditControl.Value := message
         this.EditControl.Focus()
         this.guiObj.Show("AutoSize")
     }
