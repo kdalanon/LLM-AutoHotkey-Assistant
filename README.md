@@ -233,6 +233,15 @@ This will also enable the `Send message to all models` menu option after pressin
 
 Since this app uses [OpenRouter.ai](https://openrouter.ai/) service, you get access to the latest models as soon as they're available.
 
+> [!TIP]
+> You can control which API models are selected by adding a semicolon (`;`) to the beginning of any `APIModel` entry that you want to disable.
+
+![image](https://github.com/user-attachments/assets/bd48bfcf-fda8-42c3-9802-ea2b7001c4a1)
+
+The `APIModel: "google/gemini-2.0-flash-thinking-exp:free"` above `isCustomPrompt: true` is the one that will be enabled. All other lines will be disabled. This feature is helpful for managing multiple API model configurations and easily switching between them.
+
+This is also applicable to all the values inside the `prompts` array, such as `promptName`, `menuText`, `systemPrompt`, etc.
+
 ##### Auto Router
 
 Your prompt will be processed by a meta-model and [routed to one of dozens of models](https://openrouter.ai/openrouter/auto), optimizing for the best possible output. To use it, just enter `openrouter/auto` in the `APIModel` field.
