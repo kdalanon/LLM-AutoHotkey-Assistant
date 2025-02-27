@@ -36,39 +36,49 @@ function renderMarkdown(content, ChatHistoryText) {
   }
 }
 
-function responseWindowCopyButtonAction() {
+function responseWindowCopyButtonAction(copyAsMarkdown) {
   // Get the button element by its id
   var button = document.getElementById('copyButton');
-
-  // Get the 'content' element
-  var contentElement = document.getElementById('content');
-
-  // Create a temporary element to hold the formatted content
-  const tempElement = document.createElement('div');
-  tempElement.innerHTML = contentElement.innerHTML;
-
-  // Use the Clipboard API to write the HTML content to the clipboard
-  navigator.clipboard.write([
-    new ClipboardItem({
-      'text/html': new Blob([tempElement.innerHTML], { type: 'text/html' }),
-      'text/plain': new Blob([contentElement.innerText], { type: 'text/plain' })
-    })
-  ]).then(() => {
-    // Store the original button text
-    var originalText = button.innerHTML;
-
-    // Change button text to "Copied!" and disable the button
+  
+  // Store the original button text
+  var originalText = button.innerHTML;
+  
+  if (copyAsMarkdown) {
+    // If copyAsMarkdown is true, just update the button without copying
     button.innerHTML = 'Copied!';
     button.disabled = true;
-
+    
     // After 2 seconds, restore the original text and enable the button
     setTimeout(function () {
       button.innerHTML = originalText;
       button.disabled = false;
     }, 2000);
-  }).catch(err => {
-    console.error('Failed to copy text: ', err);
-  });
+  } else {
+    // Get the 'content' element
+    var contentElement = document.getElementById('content');
+
+    // Create a temporary element to hold the formatted content
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = contentElement.innerHTML;
+
+    // Use the Clipboard API to write the HTML content to the clipboard
+    navigator.clipboard.write([
+      new ClipboardItem({
+        'text/html': new Blob([tempElement.innerHTML], { type: 'text/html' }),
+        'text/plain': new Blob([contentElement.innerText], { type: 'text/plain' })
+      })
+    ]).then(() => {
+      // Change button text to "Copied!" and disable the button
+      button.innerHTML = 'Copied!';
+      button.disabled = true;
+
+      // After 2 seconds, restore the original text and enable the button
+      setTimeout(function () {
+        button.innerHTML = originalText;
+        button.disabled = false;
+      }, 2000);
+    });
+  }
 }
 
 // Enables or disables the buttons and resets the cursor
