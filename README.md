@@ -298,6 +298,10 @@ https://github.com/user-attachments/assets/d8f70927-2544-4c8e-a856-b4569d89263e
 
 ![image](https://github.com/user-attachments/assets/ca0ce9a1-77ac-40a9-9eef-17de255ca599)
 
+## 📣 Share prompts and settings
+
+Do you have prompts and settings you'd like to share? [Check here](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/discussions/7) to share your prompts!
+
 ## 🔒 Privacy policy
 
 The app does not collect logs, prompts, or copied text. It simply bundles up the conversation between you and your chosen API model and sends the request to [OpenRouter.ai](https://openrouter.ai/). See their privacy policy [here](https://openrouter.ai/privacy). Adjust your OpenRouter privacy settings [here](https://openrouter.ai/settings/privacy).
