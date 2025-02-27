@@ -54,7 +54,8 @@ prompts := [{
     menuText: "&8 - Deep thinking multi-model custom prompt",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
     APIModel: "perplexity/r1-1776, openai/o3-mini-high, anthropic/claude-3.7-sonnet:thinking, google/gemini-2.0-flash-thinking-exp:free",
-    isCustomPrompt: true
+    isCustomPrompt: true,
+    customPromptInitialMessage: "This is a message template."
 }, {
     promptName: "Deep thinking multi-model web search custom prompt",
     menuText: "&9 - Deep thinking multi-model custom prompt web search",
@@ -84,9 +85,7 @@ prompts := [{
 ; ----------------------------------------------------
 
 `:: hotkeyFunctions("showPromptMenu")
-
-~^s:: hotkeyFunctions("saveScriptAndReload")
-
+~^s:: WinActive("LLM AutoHotkey Assistant.ahk") ? Reload() : ""
 #SuspendExempt
 CapsLock & `:: hotkeyFunctions("suspendHotkey")
 
@@ -109,7 +108,6 @@ hotkeyFunctions(action) {
             optionsMenu.Add("&Add API key", (*) => Run("Notepad " A_ScriptDir "\lib\Configs_and_Classes.ahk"))
             promptMenu.Show()
 
-        case "saveScriptAndReload": WinActive("LLM AutoHotkey Assistant.ahk") ? Reload() : ""
         case "suspendHotkey":
             KeyWait "CapsLock", "L"
             SetCapsLockState "Off"
@@ -232,16 +230,6 @@ toggleSuspend(*) {
 }
 
 ; ----------------------------------------------------
-; Generate prompt menu dynamically by using PromptMenuHandler
-; to pass the index to the handler function
-; ----------------------------------------------------
-
-; promptMenu := Menu()
-; for index, prompt in managePromptState("prompts", "get") {
-;     promptMenu.Add(prompt.menuText, promptMenuHandler.Bind(index))
-; }
-
-; ----------------------------------------------------
 ; Prompt menu handler function
 ; ----------------------------------------------------
 
@@ -252,7 +240,11 @@ promptMenuHandler(index, *) {
 
         ; Save the prompt for future reference in customPromptSendButtonAction(*)
         managePromptState("selectedPrompt", "set", selectedPrompt)
-        customPromptInputWindow.showInputWindow()
+        customPromptInputWindow.showInputWindow(selectedPrompt.HasProp("customPromptInitialMessage")
+            ? selectedPrompt.customPromptInitialMessage : unset)
+        if selectedPrompt.HasProp("customPromptInitialMessage") {
+            ControlSend("^{End}", "Edit1", "ahk_id " customPromptInputWindow.guiObj.hWnd)
+        }
     } else {
         processInitialRequest(selectedPrompt.promptName, selectedPrompt.menuText, selectedPrompt.systemPrompt,
             selectedPrompt.APIModel, selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste)
@@ -296,16 +288,16 @@ processInitialRequest(promptName, menuText, systemPrompt, APIModel, isAutoPaste,
 
     if !ClipWait(1) {
         if IsSet(customPromptMessage) {
-            copiedText := customPromptMessage
+            userPrompt := customPromptMessage
         } else {
             manageCursorAndToolTip("Reset")
             MsgBox "The attempt to copy text onto the clipboard failed.", "No text copied", "IconX"
             return
         }
     } else if IsSet(customPromptMessage) {
-        copiedText := customPromptMessage "`n`n" A_Clipboard
+        userPrompt := customPromptMessage "`n`n" A_Clipboard
     } else {
-        copiedText := A_Clipboard
+        userPrompt := A_Clipboard
     }
 
     A_Clipboard := clipboardBeforeCopy
@@ -328,7 +320,7 @@ processInitialRequest(promptName, menuText, systemPrompt, APIModel, isAutoPaste,
         uniqueID := A_TickCount
 
         ; Create the chatHistoryJSONRequest
-        chatHistoryJSONRequest := router.createJSONRequest(singleAPIModel, systemPrompt, copiedText)
+        chatHistoryJSONRequest := router.createJSONRequest(singleAPIModel, systemPrompt, userPrompt)
 
         ; Get text before forward slash as providerName
         providerName := SubStr(singleAPIModel, 1, InStr(singleAPIModel, "/") - 1)
