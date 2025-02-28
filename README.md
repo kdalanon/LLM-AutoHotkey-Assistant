@@ -103,7 +103,10 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ![image](https://github.com/user-attachments/assets/2aabef64-9695-410e-8f33-0058163ebad3)
 
-3. Paste your [OpenRouter.ai API key](https://openrouter.ai/settings/keys) inside the quotes. Save the file afterwards, then press the `backtick` hotkey again and select `Options` ➡ `Reload script` 
+3. Enter your [OpenRouter.ai API key](https://openrouter.ai/settings/keys) within the quotation marks. Then, press `CTRL + S` to save the file automatically and reload the application.
+
+> [!NOTE]
+> To ensure the API key is automatically applied and the application reloads, use the keyboard shortcut `CTRL + S` to save.  Saving via `File` ➡ `Save` will not trigger the automatic reload.
 
 ![image](https://github.com/user-attachments/assets/13b2a4e8-afcb-4929-9055-5850a0ad7566)
 
@@ -153,7 +156,8 @@ prompts := [{
     copyAsMarkdown: true,
     isAutoPaste: true,
     isCustomPrompt: true,
-    customPromptInitialMessage: "Initial message that will show on Custom Prompt window"
+    customPromptInitialMessage: "Initial message that will show on Custom Prompt window",
+    tags: ["&tag1", "&tag2"]
 }]
 ```
 
@@ -297,6 +301,36 @@ https://github.com/user-attachments/assets/d8f70927-2544-4c8e-a856-b4569d89263e
 
 ![image](https://github.com/user-attachments/assets/ca0ce9a1-77ac-40a9-9eef-17de255ca599)
 
+#### tags
+
+Enabling this feature will sort and group the prompts by their tags.
+
+For example, this will show `&1 - Gemini, GPT-4o, Claude` to both `&Custom prompts` and `&Multi-models` sub menus:
+
+```autohotkey
+prompts := [{
+    promptName: "Multi-model custom prompt",
+    menuText: "&1 - Gemini, GPT-4o, Claude",
+    systemPrompt: "System prompt",
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free, openai/gpt-4o, anthropic/claude-3.7-sonnet",
+    isCustomPrompt: true,
+    customPromptInitialMessage: "How can I leverage the power of AI in my everyday tasks?",
+    tags: ["&Custom prompts", "&Multi-models"]
+}, {
+    promptName: "Auto-paste custom prompt",
+    menuText: "&5 - Auto-paste custom prompt",
+    systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask.",
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free",
+    isCustomPrompt: true,
+    isAutoPaste: true,
+    tags: ["&Custom prompts", "&Auto paste"]
+}]
+```
+
+![image](https://github.com/user-attachments/assets/f6629513-35c4-4469-886d-480363c89214)
+
+![image](https://github.com/user-attachments/assets/8c931782-0937-4a10-a26a-2fe7f22272aa)
+
 ## 📣 Share prompts and settings
 
 Do you have prompts and settings you'd like to share? [Check here](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/discussions/7) to share your prompts!
@@ -365,7 +399,7 @@ See [OpenRouter's documentation](https://openrouter.ai/docs/api-reference/limits
 
 I'm uncertain if it will work, as I don't have a local AI setup on my machine to test it myself. However, it's highly likely to work if your local AI uses the same format as the `OpenAI SDK`. OpenRouter relies on the `OpenAI SDK` for request processing. I followed the [OpenRouter documentation](https://openrouter.ai/docs/quickstart) to configure the app to connect to their API.
 
-To understand how the app sends and receives requests through the OpenRouter API, open the `Configs_and_Classes.ahk` script (`Menu` ➡ `Options` ➡ `Add API key`). If you successfully set up the app to connect to your local LLM, please let me know, and I will update this information.
+To understand how the app sends and receives requests through the OpenRouter API, open the `Config.ahk` file via `Menu` ➡ `Options` ➡ `Add API key`. If you successfully set up the app to connect to your local LLM, please let me know, and I will update this information.
 
 ### Inquiries regarding OpenRouter's service
 
