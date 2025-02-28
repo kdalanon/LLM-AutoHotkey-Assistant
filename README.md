@@ -103,7 +103,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ![image](https://github.com/user-attachments/assets/2aabef64-9695-410e-8f33-0058163ebad3)
 
-3. Paste your [OpenRouter.ai API key](https://openrouter.ai/settings/keys) inside the quotes. Save the file afterwards.
+3. Paste your [OpenRouter.ai API key](https://openrouter.ai/settings/keys) inside the quotes. Save the file afterwards, then press the `backtick` hotkey again and select `Options` ➡ `Reload script` 
 
 ![image](https://github.com/user-attachments/assets/13b2a4e8-afcb-4929-9055-5850a0ad7566)
 
