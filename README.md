@@ -325,10 +325,10 @@ The app does not collect logs, prompts, or copied text. It simply bundles up the
 
 ![image](https://github.com/user-attachments/assets/16daecd5-4b46-46ae-b375-951d8c1857d5)
 
-These files will be kept open while the Response Window is active, and will be deleted after performing the following actions:
+These files will be created after you select a prompt and will be deleted when any of the following actions are performed:
 
 - Pasting the response when `isAutoPaste: true` is set
-- Pressing `ESC` key *after* processing the first request but *before* getting the model's response (e.g. Response Window is not opened for the first time)
+- Pressing the `ESC` key _after_ selecting a prompt but _before_ receiving the model's response (for example, if the Response Window has not yet opened)
 - Closing the Response Window
 
 ## 💬 Frequently-asked questions
