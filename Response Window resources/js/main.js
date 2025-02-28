@@ -4,11 +4,21 @@ window.chrome.webview.addEventListener('message', handleWebMessage);
 var md = window.markdownit({
   html: true,         // Enable HTML tags in source
   linkify: true,      // Autoconvert URL-like text to links
-  typographer: true   // Enable smartypants and other sweet transforms
+  typographer: true,  // Enable smartypants and other sweet transforms
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return '<pre class="hljs"><code>' +
+          hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
+          '</code></pre>';
+      } catch (__) { }
+    }
+    return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+  }
 })
   .use(window.texmath, {  // Use texmath plugin for mathematical expressions
     engine: window.katex,
-    delimiters: 'dollars', // Use $...$ for inline math, $$...$$ for display math
+    delimiters: 'dollars',
     katexOptions: { macros: { "\\RR": "\\mathbb{R}" } }
   });
 
@@ -39,15 +49,15 @@ function renderMarkdown(content, ChatHistoryText) {
 function responseWindowCopyButtonAction(copyAsMarkdown) {
   // Get the button element by its id
   var button = document.getElementById('copyButton');
-  
+
   // Store the original button text
   var originalText = button.innerHTML;
-  
+
   if (copyAsMarkdown) {
     // If copyAsMarkdown is true, just update the button without copying
     button.innerHTML = 'Copied!';
     button.disabled = true;
-    
+
     // After 2 seconds, restore the original text and enable the button
     setTimeout(function () {
       button.innerHTML = originalText;
