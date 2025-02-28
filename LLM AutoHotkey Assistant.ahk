@@ -1,4 +1,4 @@
-#Include <Configs_and_Classes>
+#Include <Config>
 #SingleInstance
 
 ; ----------------------------------------------------
@@ -7,58 +7,67 @@
 
 prompts := [{
     promptName: "Multi-model custom prompt",
-    menuText: "&0 - Multi-model custom prompt",
+    menuText: "&1 - Gemini, GPT-4o, Claude",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free, openai/gpt-4o, google/gemini-exp-1206:free, anthropic/claude-3.7-sonnet",
-    isCustomPrompt: true
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free, openai/gpt-4o, anthropic/claude-3.7-sonnet",
+    isCustomPrompt: true,
+    customPromptInitialMessage: "How can I leverage the power of AI in my everyday tasks?",
+    tags: ["&Custom prompts", "&Multi-models"]
 }, {
     promptName: "Rephrase",
     menuText: "&1 - Rephrase",
     systemPrompt: "Your task is to rephrase the following text or paragraph in English to ensure clarity, conciseness, and a natural flow. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The revision should preserve the tone, style, and formatting of the original text. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free",
+    tags: ["&Text manipulation"]
 }, {
     promptName: "Summarize",
     menuText: "&2 - Summarize",
     systemPrompt: "Your task is to summarize the following article in English to ensure clarity, conciseness, and a natural flow. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The summary should preserve the tone, style, and formatting of the original text, and should be in its original language. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free",
+    tags: ["&Text manipulation", "&Articles"]
 }, {
     promptName: "Translate to English",
     menuText: "&3 - Translate to English",
     systemPrompt: "Generate an English translation for the following text or paragraph, ensuring the translation accurately conveys the intended meaning or idea without excessive deviation. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The translation should preserve the tone, style, and formatting of the original text. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free",
+    tags: ["&Text manipulation", "Language"]
 }, {
     promptName: "Define",
     menuText: "&4 - Define",
     systemPrompt: "Provide and explain the definition of the following, providing analogies if needed. In addition, answer follow-up questions if asked:",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free",
+    tags: ["&Text manipulation", "Learning"]
 }, {
     promptName: "Auto-paste custom prompt",
     menuText: "&5 - Auto-paste custom prompt",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask.",
     APIModel: "google/gemini-2.0-flash-thinking-exp:free",
     isCustomPrompt: true,
-    isAutoPaste: true
+    isAutoPaste: true,
+    tags: ["&Custom prompts", "&Auto paste"]
 }, {
     promptName: "Web search",
     menuText: "&6 - Web search",
     systemPrompt: "Provide the latest information and answer follow-up questions that I will ask. My first query is the following:",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free:online"
+    APIModel: "google/gemini-2.0-flash-thinking-exp:free:online",
+    tags: ["&Web search", "Learning"]
 }, {
     promptName: "Web search custom prompt",
     menuText: "&7 - Web search custom prompt",
     systemPrompt: "Provide the latest information and answer follow-up questions that I will ask. My first query is the following:",
     APIModel: "google/gemini-2.0-flash-thinking-exp:free:online",
-    isCustomPrompt: true
+    isCustomPrompt: true,
+    tags: ["&Web search", "&Custom prompts"]
 }, {
     promptName: "Deep thinking multi-model custom prompt",
-    menuText: "&8 - Deep thinking multi-model custom prompt",
+    menuText: "&1 - Deep thinking multi-model custom prompt",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
     APIModel: "perplexity/r1-1776, openai/o3-mini-high, anthropic/claude-3.7-sonnet:thinking, google/gemini-2.0-flash-thinking-exp:free",
     isCustomPrompt: true,
     customPromptInitialMessage: "This is a message template."
 }, {
     promptName: "Deep thinking multi-model web search custom prompt",
-    menuText: "&9 - Deep thinking multi-model custom prompt web search",
+    menuText: "&2 - Deep thinking multi-model custom prompt web search",
     systemPrompt: "Provide information about the following. In addition, answer follow-up questions that I will ask or follow any instructions that I may provide:",
     APIModel: "perplexity/r1-1776:online, openai/o3-mini-high:online, anthropic/claude-3.7-sonnet:thinking:online, google/gemini-2.0-flash-thinking-exp:free:online",
     isCustomPrompt: true
@@ -85,21 +94,50 @@ prompts := [{
 ; ----------------------------------------------------
 
 `:: hotkeyFunctions("showPromptMenu")
-~^s:: WinActive("LLM AutoHotkey Assistant.ahk") ? Reload() : ""
+~^s:: WinActive("LLM AutoHotkey Assistant.ahk") || WinActive("Configs_and_Classes.ahk") ? hotkeyFunctions(
+    "reloadScript") : ""
 #SuspendExempt
 CapsLock & `:: hotkeyFunctions("suspendHotkey")
-
 hotkeyFunctions(action) {
+    static scriptInitialModifiedTime := FileGetTime(A_ScriptFullPath, "M")
+
     switch action {
         case "showPromptMenu":
             promptMenu := Menu()
+            tagsMap := Map()
+
             if (getActiveModels().Count > 1) {
-                promptMenu.Add("&Send message to all models", (*) => sendToAllModelsInputWindow.showInputWindow())
+                promptMenu.Add("&Send message to all models", (*) => sendToAllModelsInputWindow.showInputWindow(, ,
+                    "ahk_id " sendToAllModelsInputWindow.guiObj.hWnd))
                 promptMenu.Add()
             }
 
             for index, prompt in managePromptState("prompts", "get") {
-                promptMenu.Add(prompt.menuText, promptMenuHandler.Bind(index))
+                if !IsObject(prompt)
+                    continue
+
+                ; Check if prompt has tags
+                hasTags := prompt.HasProp("tags") && prompt.tags && prompt.tags.Length > 0
+
+                ; If no tags, add directly to menu and continue
+                if !hasTags {
+                    promptMenu.Add(prompt.menuText, promptMenuHandler.Bind(index))
+                    continue
+                }
+
+                ; Process tags
+                for tag in prompt.tags {
+                    normalizedTag := StrLower(Trim(tag))
+
+                    ; Create tag menu if doesn't exist
+                    if !tagsMap.Has(normalizedTag) {
+                        tagsMap[normalizedTag] := { menu: Menu(), displayName: tag }
+                        promptMenu.Add(tag, tagsMap[normalizedTag].menu)
+                    }
+
+                    ; Add prompt to tag menu
+                    tagsMap[normalizedTag].menu.Add(prompt.menuText, promptMenuHandler.Bind(index))
+                }
             }
 
             promptMenu.Add()
@@ -112,13 +150,25 @@ hotkeyFunctions(action) {
             KeyWait "CapsLock", "L"
             SetCapsLockState "Off"
             toggleSuspend(A_IsSuspended)
+
+        case "reloadScript":
+            ; Small delay to ensure file operations are complete
+            Sleep 100
+            scriptCurrentModifiedTime := FileGetTime(A_ScriptFullPath, "M")
+
+            if WinActive("Configs_and_Classes.ahk") || (scriptCurrentModifiedTime > scriptInitialModifiedTime) {
+                if (getActiveModels().Count > 0) {
+                    MsgBox("Script will automatically reload once all Response Windows are closed.", "LLM AutoHotkey Assistant", 64)
+                    responseWindowState("", "", "reloadScript", "")
+                } else {
+                    Reload()
+                }
+            }
     }
 }
-
 ; ----------------------------------------------------
 ; Script tray menu
 ; ----------------------------------------------------
-
 trayMenuItems := [{
     menuText: "&Reload Script",
     function: (*) => Reload()
@@ -126,33 +176,24 @@ trayMenuItems := [{
     menuText: "E&xit",
     function: (*) => ExitApp()
 }]
-
 ; ----------------------------------------------------
 ; Generate tray menu dynamically
 ; ----------------------------------------------------
-
 TraySetIcon("icons\IconOn.ico")
 A_TrayMenu.Delete()
-
 for index, item in trayMenuItems {
     A_TrayMenu.Add(item.menuText, item.function)
 }
-
 A_IconTip := "LLM AutoHotkey Assistant"
-
 ; ----------------------------------------------------
 ; Create new instance of OpenRouter class
 ; ----------------------------------------------------
-
 router := OpenRouter(APIKey)
-
 ; ----------------------------------------------------
 ; Create Custom Prompt Input Window
 ; ----------------------------------------------------
-
 customPromptInputWindow := InputWindow("Custom prompt")
 customPromptInputWindow.sendButtonAction(customPromptSendButtonAction)
-
 customPromptSendButtonAction(*) {
     if !customPromptInputWindow.validateInputAndHide() {
         return
@@ -161,16 +202,15 @@ customPromptSendButtonAction(*) {
     selectedPrompt := managePromptState("selectedPrompt", "get")
     processInitialRequest(selectedPrompt.promptName, selectedPrompt.menuText, selectedPrompt.systemPrompt,
         selectedPrompt.APIModel, selectedPrompt.HasProp("copyAsMarkdown") && selectedPrompt.copyAsMarkdown,
-        selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste, customPromptInputWindow.EditControl.Value)
+        selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste, customPromptInputWindow.EditControl.Value
+    )
+    customPromptInputWindow.EditControl.Value := ""
 }
-
 ; ----------------------------------------------------
 ; Create Send message to all models Window
 ; ----------------------------------------------------
-
 sendToAllModelsInputWindow := InputWindow("Send message to all models")
 sendToAllModelsInputWindow.sendButtonAction(sendToAllModelsSendButtonAction)
-
 sendToAllModelsSendButtonAction(*) {
     if !sendToAllModelsInputWindow.validateInputAndHide() {
         return
@@ -194,14 +234,13 @@ sendToAllModelsSendButtonAction(*) {
 
         ; Notify the Response Window to re-read the JSON file and call sendRequestToLLM() again
         responseWindowhWnd := modelData.hWnd
-        CustomMessages.notifyResponseWindowState(CustomMessages.WM_SEND_TO_ALL_MODELS, uniqueID, responseWindowhWnd)
+        CustomMessages.notifyResponseWindowState(CustomMessages.WM_SEND_TO_ALL_MODELS, uniqueID, responseWindowhWnd
+        )
     }
 }
-
 ; ----------------------------------------------------
 ; Initialize Suspend GUI
 ; ----------------------------------------------------
-
 scriptSuspendStatus := Gui()
 scriptSuspendStatus.SetFont("s10", "Cambria")
 scriptSuspendStatus.Add("Text", "cBlack Center", "LLM AutoHotkey Assistant Suspended")
@@ -209,11 +248,9 @@ scriptSuspendStatus.BackColor := "0xFFDF00"
 scriptSuspendStatus.Opt("-Caption +Owner -SysMenu +AlwaysOnTop")
 scriptSuspendStatusWidth := ""
 scriptSuspendStatus.GetPos(, , &scriptSuspendStatusWidth)
-
 ; ----------------------------------------------------
 ; Toggle Suspend
 ; ----------------------------------------------------
-
 toggleSuspend(*) {
     Suspend -1
     if (A_IsSuspended) {
@@ -228,11 +265,9 @@ toggleSuspend(*) {
         scriptSuspendStatus.Hide()
     }
 }
-
 ; ----------------------------------------------------
 ; Prompt menu handler function
 ; ----------------------------------------------------
-
 promptMenuHandler(index, *) {
     promptsList := managePromptState("prompts", "get")
     selectedPrompt := promptsList[index]
@@ -241,21 +276,17 @@ promptMenuHandler(index, *) {
         ; Save the prompt for future reference in customPromptSendButtonAction(*)
         managePromptState("selectedPrompt", "set", selectedPrompt)
         customPromptInputWindow.showInputWindow(selectedPrompt.HasProp("customPromptInitialMessage")
-            ? selectedPrompt.customPromptInitialMessage : unset)
-        if selectedPrompt.HasProp("customPromptInitialMessage") {
-            ControlSend("^{End}", "Edit1", "ahk_id " customPromptInputWindow.guiObj.hWnd)
-        }
+            ? selectedPrompt.customPromptInitialMessage : unset, selectedPrompt.promptName, "ahk_id " customPromptInputWindow
+        .guiObj.hWnd)
     } else {
         processInitialRequest(selectedPrompt.promptName, selectedPrompt.menuText, selectedPrompt.systemPrompt,
             selectedPrompt.APIModel, selectedPrompt.HasProp("copyAsMarkdown") && selectedPrompt.copyAsMarkdown,
             selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste)
     }
 }
-
 ; ----------------------------------------------------
 ; Manage prompt states
 ; ----------------------------------------------------
-
 managePromptState(component, action, data := {}) {
     static state := {
         prompts: prompts,
@@ -275,12 +306,11 @@ managePromptState(component, action, data := {}) {
             }
     }
 }
-
 ; ----------------------------------------------------
 ; Connect to LLM API and process request
 ; ----------------------------------------------------
-
-processInitialRequest(promptName, menuText, systemPrompt, APIModel, copyAsMarkdown, isAutoPaste, customPromptMessage :=
+processInitialRequest(promptName, menuText, systemPrompt, APIModel, copyAsMarkdown, isAutoPaste,
+    customPromptMessage :=
     unset) {
 
     ; Handle the copied text
@@ -381,25 +411,21 @@ processInitialRequest(promptName, menuText, systemPrompt, APIModel, copyAsMarkdo
         Run(A_ScriptDir "\Response Window.ahk " "`"" dataObjToJSONStrFile)
     }
 }
-
 ; ----------------------------------------------------
 ; Tracks active models
 ; ----------------------------------------------------
-
 getActiveModels() {
     static activeModels := Map()
     return activeModels
 }
-
 ; ----------------------------------------------------
 ; Custom messages and handlers for detecting
 ; Response Window states
 ; ----------------------------------------------------
-
 CustomMessages.registerHandlers("mainScript", responseWindowState)
-
 responseWindowState(uniqueID, responseWindowhWnd, state, mainScripthWnd) {
     static responseWindowLoadingCount := 0
+    static reloadScript := false
 
     switch state {
         case CustomMessages.WM_RESPONSE_WINDOW_OPENED:
@@ -411,6 +437,9 @@ responseWindowState(uniqueID, responseWindowhWnd, state, mainScripthWnd) {
                 manageCursorAndToolTip("Update")
             }
 
+            if (getActiveModels().Count = 0) && reloadScript {
+                Reload()
+            }
         case CustomMessages.WM_RESPONSE_WINDOW_LOADING_START:
             getActiveModels()[uniqueID].isLoading := true
             responseWindowLoadingCount++
@@ -430,13 +459,13 @@ responseWindowState(uniqueID, responseWindowhWnd, state, mainScripthWnd) {
                     manageCursorAndToolTip("Update")
                 }
             }
+
+        case "reloadScript": reloadScript := true
     }
 }
-
 ; ----------------------------------------------------
 ; Cursor and Tooltip management
 ; ----------------------------------------------------
-
 manageCursorAndToolTip(action) {
     switch action {
         case "Update":
