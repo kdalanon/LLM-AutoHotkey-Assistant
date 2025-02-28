@@ -1,4 +1,4 @@
-#Include <Configs_and_Classes>
+#Include <Config>
 #SingleInstance Off
 #NoTrayIcon
 
@@ -6,9 +6,7 @@
 ; Read data from main script and start loading cursor
 ; ----------------------------------------------------
 
-responseWindowDataFile := A_Args[1]
-JSONStr := FileOpen(responseWindowDataFile, "r", "UTF-8").Read()
-requestParams := jsongo.Parse(JSONStr)
+requestParams := jsongo.Parse(FileOpen(A_Args[1], "r", "UTF-8").Read())
 startLoadingCursor(true)
 
 ; ----------------------------------------------------
@@ -219,6 +217,7 @@ responseWindowSendToAllModels(uniqueID, lParam, msg, responseWindowhWnd) {
 ; ----------------------------------------------------
 
 ~Esc:: cancelProcessOrCloseResponseWindow()
+~^w:: WinActive(responseWindow.hWnd) ? buttonClickAction("Close") : ""
 cancelProcessOrCloseResponseWindow() {
     switch {
         case WinExist(responseWindow.hWnd) && !(WinActive(responseWindow.hWnd)) && ProcessExist(manageState("cURL",
@@ -303,7 +302,7 @@ sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
             . "`n`n---`n`n"
         errorCodes := {
             400: "Invalid request sent to the API. Please double-check your input parameters and ensure they are correctly formatted.",
-            401: "Authentication failed. Your API key or session might be invalid or expired. Please verify your credentials and try again.",
+            401: "Authentication failed. Your API key or session might be invalid or expired. Check your keys [here](https://openrouter.ai/settings/keys), re-add it to the app, and try again.",
             402: "Insufficient funds. Click [here](https://openrouter.ai/credits) to check your available credits.",
             403: "Content flagged as inappropriate. Your input triggered content moderation and was rejected. Please revise your request and try again with different content.",
             408: "Request timed out. The API request took too long to process. This might be due to network issues or server overload.",
@@ -442,7 +441,7 @@ deleteTempFiles() {
     FileDelete(requestParams["chatHistoryJSONRequestFile"])
     FileDelete(requestParams["cURLCommandFile"])
     FileExist(requestParams["cURLOutputFile"]) ? FileDelete(requestParams["cURLOutputFile"]) : ""
-    FileDelete(responseWindowDataFile)
+    FileDelete(A_Args[1])
 }
 
 ; ----------------------------------------------------
