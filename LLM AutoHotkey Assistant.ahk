@@ -94,7 +94,7 @@ prompts := [{
 ; ----------------------------------------------------
 
 `:: hotkeyFunctions("showPromptMenu")
-~^s:: WinActive("LLM AutoHotkey Assistant.ahk") || WinActive("Configs_and_Classes.ahk") ? hotkeyFunctions(
+~^s:: WinActive("LLM AutoHotkey Assistant.ahk") || WinActive("Config.ahk") ? hotkeyFunctions(
     "reloadScript") : ""
 #SuspendExempt
 CapsLock & `:: hotkeyFunctions("suspendHotkey")
@@ -143,7 +143,7 @@ hotkeyFunctions(action) {
             promptMenu.Add()
             promptMenu.Add("&Options", optionsMenu := Menu())
             optionsMenu.Add("&Edit prompts", (*) => Run("Notepad " A_ScriptFullPath))
-            optionsMenu.Add("&Add API key", (*) => Run("Notepad " A_ScriptDir "\lib\Configs_and_Classes.ahk"))
+            optionsMenu.Add("&Add API key", (*) => Run("Notepad " A_ScriptDir "\lib\Config.ahk"))
             promptMenu.Show()
 
         case "suspendHotkey":
@@ -156,7 +156,7 @@ hotkeyFunctions(action) {
             Sleep 100
             scriptCurrentModifiedTime := FileGetTime(A_ScriptFullPath, "M")
 
-            if WinActive("Configs_and_Classes.ahk") || (scriptCurrentModifiedTime > scriptInitialModifiedTime) {
+            if WinActive("Config.ahk") || (scriptCurrentModifiedTime > scriptInitialModifiedTime) {
                 if (getActiveModels().Count > 0) {
                     MsgBox("Script will automatically reload once all Response Windows are closed.", "LLM AutoHotkey Assistant", 64)
                     responseWindowState("", "", "reloadScript", "")
