@@ -134,6 +134,7 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 - `Ctrl + S` Will automatically save and reload the script when editing in Notepad (or any other editing tool that matches `LLM AutoHotkey Assistant.ahk` title window)
 - `CapsLock + backtick` Suspend/resume hotkeys
 - `ESC` Cancel ongoing requests
+- `CTRL + W` Close response window
 
 ### Running the script at startup
 
