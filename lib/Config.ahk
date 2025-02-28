@@ -124,10 +124,17 @@ class InputWindow {
         }
     }
 
-    showInputWindow(message := "") {
+    showInputWindow(message := "", title := unset, windowID := unset) {
         this.EditControl.Value := message
+        if IsSet(title) {
+            this.guiObj.Title := title
+        }
+
         this.EditControl.Focus()
         this.guiObj.Show("AutoSize")
+        if IsSet(windowID) {
+            ControlSend("^{End}", "Edit1", windowID)
+        }
     }
 
     validateInputAndHide(*) {
@@ -145,6 +152,7 @@ class InputWindow {
 
     closeButtonAction(*) {
         if (MsgBox("Close " this.guiObj.Title " window?", this.guiObj.Title, 308) = "Yes") {
+            this.EditControl.Value := ""
             this.guiObj.Hide
         } else {
             return true
