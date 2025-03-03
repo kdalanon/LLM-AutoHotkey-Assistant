@@ -209,7 +209,7 @@ prompts := [{
 
 ![image](https://github.com/user-attachments/assets/8f9b16a4-8e07-4618-9b6c-ea9122766f3f)
 
-#### APIModel
+#### APIModels
 
 The API model that will be used to process the prompt.
 
