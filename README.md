@@ -177,15 +177,15 @@ prompts := [{
 
 #### `promptName`
 
-The name of the prompt. This will also be shown in the tooltip, `Send message to`, `Activate`, `Minimize`, and `Close` menus. In addition, this will also show in the Response Window title with the chosen API model.
+The name of the prompt. This will also be shown in the tooltip, `Send message to`, `Activate`, `Minimize`, and `Close` menus. In addition, this will also show in the Response Window title together with the chosen API model.
 
-![image](https://github.com/user-attachments/assets/5bb775b0-3309-4395-9ea7-7075da490107)
+![image](https://github.com/user-attachments/assets/4d4385b4-4abd-4c0d-8922-ab046cc38f38)
 
-![image](https://github.com/user-attachments/assets/0f8de4db-c93d-439e-b622-1c6ee3de89be)
+![image](https://github.com/user-attachments/assets/a06b87b6-2468-4166-a17f-a0bad27d9bb7)
 
-![image](https://github.com/user-attachments/assets/5fc8771d-4867-4204-91c8-93fc940be222)
+![image](https://github.com/user-attachments/assets/f521d9b0-24cd-46da-9b73-2fe6fb8ec4f6)
 
-![image](https://github.com/user-attachments/assets/af1c530c-7354-43f7-a62a-192d6d023e24)
+![image](https://github.com/user-attachments/assets/cea6810f-1408-4d49-8a53-18d8bd334c46)
 
 ### `menuText`
 
