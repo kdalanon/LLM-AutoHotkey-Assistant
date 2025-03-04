@@ -99,18 +99,18 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 ### Set up
 
 1. Run the `LLM AutoHotkey Assistant.ahk` script and press the `backtick` hotkey.
-2. Select `Options` ➡ `Add API Key`
+2. Select `Options` ➡ `Edit prompts`
 
-![image](https://github.com/user-attachments/assets/2aabef64-9695-410e-8f33-0058163ebad3)
+![image](https://github.com/user-attachments/assets/93b4b345-6651-4693-82b4-0edd728ff076)
 
 3. Enter your [OpenRouter.ai API key](https://openrouter.ai/settings/keys) within the quotation marks. Then, press `CTRL + S` to save the file automatically and reload the application.
 
 > [!NOTE]
 > To ensure the API key is automatically applied and the application reloads, use the keyboard shortcut `CTRL + S` to save.  Saving via `File` ➡ `Save` will not trigger the automatic reload.
 
-![image](https://github.com/user-attachments/assets/13b2a4e8-afcb-4929-9055-5850a0ad7566)
+![image](https://github.com/user-attachments/assets/6622d386-d73b-40bd-9fb5-7a5a429133a3)
 
-4. You can now use the app! If you want to further enhance your experience and customize your prompts, press the `backtick` hotkey and select `Options` ➡ `Edit prompts`. See [Editing prompts](#editing-prompts) for more info.
+4. You can now use the app! If you want to further enhance your experience and customize your prompts, press the `backtick` hotkey and select `Options` ➡ `Edit prompts` again. See [Editing prompts](#editing-prompts) for more info.
 
 > [!NOTE]
 > The app icon will appear in your system tray and will indicate that the script is running in the background.
@@ -130,19 +130,31 @@ https://github.com/user-attachments/assets/f960a7ef-9a6c-4217-8f86-44acfcea9122
 
 ### Hotkeys
 
-- `Backtick` Show prompt menu
-- `Ctrl + S` Will automatically save and reload the script when editing in Notepad (or any other editing tool that matches `LLM AutoHotkey Assistant.ahk` title window)
-- `CapsLock + backtick` Suspend/resume hotkeys
-- `ESC` Cancel ongoing requests
-- `CTRL + W` Close response window
+- `Backtick`: Show prompt menu
+- `Ctrl + S`: Will automatically save and reload the script when editing in Notepad (or any other editing tool that matches `LLM AutoHotkey Assistant.ahk` title window)
+- `CapsLock + backtick`: Suspend/resume hotkeys
+- `ESC`: Cancel ongoing requests
+- `CTRL + W`: Close the following windows:
+  - Custom prompt
+  - Chat
+  - Chat with specific prompt
+  - Response Window
 
 ### Running the script at startup
 
 You can automatically run the script at startup by following the steps below:
 
 1. Copy `LLM AutoHotkey Assistant.ahk`
+
+![image](https://github.com/user-attachments/assets/dec84b9c-b945-4902-92f6-4e042fcd6649)
+
 2. Enter `shell:startup` at the File Explorer address bar and press `enter`.
-3. Right-click ➡ Paste shortcut
+
+![image](https://github.com/user-attachments/assets/970b44c5-c365-406a-814c-1c5ed6be0611)
+
+3. Right-click ➡ `Paste shortcut`
+
+![image](https://github.com/user-attachments/assets/eecefcac-629d-4527-95c0-0f4b77533fee)
 
 ### Editing prompts
 
@@ -153,35 +165,40 @@ prompts := [{
     promptName: "Your Prompt Name",
     menuText: "&1 - Menu Text",
     systemPrompt: "Your system prompt",
-    APIModel: "model-name",
+    APIModels: "model-name",
     copyAsMarkdown: true,
     isAutoPaste: true,
     isCustomPrompt: true,
     customPromptInitialMessage: "Initial message that will show on Custom Prompt window",
-    tags: ["&tag1", "&tag2"]
+    tags: ["&tag1", "&tag2"],
+    skipConfirmation: true
 }]
 ```
 
-#### promptName
+#### `promptName`
 
-The name of the prompt. This will also be shown in the tooltip and the Response Window title, in addition to the chosen API model.
+The name of the prompt. This will also be shown in the tooltip, `Send message to`, `Activate`, `Minimize`, and `Close` menus. In addition, this will also show in the Response Window title with the chosen API model.
 
 ![image](https://github.com/user-attachments/assets/5bb775b0-3309-4395-9ea7-7075da490107)
 
+![image](https://github.com/user-attachments/assets/0f8de4db-c93d-439e-b622-1c6ee3de89be)
+
+![image](https://github.com/user-attachments/assets/5fc8771d-4867-4204-91c8-93fc940be222)
+
 ![image](https://github.com/user-attachments/assets/af1c530c-7354-43f7-a62a-192d6d023e24)
 
-### menuText
+### `menuText`
 
 The name of the prompt that will appear when your press the hotkey to bring up the menu. The ampersand (`&`) is a shortcut key and indicates that by pressing the character next to it after bringing up the menu, the prompt will be selected.
 
-![image](https://github.com/user-attachments/assets/309c7959-250c-4178-8b1f-94a62f913ee1)
+![image](https://github.com/user-attachments/assets/caa7a07a-b62f-48b2-8741-0a143f53ac99)
 
 > [!NOTE]
 > You can have duplicate shortcut keys for the prompts. Pressing the shortcut key will highlight the first prompt, and pressing the shortcut key again will highlight the second prompt. Pressing `Enter` afterwards will select the prompt and initiate the request.
 
-#### systemPrompt
+#### `systemPrompt`
 
-This will be the initial prompt and will set the tone of the conversation.
+This will be the initial prompt and will set the tone and context of the conversation.
 
 ##### Splitting a long prompt into a series of multiple lines
 
@@ -189,8 +206,8 @@ Long prompts can be divided into new lines to improve readability.
 
 ```autohotkey
 prompts := [{
-    promptName: "Multi-line prompt here",
-    menuText: "&1 - Multi-line prompt here",
+    promptName: "Multi-line prompt example",
+    menuText: "Multi-line prompt example",
     systemPrompt: "
     (
     This prompt is broken down into multiple lines.
@@ -203,13 +220,16 @@ prompts := [{
 
     it will be valid.
     )",
-    APIModel: "openrouter/auto"
+    APIModels: "
+    (
+    google/gemini-2.0-flash-thinking-exp:free
+    )"
 }]
 ```
 
-![image](https://github.com/user-attachments/assets/8f9b16a4-8e07-4618-9b6c-ea9122766f3f)
+![image](https://github.com/user-attachments/assets/ebd22b64-0c49-4ce2-a5b7-c10dd0b9f2e0)
 
-#### APIModels
+#### `APIModels`
 
 The API model that will be used to process the prompt.
 
@@ -231,26 +251,43 @@ In addition, you can also append `:online` to *any* model so that it will have t
 - `google/gemini-2.0-flash-001:online`
 - `deepseek/deepseek-r1:online`
 
-To enable multi-model functionality, you can specify different API models, separating them with a comma and a space.
+To enable multi-model functionality, you can specify different API models, separating them with a comma and a space:
 
-`openai/o3-mini-high, anthropic/claude-3.5-sonnet, google/gemini-2.0-flash-001:online, deepseek/deepseek-r1:online`
+```autohotkey
+prompts := [{
+    promptName: "Deep thinking multi-model custom prompt",
+    menuText: "&1 - Deep thinking multi-model custom prompt",
+    systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
+    APIModels: "perplexity/r1-1776, openai/o3-mini-high, anthropic/claude-3.7-sonnet:thinking, google/gemini-2.0-flash-thinking-exp:free",
+    isCustomPrompt: true,
+    customPromptInitialMessage: "This is a message template."
+}]
+```
 
-![image](https://github.com/user-attachments/assets/d878c9ab-6145-4aa3-a73c-463fee923459)
+You can also enter them into new lines for better readability:
 
-This will also enable the `Send message to all models` menu option after pressing the backtick hotkey. The shortcut key is `S`.
+```autohotkey
+prompts := [{
+    promptName: "Deep thinking multi-model custom prompt",
+    menuText: "&1 - Deep thinking multi-model custom prompt",
+    systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
+    APIModels: "
+    (
+    perplexity/r1-1776,
+    openai/o3-mini-high,
+    anthropic/claude-3.7-sonnet:thinking,
+    google/gemini-2.0-flash-thinking-exp:free
+    )",
+    isCustomPrompt: true,
+    customPromptInitialMessage: "This is a message template."
+}]
+```
 
-![image](https://github.com/user-attachments/assets/a450ea0e-8954-41d0-b25f-34b8a9c2e213)
+![image](https://github.com/user-attachments/assets/f0a7158a-b1ee-4cf5-959a-696c561b6d25)
 
-Since this app uses [OpenRouter.ai](https://openrouter.ai/) service, you get access to the latest models as soon as they're available.
+After selecting the prompt with multiple API models, it will enable the `Send message to`, `Activate`, `Minimize`, and `Close` menu options after pressing the backtick hotkey.
 
-> [!TIP]
-> You can control which API models are selected by adding a semicolon (`;`) to the beginning of any `APIModel` entry that you want to disable.
-
-![image](https://github.com/user-attachments/assets/bd48bfcf-fda8-42c3-9802-ea2b7001c4a1)
-
-The `APIModel: "google/gemini-2.0-flash-thinking-exp:free"` above `isCustomPrompt: true` is the one that will be enabled. All other lines will be disabled. This feature is helpful for managing multiple API model configurations and easily switching between them.
-
-This is also applicable to all the values inside the `prompts` array, such as `promptName`, `menuText`, `systemPrompt`, etc.
+Since this app uses [OpenRouter.ai](https://openrouter.ai/) service, you get access to the [latest models](https://openrouter.ai/models) as soon as they're available.
 
 > [!TIP]
 > Feeling overwhelmed by the number of models to choose from? Take a look at [OpenRouter.ai's ranking page](https://openrouter.ai/rankings) to discover the best models for each task. You can also find benchmarks across various models at [LiveBench.ai](https://livebench.ai/#/).
@@ -259,15 +296,15 @@ This is also applicable to all the values inside the `prompts` array, such as `p
 
 Your prompt will be processed by a meta-model and [routed to one of dozens of models](https://openrouter.ai/openrouter/auto), optimizing for the best possible output. To use it, just enter `openrouter/auto` in the `APIModel` field.
 
-#### copyAsMarkdown
+#### `copyAsMarkdown: true`
 
-Setting `copyAsMarkdown: true` will enable the `Copy` button in the Response Window to copy content in Markdown format. This is especially useful for responses that need markdown content such as codes for programming.
+Setting `copyAsMarkdown: true` will enable the `Copy` button in the Response Window to copy content in Markdown format. This is especially useful for responses that need markdown content such as codes for programming. Remove this if you don't need to copy the response as Markdown format.
 
 If you’d rather copy the response as plain text or HTML-formatted text (default behavior), simply remove this setting.
 
-#### isAutoPaste
+#### `isAutoPaste: true`
 
-Enabling `isAutoPaste: true` will automatically paste the model's response in Markdown format. Disable this feature if you do not require auto-paste functionality.
+Setting `isAutoPaste: true` will automatically paste the model's response in Markdown format. Remove this if you don't need auto-paste functionality.
 
 > [!NOTE]  
 > The app will automatically disable the Auto Paste functionality if more than one model is set, and will show the Response Window instead.
@@ -279,15 +316,15 @@ Default behavior of copied content between `isAutoPaste: true` and `Copy`:
 | `Copy` button from the Response Window | HTML          |
 | `isAutoPaste: true`  | Markdown      |
 
-#### isCustomPrompt
+#### `isCustomPrompt: true`
 
-Setting this to `isCustomPrompt: true` will allow the prompt to show an input box to write custom prompts. Remove it if you don't need Custom Prompt functionality.
+Setting `isCustomPrompt: true` will allow the prompt to show an input box to write custom prompts. Remove this if you don't need Custom Prompt functionality.
 
 ![image](https://github.com/user-attachments/assets/951a3133-bf21-44e6-8959-b98ab26bbbb1)
 
-##### customPromptInitialMessage
+##### `customPromptInitialMessage`
 
-An optional message that you can set to be displayed when the Custom Prompt window is shown.
+An optional message that you can set to be displayed when the Custom Prompt window is shown. Remove this if you don't want to show a message whenever you open the Custom Prompt.
 
 ![image](https://github.com/user-attachments/assets/7aeb1a40-8bbd-4aae-bf44-fb417c5f366c)
 
@@ -300,9 +337,9 @@ https://github.com/user-attachments/assets/d8f70927-2544-4c8e-a856-b4569d89263e
 > [!IMPORTANT]  
 > Make sure to add a comma at the end of the line before the Auto Paste, Custom Prompt, `copyAsMarkdown`, etc. functionality:
 
-![image](https://github.com/user-attachments/assets/ca0ce9a1-77ac-40a9-9eef-17de255ca599)
+![image](https://github.com/user-attachments/assets/04ad392f-0f6d-45c0-b00b-00d0e4414109)
 
-#### tags
+#### `tags`
 
 Enabling this feature will sort and group the prompts by their tags.
 
@@ -313,7 +350,7 @@ prompts := [{
     promptName: "Multi-model custom prompt",
     menuText: "&1 - Gemini, GPT-4o, Claude",
     systemPrompt: "System prompt",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free, openai/gpt-4o, anthropic/claude-3.7-sonnet",
+    APIModels: "google/gemini-2.0-flash-thinking-exp:free, openai/gpt-4o, anthropic/claude-3.7-sonnet",
     isCustomPrompt: true,
     customPromptInitialMessage: "How can I leverage the power of AI in my everyday tasks?",
     tags: ["&Custom prompts", "&Multi-models"]
@@ -321,7 +358,7 @@ prompts := [{
     promptName: "Auto-paste custom prompt",
     menuText: "&5 - Auto-paste custom prompt",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask.",
-    APIModel: "google/gemini-2.0-flash-thinking-exp:free",
+    APIModels: "google/gemini-2.0-flash-thinking-exp:free",
     isCustomPrompt: true,
     isAutoPaste: true,
     tags: ["&Custom prompts", "&Auto paste"]
@@ -331,6 +368,15 @@ prompts := [{
 ![image](https://github.com/user-attachments/assets/f6629513-35c4-4469-886d-480363c89214)
 
 ![image](https://github.com/user-attachments/assets/8c931782-0937-4a10-a26a-2fe7f22272aa)
+
+#### `skipConfirmation: true`
+
+Setting `skipConfirmation: true` will skip confirmation messages when closing the following windows:
+
+- Custom prompt
+- Chat
+- Chat with specific prompt
+- Response Window
 
 ## 📣 Share prompts and settings
 
@@ -401,6 +447,22 @@ See [OpenRouter's documentation](https://openrouter.ai/docs/api-reference/limits
 I'm uncertain if it will work, as I don't have a local AI setup on my machine to test it myself. However, it's highly likely to work if your local AI uses the same format as the `OpenAI SDK`. OpenRouter relies on the `OpenAI SDK` for request processing. I followed the [OpenRouter documentation](https://openrouter.ai/docs/quickstart) to configure the app to connect to their API.
 
 To understand how the app sends and receives requests through the OpenRouter API, open the `Config.ahk` file via `Menu` ➡ `Options` ➡ `Add API key`. If you successfully set up the app to connect to your local LLM, please let me know, and I will update this information.
+
+### Can I run the app using a portable installation of AutoHotkey?
+
+Yes, you can modify the `LLM AutoHotkey Assistant.ahk` script to point to your portable `AutoHotkey64.exe` file. Just change this line:
+
+```autohotkey
+Run("lib\Response Window.ahk " "`"" dataObjToJSONStrFile)
+```
+
+to
+
+```autohotkey
+Run('"C:\path\to\AutoHotkey64.exe" "' A_ScriptDir '\lib\Response Window.ahk" "' dataObjToJSONStrFile '"')
+```
+
+Thanks to [@WhazZzZzup25](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/issues/1#issuecomment-2693062034) for testing this out.
 
 ### Inquiries regarding OpenRouter's service
 
