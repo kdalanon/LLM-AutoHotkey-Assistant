@@ -298,7 +298,7 @@ Your prompt will be processed by a meta-model and [routed to one of dozens of mo
 
 #### `copyAsMarkdown: true`
 
-Setting `copyAsMarkdown: true` will enable the `Copy` button in the Response Window to copy content in Markdown format. This is especially useful for responses that need markdown content such as codes for programming. Remove this if you don't need to copy the response as Markdown format.
+Setting `copyAsMarkdown: true` will enable the `Copy` button in the Response Window to copy content in Markdown format. This is especially useful for responses that need markdown content such as codes for programming.
 
 If you’d rather copy the response as plain text or HTML-formatted text (default behavior), simply remove this setting.
 
