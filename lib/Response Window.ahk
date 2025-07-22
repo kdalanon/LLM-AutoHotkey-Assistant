@@ -1,4 +1,5 @@
 #Include Config.ahk
+
 #SingleInstance Off
 #NoTrayIcon
 
@@ -6,12 +7,47 @@
 ; Hotkeys
 ; ----------------------------------------------------
 
-~Esc:: subScriptHotkeyActions("Esc")
-~^w:: subScriptHotkeyActions("closeWindows")
+!t:: respWindowHotkeyActions("chatButton")
+!r:: respWindowHotkeyActions("retryButton")
+!h:: 
+!l:: respWindowHotkeyActions("chatHistoryButton")
+!c:: respWindowHotkeyActions("copyButton")
+!p:: respWindowHotkeyActions("pasteButton")
 
-subScriptHotkeyActions(action) {
+~Esc:: respWindowHotkeyActions("Esc")
+~^w:: respWindowHotkeyActions("closeWindows")
+
+global gChatHistoryButtonState := "ChatHistory"
+
+respWindowHotkeyActions(action) {
     switch action {
 
+        case "chatButton":
+            switch WinActive("A") {
+                case responseWindow.hWnd: buttonClickAction("chatButton")
+            }
+
+            case "retryButton":
+                switch WinActive("A") {
+                    case responseWindow.hWnd: buttonClickAction("retryButton")
+                }
+                
+        case "chatHistoryButton":
+            switch WinActive("A") {
+                case responseWindow.hWnd: 
+                    buttonClickAction("chatHistoryButton")
+            }
+
+        case "copyButton":    
+            switch WinActive("A") {
+                case responseWindow.hWnd: buttonClickAction("copyButton")
+            }        
+
+        case "pasteButton":
+            switch WinActive("A") {
+                case responseWindow.hWnd: buttonClickAction("pasteButton")
+            }        
+        
         ; Handles request cancellation based on Response Window state:
         ;
         ; Background window: Stop request, keep window open
@@ -43,27 +79,45 @@ subScriptHotkeyActions(action) {
                 case responseWindow.hWnd: buttonClickAction("Close")
                 case chatInputWindow.guiObj.hWnd: chatInputWindow.closeButtonAction()
             }
+        
+        Default:
+            MsgBox("Unhandled key : (" action ")", "Error", 0x30)
     }
 }
 
 ; ----------------------------------------------------
-; Read data from main script and start loading cursor
+; Read data created by main script
 ; ----------------------------------------------------
 
-requestParams := jsongo.Parse(FileOpen(A_Args[1], "r", "UTF-8").Read())
+if (A_Args.Length < 1) {
+    ; No args provided (case of debug)
+
+    ; Ask user to select an 2_responseWindowData.json file
+    responseWindowDataFilePath := FileSelect(3, A_Temp , "Open a file", "Text Documents (LLM_Ahk_*_responseWindowData.json)")
+
+} else {
+
+    ; Path to JSON file given as first argument
+    responseWindowDataFilePath := A_Args[1]
+}
+
+requestParams := jsongo.Parse(FileOpen(responseWindowDataFilePath, "r", "UTF-8").Read())
 startLoadingCursor(true)
 
 ; ----------------------------------------------------
 ; Change icon based on providerName
 ; ----------------------------------------------------
 
-TraySetIcon(FileExist(icon := "..\icons\" requestParams["providerName"] ".ico") ? icon : "..\icons\IconOn.ico")
+iconNb := getIconNb(requestParams["providerName"])
+
+; TraySetIcon(FileExist(icon) ? icon : iconDefault)
+TraySetIconEmbed((iconNb > 0) ? iconNb : ICON_ON)
 
 ; ----------------------------------------------------
 ; Create new instance of OpenRouter class
 ; ----------------------------------------------------
 
-router := OpenRouter(APIKey)
+router := OpenRouter(gLLM_BASE_URL, APIKey)
 
 ; ----------------------------------------------------
 ; Create Response Window
@@ -72,84 +126,163 @@ router := OpenRouter(APIKey)
 ; Create the Webview Window
 responseWindow := WebViewToo(, , ,)
 responseWindow.OnEvent("Close", (*) => buttonClickAction("Close"))
-responseWindow.Load("..\Response Window resources\index.html")
+responseWindow.Load("Response Window resources\index.html")
 
 ; Apply dark mode to title bar
 ; Reference: https://www.autohotkey.com/boards/viewtopic.php?p=422034#p422034
 DllCall("Dwmapi\DwmSetWindowAttribute", "ptr", responseWindow.hWnd, "int", 20, "int*", true, "int", 4)
 
+;
 ; Assign actions to click events
+;
+
+; Define the function that will handle the action when a button is clicked
 responseWindow.AddHostObjectToScript("ButtonClick", { func: buttonClickAction })
+
+; Function that perform action when button is clicked
+;
+;   action : buttonId or button Name
+;
 buttonClickAction(action) {
-    static chatHistoryButtonText := "Chat History"
+
+    global gChatHistoryButtonState
 
     switch action {
-        case "Chat": chatInputWindow.showInputWindow()
-        case "Copy":
-            if requestParams["copyAsMarkdown"] {
-                chatState := manageState("chat", "get")
-                A_Clipboard := (chatHistoryButtonText = "Chat History") ? chatState.latestResponse : chatState.chatHistory
-            }
+        case "chatButton": 
+            chatInputWindow.showInputWindow()
 
-            postWebMessage("responseWindowCopyButtonAction", requestParams["copyAsMarkdown"])
+        case "copyButton":
+            doWebCopy()
 
-        case "Retry":
+        case "pasteButton":
+            ; Perform a Copy Button Action
+            doWebCopy()
+
+            ; Activate the calling window
+            WinActivate("ahk_id " requestParams["callingWindowHwnd"])
+
+            ; Paste the Clipboard to the calling window
+            Send("^v")
+
+            ; Close and stop the Response Window
+            closeAndStop()
+
+        case "retryButton":
             manageState("model", "remove")
+
             postWebMessage("responseWindowButtonsEnabled", false)
+
             startLoadingCursor(true)
+
             chatHistoryJSONRequest := manageChatHistoryJSON("get")
             router.removeLastAssistantMessage(&chatHistoryJSONRequest)
             FileOpen(requestParams["chatHistoryJSONRequestFile"], "w", "UTF-8-RAW").Write(chatHistoryJSONRequest)
             manageChatHistoryJSON("set", chatHistoryJSONRequest)
+
             sendRequestToLLM(&chatHistoryJSONRequest)
 
-        case "Chat History", "Latest Response":
+        case "chatHistoryButton":
+            ; Render ChatHistory or LatestResponse as Markdown
             content := manageState("chat", "get")
-            data := [(action = "Chat History") ? content.chatHistory : content.latestResponse]
-            postWebMessage("renderMarkdown", data)
-            chatHistoryButtonText := (chatHistoryButtonText = "Chat History" ? "Latest Response" : "Chat History")
+            contentToDisplay := (gChatHistoryButtonState = "ChatHistory") ? content.chatHistory : content.latestResponse
 
-        case "resetChatHistoryButtonText": chatHistoryButtonText := "Chat History"
+            ; Toggle gChatHistoryButtonState
+            gChatHistoryButtonState := (gChatHistoryButtonState = "ChatHistory" ? "LatestResponse" : "ChatHistory")
+
+            postWebMessage("renderMarkdown", Map("content", contentToDisplay, "shallSetChatHistoryText", gChatHistoryButtonState = "ChatHistory"))
+
+        case "resetChatHistoryButtonState": gChatHistoryButtonState := "ChatHistory"
+
         case "Close":
-            if (!requestParams["skipConfirmation"]) {
-                if (MsgBox("End your chat session with " requestParams["responseWindowTitle"] "?",
-                    "Close " requestParams["responseWindowTitle"],
-                    "308 Owner" responseWindow.hWnd) != "Yes") {
-                    return true
-                }
-            }
-
-            ; Proceed with closing (either no warning needed or user clicked "Yes")
-            if (ProcessExist(manageState("cURL", "get"))) {
-                manageState("cURL", "close")
-
-                ; Sometimes the cURLOutputFile is still being accessed
-                ; Sleep here to make sure the file is not opened anymore
-                Sleep 100
-            }
-
-            deleteTempFiles()
-            startLoadingCursor(false)
-            postWebMessage("toggleButtonText", [true])
-
-            ; Sends a PostMessage to main script saying the
-            ; Response Window has been closed, then terminates
-            ; the Response Window script afterwards
-            CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_CLOSED,
-                requestParams["uniqueID"],
-                responseWindow.hWnd,
-                requestParams["mainScriptHiddenhWnd"])
-            ExitApp
+            ; Close and stop the response window
+            closeAndStop()
+        
+        Default:
+            MsgBox("Unhandled action: (" action ")", "Error", 0x30)
     }
 }
 
+; Call JavaScript function in the web page to toggle copy button for few seconds
+; and copy the response to the clipboard as HTML and Plain Text (if not copyAsMarkdown)
+doWebCopy() {
+
+    global gChatHistoryButtonState
+
+    if requestParams["copyAsMarkdown"] {
+        ; Shall copy as Markdown
+
+        chatState := manageState("chat", "get")
+
+        ; Last response and Chathistory are encoded as Markdown
+        ; Put it to clipboard
+        A_Clipboard := (gChatHistoryButtonState = "ChatHistory") ? chatState.latestResponse : chatState.chatHistory
+
+    } else {
+        ; Shall copy as HTML and Plain Text
+
+        ; Nothing to do here. It must be done in the web page
+    }
+
+    ; Set Focus
+    responseWindow.MoveFocus(0)
+    ; ControlFocus responseWindow.Gui["WebViewTooContainer"].Hwnd
+
+    ; Call JavaScript function in the web page to toggle button for few seconds
+    ; and copy the response to the clipboard as HTML and Plain Text (if not copyAsMarkdown)
+    postWebMessage("responseWindowCopyButtonAction", requestParams["copyAsMarkdown"])
+}
+
+; Close and stop the response window
+closeAndStop() {
+    if (!requestParams["skipConfirmation"]) {
+        if (MsgBox("End your chat session with " requestParams["responseWindowTitle"] "?",
+            "Close " requestParams["responseWindowTitle"],
+            InputWindow.cMSGBOX_WARNING . " Owner" responseWindow.hWnd) != "Yes") {
+            return true
+        }
+    }
+
+    ; Proceed with closing (either no warning needed or user clicked "Yes")
+    if (ProcessExist(manageState("cURL", "get"))) {
+        manageState("cURL", "close")
+
+        ; Sometimes the cURLOutputFile is still being accessed
+        ; Sleep here to make sure the file is not opened anymore
+        Sleep 400
+    }
+
+    deleteTempFiles()
+    startLoadingCursor(false)
+
+    postWebMessage("toggleButtonText", [true])
+
+    ; Sends a PostMessage to main script saying the
+    ; Response Window has been closed, then terminates
+    ; the Response Window script afterwards
+    CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_CLOSED,
+        requestParams["uniqueID"],
+        responseWindow.hWnd,
+        requestParams["mainScriptHiddenhWnd"])
+
+    ; Stop the Response Window script
+    ExitApp
+}
+
+;
+; Function to show the Response Window using WebView
+; (This method does not block execution)
+;
 showResponseWindow(responseWindowTextContent, initialRequest, noActivate := false) {
-    postWebMessage("renderMarkdown", [responseWindowTextContent, true])
-    buttonClickAction("resetChatHistoryButtonText")
+
+    buttonClickAction("resetChatHistoryButtonState")
+
+    postWebMessage("renderMarkdown", Map("content", responseWindowTextContent, "shallSetChatHistoryText", gChatHistoryButtonState = "ChatHistory"))
+
+
     if initialRequest {
 
         ; Response Window's width and height
-        desiredW := 600
+        desiredW := 750
         desiredH := 600
 
         ; Calculate screen center
@@ -217,21 +350,32 @@ showResponseWindow(responseWindowTextContent, initialRequest, noActivate := fals
 ; Create Chat Input Window
 ; ----------------------------------------------------
 
-chatInputWindow := InputWindow("Send message to " requestParams["responseWindowTitle"], requestParams[
-    "skipConfirmation"])
-chatInputWindow.sendButtonAction(chatSendButtonAction)
+chatInputWindow := InputWindow("Send message to " requestParams["responseWindowTitle"], 
+                               requestParams["skipConfirmation"])
+
+chatInputWindow.registerSendButtonAction(chatSendButtonAction)
 
 chatSendButtonAction(*) {
     if !chatInputWindow.validateInputAndHide() {
         return
     }
 
+    ; Activate Loading Mouse Cursor
     startLoadingCursor(true)
+
+    ; Disable Response Window Buttons while waiting for LLM response
     postWebMessage("responseWindowButtonsEnabled", false)
+
+    ; Append User Prompt message to chat history
+    ; and get the JSON request for sending to the LLM
     chatHistoryJSONRequest := manageChatHistoryJSON("get")
-    router.appendToChatHistory("user", chatInputWindow.EditControl.Value, &
-        chatHistoryJSONRequest, requestParams["chatHistoryJSONRequestFile"])
+    router.appendToChatHistory("user", 
+                               chatInputWindow.EditControl.Value, 
+                               &chatHistoryJSONRequest, 
+                               requestParams["chatHistoryJSONRequestFile"])
     manageChatHistoryJSON("set", chatHistoryJSONRequest)
+
+    ; Send the request to the LLM
     sendRequestToLLM(&chatHistoryJSONRequest)
 }
 
@@ -259,7 +403,7 @@ responseWindowSendToAllModels(uniqueID, lParam, msg, responseWindowhWnd) {
 }
 
 ; ----------------------------------------------------
-; Run cURL command and process response
+; Run cURL command and process LLM response
 ; ----------------------------------------------------
 
 chatHistoryJSONRequest := manageChatHistoryJSON("get")
@@ -267,20 +411,29 @@ sendRequestToLLM(&chatHistoryJSONRequest, true)
 
 sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
 
+    ;
+    ; Launch the cURL command and run it asynchronously
+    ;
+    
     ; Run the cURL command asynchronously and store the PID
     Run(FileOpen(requestParams["cURLCommandFile"], "r", "UTF-8").Read(), , "Hide", &cURLPID)
     manageState("cURL", "set", cURLPID)
 
-    ; Waits for the process to complete or be aborted
+    ; Waits for the cURL process to complete or be aborted
     ; while allowing the script to process events
     while (ProcessExist(cURLPID)) {
         Sleep 250
     }
 
-    ; If user cancels the process, exit
     if !manageState("cURL", "get") {
+        ; User canceled the process
+        
+        ; Perform Exit
+
         manageState("cURL", "close")
+
         startLoadingCursor(false)
+
         if initialRequest {
             deleteTempFiles()
 
@@ -297,53 +450,117 @@ sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
     cURLPID := 0
     manageState("cURL", "set", cURLPID)
 
-    ; Read the output after the process has completed
-    JSONResponseFromLLM := FileOpen(requestParams["cURLOutputFile"], "r", "UTF-8").Read()
 
+    ;
     ; Process the JSON response from the LLM API
+    ;
+    
+    errorMsg := ""
+
     try {
-        JSONResponseVar := jsongo.Parse(JSONResponseFromLLM)
-        responseFromLLM := router.extractJSONResponse(JSONResponseVar)
+        ; Read the LLM Response File
+        JSONResponseFromLLM := FileOpen(requestParams["cURLOutputFile"], "r", "UTF-8").Read()
 
-        ; Get text after forward slash as responseFromLLM.model and replace colon (:) with dash (-)
-        responseFromLLM.model := StrReplace(SubStr(responseFromLLM.model, InStr(responseFromLLM.model, "/") + 1), ":",
-        "-")
-
-        manageState("model", "add", responseFromLLM.model)
-        router.appendToChatHistory("assistant",
-            responseFromLLM.response, &chatHistoryJSONRequest, requestParams["chatHistoryJSONRequestFile"])
     } catch as e {
-        JSONResponseFromLLM := router.extractErrorResponse(JSONResponseVar)
-        responseFromLLM :=
-            "**⛔ Error parsing response**`n`n" e.Message
-            . "`n`n---`n`n**⚠️ Response from the API**`n`n"
-            . JSONResponseFromLLM.error
-            . "`n`n---`n`n"
-        errorCodes := {
-            400: "You may have specified an invalid API model. See [this guide](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/blob/main/README.md#apimodels) on how to get the correct API models.",
-            401: "Authentication failed. Your API key or session might be invalid or expired. Check your keys [here](https://openrouter.ai/settings/keys), re-add it to the app, and try again.",
-            402: "Insufficient funds. Click [here](https://openrouter.ai/credits) to check your available credits.",
-            403: "Content flagged as inappropriate. Your input triggered content moderation and was rejected. Please revise your request and try again with different content.",
-            408: "Request timed out. The API request took too long to process. This might be due to network issues or server overload.",
-            429: "You've hit the rate limit of **" requestParams["singleAPIModelName"] "**. Try again after some time.",
-            502: "Service temporarily unavailable. The chosen model is either down or returned an invalid response. Please try again later or select a different model.",
-            503: "No suitable model available. There are no providers currently meeting your request requirements. Please try again later or adjust your routing settings."
-        }
 
-        responseFromLLM .= errorCodes.%JSONResponseFromLLM.code%
-        showResponseWindow(responseFromLLM, initialRequest)
-        postWebMessage("responseWindowButtonsEnabled", true)
-        startLoadingCursor(false)
-        Exit
+        errorMsg :=
+            "**⛔ ERROR**"
+            . "`n`n"
+            . "LLM Response File not found :"
+            . "`n`n"
+            . requestParams["cURLOutputFile"]
+            . "`n`n---`n`n"
+            . "**POSSIBLE REASONS**"
+            . "`n`n"
+            . "- **LLM** did **not respond**."
+            . "`n`n"
+            . "- Your disk is **full**."
+
+    } else {
+        ; LLM Response File found
+
+        try {
+            ; Parse JSON response from LLM
+            JSONResponseVar := jsongo.Parse(JSONResponseFromLLM)
+            responseFromLLM := router.extractJSONResponse(JSONResponseVar)
+            
+            ; Get text after forward slash as responseFromLLM.model and replace colon (:) with dash (-)
+            responseFromLLM.model := StrReplace(SubStr(responseFromLLM.model, InStr(responseFromLLM.model, "/") + 1), ":", "-")
+            
+            manageState("model", "add", responseFromLLM.model)
+            
+            ; Append assistant's (LLM's) response to chat history
+            router.appendToChatHistory("assistant",
+                                    responseFromLLM.response, 
+                                    &chatHistoryJSONRequest, 
+                                    requestParams["chatHistoryJSONRequestFile"])
+                                    
+        } catch as e {
+            
+            try {
+                JSONResponseFromLLM := router.extractErrorResponse(JSONResponseVar)
+
+            } catch as e2 {
+                ; Can not extract error message from JSON response
+
+                errorMsg :=
+                    "**⛔ ERROR**"
+                    . "`n`n"
+                    . "Error **parsing** LLM Response"
+                    
+            } else {
+                ; Can extract error message from JSON response
+
+                errorMsg :=
+                    "**⛔ ERROR**"
+                    . "`n`n"
+                    . "Error **parsing** LLM Response"
+                    . "`n`n"
+                    . e.Message
+                    . "`n`n---`n`n"
+                    . "**REASON**"
+                    . "`n`n"
+                    . "**⚠️ Response from the API** : "
+                    . "`n`n"
+                    . JSONResponseFromLLM.error
+            
+                ; Map of error codes
+                errorCodes := {
+                    400: "You may have specified an invalid API model. See [this guide](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/blob/main/README.md#apimodels) on how to get the correct API models.",
+                    401: "Authentication failed. Your API key or session might be invalid or expired. Check your keys [here](https://openrouter.ai/settings/keys), re-add it to the app, and try again.",
+                    402: "Insufficient funds. Click [here](https://openrouter.ai/credits) to check your available credits.",
+                    403: "Content flagged as inappropriate. Your input triggered content moderation and was rejected. Please revise your request and try again with different content.",
+                    408: "Request timed out. The API request took too long to process. This might be due to network issues or server overload.",
+                    429: "You've hit the rate limit of **" requestParams["singleAPIModelName"] "**. Try again after some time.",
+                    502: "Service temporarily unavailable. The chosen model is either down or returned an invalid response. Please try again later or select a different model.",
+                    503: "No suitable model available. There are no providers currently meeting your request requirements. Please try again later or adjust your routing settings."
+                }
+        
+                ; Concat Error message according to error code
+                errorMsg .= errorCodes.%JSONResponseFromLLM.code%
+
+            } finally {
+
+                ; NTD
+            }
+        } ; catch
+
+    } finally {
+
+        ; NTD
     }
 
+    ;
     ; Save Chat History and Latest Response so it can be viewed later
-    ; Begin by parsing the JSON string into an object
+    ;
+
     manageChatHistoryJSON("set", chatHistoryJSONRequest)
+
+    ; Begin by parsing the Chat History JSON string into an object
     obj := jsongo.Parse(chatHistoryJSONRequest)
 
     ; Get the messages array
-    messages := router.getMessages(obj)
+    messages := router.getChatHistoryMessages(obj)
     totalMessages := messages.Length
 
     ; Chat History - Iterate over each message in the 'messages' array
@@ -357,10 +574,11 @@ sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
             case "user": chatHistory .= "`n`n---`n`n**🔵 You**`n`n" content
             case "assistant": chatHistory .= "`n`n---`n`n**🟡 " manageState("model", "get")[modelIndex++] "**`n`n" content
         }
-    }
+    } ; for
 
     ; Latest Response - Iterate backwards over each message in the 'messages' array to find the last assistant message
     ; and calculate the current index starting from the end
+    latestResponse := "⚠️ No LLM Response yet."
     loop totalMessages {
         currentIndex := totalMessages - A_Index + 1  ;
         msg := messages[currentIndex]
@@ -372,18 +590,55 @@ sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
 
     manageState("chat", "add", { chatHistory: chatHistory, latestResponse: latestResponse })
 
-    if requestParams["isAutoPaste"] {
-        A_Clipboard := responseFromLLM.response
-        Send("^v")
-        startLoadingCursor(false)
-        CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_CLOSED, requestParams["uniqueID"],
-            responseWindow.hWnd, requestParams["mainScriptHiddenhWnd"])
-        deleteTempFiles()
-        ExitApp
+
+    ;
+    ; Display or Paste
+    ;
+
+    if (errorMsg = "") {
+        ; No error
+
+        if requestParams["isAutoPaste"] {
+            ; Auto-paste the response into the active window
+
+            ; TODO M 2025_06_26 : Should Activate the calling Window because another window could have been activated since the call
+
+            A_Clipboard := responseFromLLM.response
+            Send("^v")
+
+            ; TODO m 2025_06_26 : Should factorize (See closeAndStop() )
+
+            startLoadingCursor(false)
+
+            CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_CLOSED, requestParams["uniqueID"],
+                responseWindow.hWnd, requestParams["mainScriptHiddenhWnd"])
+            deleteTempFiles()
+
+            ; Stop Response Window.ahk script
+            ExitApp
+
+        } else {
+            ; Not Auto-paste mode
+
+            ; Display the response in the Response Window
+            showResponseWindow(responseFromLLM.response, initialRequest, !initialRequest && !(WinActive(responseWindow.hWnd)))
+
+            ; Enable buttons in the response window
+            postWebMessage("responseWindowButtonsEnabled", true)
+
+            ; Stop loading mouse cursor
+            startLoadingCursor(false)
+        }
     } else {
-        showResponseWindow(responseFromLLM.response, initialRequest, !initialRequest && !(WinActive(responseWindow.hWnd
-        )))
+        ; There is an error message to display
+        
+        ; Show Response Window
+        showResponseWindow(errorMsg, initialRequest)
+
+        ; Enable Response Window buttons
         postWebMessage("responseWindowButtonsEnabled", true)
+
+        ; Stop loading Cursor
         startLoadingCursor(false)
     }
 }
@@ -407,6 +662,7 @@ manageChatHistoryJSON(action, data := unset) {
 ;--------------------------------------------------
 
 manageState(component, action, data := {}) {
+
     static state := {
         modelHistory: [],
         chatHistory: { chatHistory: "", latestResponse: "" },
@@ -457,16 +713,17 @@ postWebMessage(target, data := unset) {
 ; ----------------------------------------------------
 
 deleteTempFiles() {
-    FileDelete(requestParams["chatHistoryJSONRequestFile"])
-    FileDelete(requestParams["cURLCommandFile"])
-    FileExist(requestParams["cURLOutputFile"]) ? FileDelete(requestParams["cURLOutputFile"]) : ""
-    FileDelete(A_Args[1])
+    try FileDelete(requestParams["chatHistoryJSONRequestFile"])
+    try FileDelete(requestParams["cURLCommandFile"])
+    try FileExist(requestParams["cURLOutputFile"]) ? FileDelete(requestParams["cURLOutputFile"]) : ""
+    try FileDelete(A_Args[1])
 }
 
 ; ----------------------------------------------------
 ; Start or stop loading cursor
 ; ----------------------------------------------------
 
+; TODO m 2025_06_26 : Rename startLoadingCursor to setLoadingCursor
 startLoadingCursor(status) {
     status ? CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_LOADING_START,
         requestParams["uniqueID"], , requestParams["mainScriptHiddenhWnd"])

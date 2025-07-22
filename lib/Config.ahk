@@ -1,5 +1,54 @@
 #Requires AutoHotkey v2.0.18+
-#Include ..\Prompts.ahk
+
+;******************************************************************************
+;
+; Global Variables and Configuration
+;
+;******************************************************************************
+
+global gVersion := "2.1.0"
+global gVersionStringPrefix := ""
+global gVersionStringSuffix := ": (LLM AutoHotkey Assistant " gVersion ")"
+
+; By default use OpenRouter API endpoint
+global gLLM_BASE_URL := "https://openrouter.ai/api"
+
+global APIKey := "none"
+
+;
+; Icons mapping numbers to paths
+;
+
+ICON_ON         := 10
+ICON_OFF        := 11
+ICON_ANTHROPIC  := 12
+ICON_DEEPSEEK   := 13
+ICON_GOOGLE     := 14
+ICON_OPENAI     := 15
+ICON_OPENROUTER := 16
+ICON_PERPLEXITY := 17
+
+gMapIconNb2IconPath := Map( 
+                 ICON_ON, "icons\IconOn.ico"
+                ,ICON_OFF, "icons\IconOff.ico"
+                ,ICON_ANTHROPIC, "icons\anthropic.ico"
+                ,ICON_DEEPSEEK, "icons\deepseek.ico"
+                ,ICON_GOOGLE, "icons\google.ico"
+                ,ICON_OPENAI, "icons\openai.ico"
+                ,ICON_OPENROUTER, "icons\openrouter.ico"
+                ,ICON_PERPLEXITY, "icons\perplexity.ico"
+            )
+
+
+; Include the Preferences file only if it exists => *i
+#Include "*i ..\config\Preferences.ahk"
+
+;******************************************************************************
+;
+; Includes and Libraries
+;
+;******************************************************************************
+
 #Include Dark_MsgBox.ahk ; Enables dark mode MsgBox and InputBox. Remove this if you want light mode MsgBox and InputBox
 #Include Dark_Menu.ahk ; Enables dark mode Menu. Remove this if you want light mode Menu
 #Include SystemThemeAwareToolTip.ahk ; Enables dark mode tooltips. Remove this if you want light mode tooltips
@@ -10,21 +59,111 @@
 DetectHiddenWindows true ; Enables detection of hidden windows for inter-process communication
 
 ; ----------------------------------------------------
+; Constants
+; ----------------------------------------------------
+
+; WARNING : Do not forget to update LLM AutoHotkey Assistant.ahk according to following numbers
+
+getIconNb(iconName) {
+
+    iconNb := -1
+
+    For tmpIconNb, iconPath in gMapIconNb2IconPath {
+
+        if (InStr(iconPath, iconName, false) > 0) {
+            ; Icon found
+            
+            iconNb := tmpIconNb
+
+            break
+        } else {
+            ; Icon not found
+            
+            ; Continue to look for
+        }
+    } ; for
+    
+    return iconNb
+}
+
+; ----------------------------------------------------
+; Function to get selected text
+; ----------------------------------------------------
+getSelectedText() {
+    
+    ; Backup clipboard before copying
+    ClipSaved := ClipboardAll()   ; Save the entire clipboard to a variable of your choice.
+
+    ; Copy of the selected text in the clipboard
+    A_Clipboard := ""
+    Send("^c")
+
+    if !ClipWait(1) {
+        ; Clipboard did not receive any text within 1 second.
+        
+        selectedText := ""
+        
+    } else {
+        
+        selectedText := A_Clipboard
+    }
+
+    ; Restore clipboard
+    A_Clipboard := ClipSaved   ; Restore the original clipboard. Note the use of A_Clipboard (not ClipboardAll).
+    ClipSaved := ""  ; Free the memory in case the clipboard was very large.
+
+    ; Return the selected text
+    return selectedText
+}
+
+getRessourcePath(ressourcePath) {
+
+    Return (!A_IsCompiled) 
+                ? 
+                ; The script is not compiled, run the script directly with AHK path
+                A_WorkingDir '\' ressourcePath
+                : 
+                ; The script is compiled, run the script with /script and "*" to tell that the script is embedded in the executable
+                "*" ressourcePath
+}
+
+TraySetIconEmbed(iconNb) {
+
+    if (!A_IsCompiled) {
+        ; Script mode
+
+        ; Use icon's relative path
+        TraySetIcon((A_ScriptName = "Response Window.ahk" ? "..\" : "") gMapIconNb2IconPath[iconNb])
+
+    } else {
+        ; Compiled mode
+
+        ; Use negative icon's Number 
+        ; (see ahk v2 documentation : "If negative, the absolute value is assumed to be the resource ID of an icon within an executable file")
+        TraySetIcon(A_ScriptFullPath, -1 * iconNb)
+    }
+}
+
+; ----------------------------------------------------
 ; OpenRouter
 ; ----------------------------------------------------
 
 class OpenRouter {
-    static cURLCommand :=
-        'cURL.exe -s -X POST https://openrouter.ai/api/v1/chat/completions '
-        . '-H "Authorization: Bearer {1}" '
-        . '-H "HTTP-Referer: https://github.com/kdalanon/LLM-AutoHotkey-Assistant" '
-        . '-H "X-Title: LLM AutoHotkey Assistant" '
-        . '-H "Content-Type: application/json" '
-        . '-d @"{2}" '
-        . '-o "{3}"'
 
-    __New(APIKey) {
+    __New(llmBaseUrl, APIKey) {
+
         this.APIKey := APIKey
+
+        this.cURLCommand :=
+        'cURL.exe ' llmBaseUrl '/v1/chat/completions'
+        . ' --silent'
+        . ' --request POST'
+        . ' -H "Authorization: Bearer {1}"'
+        . ' -H "HTTP-Referer: https://github.com/kdalanon/LLM-AutoHotkey-Assistant"'
+        . ' -H "X-Title: LLM AutoHotkey Assistant"'
+        . ' -H "Content-Type: application/json"'
+        . ' --data @"{2}"'
+        . ' --output "{3}"' 
     }
 
     createJSONRequest(APIModel, systemPrompt, userPrompt) {
@@ -68,7 +207,7 @@ class OpenRouter {
         FileOpen(chatHistoryJSONRequestFile, "w", "UTF-8-RAW").Write(chatHistoryJSONRequest)
     }
 
-    getMessages(obj) {
+    getChatHistoryMessages(obj) {
         messages := []
         for i in obj["messages"] {
             messages.Push({
@@ -90,15 +229,20 @@ class OpenRouter {
     }
 
     buildcURLCommand(chatHistoryJSONRequestFile, cURLOutputFile) {
-        return Format(OpenRouter.cURLCommand, this.APIKey, chatHistoryJSONRequestFile, cURLOutputFile)
+        return Format(this.cURLCommand, this.APIKey, chatHistoryJSONRequestFile, cURLOutputFile)
     }
 }
 
 ; ----------------------------------------------------
-; Input Window
+; Input Window (for User Prompt, Send Message to All, Send Message to Prompt)
 ; ----------------------------------------------------
 
 class InputWindow {
+
+    static cMSGBOX_BTN_YES_NO :=  0x4
+    static cMSGBOX_ICON_EXCLAMATION :=  0x30
+    static cMSGBOX_WARNING :=  InputWindow.cMSGBOX_BTN_YES_NO | InputWindow.cMSGBOX_ICON_EXCLAMATION
+
     __New(windowTitle, skipConfirmation := false) {
         this.inputWindowSkipConfirmation := skipConfirmation
 
@@ -108,11 +252,11 @@ class InputWindow {
         this.guiObj.OnEvent("Escape", this.closeButtonAction.Bind(this))
         this.guiObj.OnEvent("Size", this.resizeAction.Bind(this))
         this.guiObj.BackColor := "0x212529"
-        this.guiObj.SetFont("s14 cWhite", "Cambria")
+        this.guiObj.SetFont("s14 cWhite", "Arial")
 
         ; Add controls
         this.EditControl := this.guiObj.Add("Edit", "x20 y+5 w500 h250 Background0x212529")
-        this.SendButton := this.guiObj.Add("Button", "x240 y+10 w80", "Send")
+        this.SendButton := this.guiObj.Add("Button", "x220 y+10 w80", "Send (Ctrl+Enter)")
 
         ; Apply dark mode to title bar
         ; Reference: https://www.autohotkey.com/boards/viewtopic.php?p=422034#p422034
@@ -124,34 +268,87 @@ class InputWindow {
         }
     }
 
-    showInputWindow(message := "", title := unset, windowID := unset) {
+    showInputWindow(message := "", title := unset, windowID := unset, isCustomPromptCursorAtEnd := true) {
+
         this.EditControl.Value := message
+
         if IsSet(title) {
             this.guiObj.Title := title
         }
 
         this.EditControl.Focus()
         this.guiObj.Show("AutoSize")
+
         if IsSet(windowID) {
-            ControlSend("^{End}", "Edit1", windowID)
+
+            if (isCustomPromptCursorAtEnd) {
+                ; Move the cursor to the end of the text
+
+                ; Select the whole text in the Edit control of the InputWindow
+                ControlSend("^{End}", "Edit1", windowID)
+
+
+            } else {
+                ; Select the whole text
+
+                ; Select the whole text in the Edit control of the InputWindow
+                ControlSend("^+{End}", "Edit1", windowID)
+            }
         }
     }
 
     validateInputAndHide(*) {
-        if !this.EditControl.Value {
-            MsgBox "Please enter a message or close the window.", "No text entered", "IconX"
-            return false
+
+        ; Récupérer le texte sélectionné
+        selectedText := getSelectedText()
+
+        if (selectedText == "") {
+            ; No selected text
+
+            if !this.EditControl.Value {
+                ; Edit control is also empty
+
+                ; Show error message and prevent closing the window
+                MsgBox "Please enter a message or close the window.", "No text entered", "IconX"
+                return false
+
+            } else {
+                ; Edit control is not empty
+
+                ; Put Edit value in Clipboard in order to be able to use it another time
+                ; if you use the Windows multiple clipboard
+                A_Clipboard := this.EditControl.Value
+            }
         }
+
+        ; Either clipboard or edit control has content
+
+        ; Hide the input window
         this.guiObj.Hide
         return true
     }
 
-    sendButtonAction(functionToCall) {
-        this.SendButton.OnEvent("Click", functionToCall.Bind(this))
+    registerSendButtonAction(functionToCall) {
+
+        boundFunc := functionToCall.Bind(this)
+
+        ; Sur le click, appeler la fonction passée en paramètre
+        this.SendButton.OnEvent("Click", boundFunc)
+
+        try {
+            ; Limiter le raccourci clavier défini juste après, à la fenêtre qui l'a défini
+            HotIfWinActive "ahk_id " this.guiObj.Hwnd
+
+            ; Associer le raccourci clavier CTRL+Enter au clic sur le GuiControl
+            Hotkey "^Enter", boundFunc
+
+        } catch as e {
+            MsgBox "Error setting hotkey: " e.Message
+        }
     }
 
     closeButtonAction(*) {
-        if this.inputWindowSkipConfirmation || (MsgBox("Close " this.guiObj.Title " window?", this.guiObj.Title, 308) = "Yes") {
+        if this.inputWindowSkipConfirmation || (MsgBox("Close " this.guiObj.Title " window ?", this.guiObj.Title, InputWindow.cMSGBOX_WARNING) = "Yes") {
             this.EditControl.Value := ""
             this.guiObj.Hide
             return

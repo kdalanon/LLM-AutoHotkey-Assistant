@@ -230,10 +230,11 @@
                         <!-- Markdown content will be rendered here-->
                     </div>
 					<div class="d-flex justify-content-center gap-4 mt-3">
-						<button type="button" id="chatButton" onclick="ahkButtonClick(this)" class="btn btn-primary btn-lg">Chat</button>
-						<button type="button" id="copyButton" onclick="ahkButtonClick(this)" class="btn btn-secondary btn-lg">Copy</button>
-						<button type="button" id="retryButton" onclick="ahkButtonClick(this)" class="btn btn-danger btn-lg">Retry</button>
-						<button type="button" id="chatHistoryButton" onclick="ahkButtonClick(this); toggleButtonText();" class="btn btn-success btn-lg">Chat History</button>
+						<button type="button" id="chatButton" onclick="ahkButtonClick(this)" class="btn btn-primary btn-lg">Cha<u>t</u></button>
+						<button type="button" id="retryButton" onclick="ahkButtonClick(this)" class="btn btn-danger btn-lg"><u>R</u>etry</button>
+						<button type="button" id="chatHistoryButton" onclick="ahkButtonClick(this)" class="btn btn-success btn-lg">Chat History</button>
+						<button type="button" id="copyButton" onclick="ahkButtonClick(this)" class="btn btn-secondary btn-lg"><u>C</u>opy</button>
+						<button type="button" id="pasteButton" onclick="ahkButtonClick(this)" class="btn btn-danger btn-lg">Copy & <u>P</u>aste</button>
 					</div>
 				</div>
 			<!-- End Page Content -->
@@ -255,18 +256,20 @@
 		}
 
 		function ahkButtonClick(ele) {
-			if (ele.Id != null || "") {
-				var eleInfo = ele.Id;
+			
+			if (ele.id) {
+				var eleInfo = ele.id;
 			}
-			else if (ele.Name != null || "") {
-				var eleInfo = ele.Name;
+			else if (ele.name) {
+				var eleInfo = ele.name;
 			}
-			else if (ele.innerText != null || "") {
+			else if (ele.innerText) {
 				var eleInfo = ele.innerText;
 			}
 			else {
 				var eleInfo = ele.outerHTML;
 			}
+
 			ahk.ButtonClick.Func(eleInfo);
 		}
 	</script>

@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "ahk2",
+            "request": "launch",
+            "name": "TW_AHK_LLM_Assistant v2 Debugger",
+            "program": "C:/NoSave/warrott/J/GITHUB/LLM-AutoHotkey-Assistant/LLM AutoHotkey Assistant.ahk",
+            "stopOnEntry": true
+        },
+        {
+            "type": "ahk2",
+            "request": "launch",
+            "name": "TW_AHK_Response_Window v2 Debugger",
+            "program": "C:/NoSave/warrott/J/GITHUB/LLM-AutoHotkey-Assistant/lib/Response Window.ahk",
+            "stopOnEntry": true
+        },
+        {
+            "type": "ahk2",
+            "request": "launch",
+            "name": "AutoHotkey Debugger",
+            "program": "${file}",
+            "stopOnEntry": true
+        }
+    ]
+}

@@ -59,7 +59,10 @@ class WebViewToo {
 		return RTrim(StrLower(Id), "-")
 	}
 	static TempDir := A_Temp "\" WebViewToo.UniqueId
-	static DllPath := WebViewToo.TempDir "\" (A_PtrSize * 8) "bit\WebView2Loader.dll"
+	
+	; Dll is in folder 32bit\WebView2Loader.dll or 64bit\WebView2Loader.dll
+	; static DllPath := WebViewToo.TempDir "\" (A_PtrSize * 8) "bit\WebView2Loader.dll"
+	static DllPath := (A_PtrSize * 8) "bit\WebView2Loader.dll"
 
 	__New(Html := WebViewToo.Template.Html, Css := WebViewToo.Template.Css, JavaScript := WebViewToo.Template.JavaScript, CustomCaption := False) {
 		this.Gui := Gui("+Resize")
@@ -363,8 +366,10 @@ class WebViewToo {
 			}
 		}
 	}
-	
-	Load(Filename) => this.Navigate(Filename ~= "^https?:\/\/" ? Filename : A_IsCompiled ? "https://ahk.localhost/" Filename : A_WorkingDir "\" Filename)
+
+	; In compiled mode, use A_WorkingDir, not "https://ahk.localhost/"
+	; Load(Filename) => this.Navigate(Filename ~= "^https?:\/\/" ? Filename : A_IsCompiled ? "https://ahk.localhost/" Filename : A_WorkingDir "\" Filename)
+	Load(Filename) => this.Navigate(Filename ~= "^https?:\/\/" ? Filename : A_WorkingDir "\" Filename)
 
 	SimplePrintToPdf(FileName := "", Orientation := "Portrait", Timeout := 5000) {
 		Loop {
