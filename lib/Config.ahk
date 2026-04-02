@@ -105,7 +105,7 @@ getSelectedText() {
         
     } else {
         
-        selectedText := A_Clipboard
+        selectedText := Trim(A_Clipboard, OmitChars := " `t`r`n")
     }
 
     ; Restore clipboard
@@ -244,7 +244,11 @@ class InputWindow {
     static cMSGBOX_WARNING :=  InputWindow.cMSGBOX_BTN_YES_NO | InputWindow.cMSGBOX_ICON_EXCLAMATION
 
     __New(windowTitle, skipConfirmation := false) {
+
         this.inputWindowSkipConfirmation := skipConfirmation
+
+        ; Selected text before opening pop-up
+        this.selectedText := ""
 
         ; Create Input Window
         this.guiObj := Gui("Resize", windowTitle)
@@ -269,6 +273,9 @@ class InputWindow {
     }
 
     showInputWindow(message := "", title := unset, windowID := unset, isCustomPromptCursorAtEnd := true) {
+
+        ; Retrieve the selected text before the pop-up opens
+        this.selectedText := getSelectedText()
 
         this.EditControl.Value := message
 
@@ -299,10 +306,7 @@ class InputWindow {
 
     validateInputAndHide(*) {
 
-        ; Récupérer le texte sélectionné
-        selectedText := getSelectedText()
-
-        if (selectedText == "") {
+        if (this.selectedText == "") {
             ; No selected text
 
             if !this.EditControl.Value {
