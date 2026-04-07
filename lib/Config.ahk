@@ -306,29 +306,38 @@ class InputWindow {
 
     validateInputAndHide(*) {
 
-        if (this.selectedText == "") {
-            ; No selected text
+        if !this.EditControl.Value {
+            ; Edit control is empty
 
-            if !this.EditControl.Value {
-                ; Edit control is also empty
-
+            if (this.selectedText == "") {
+                ; No selected text
+    
                 ; Show error message and prevent closing the window
                 MsgBox "Please enter a message or close the window.", "No text entered", "IconX"
+
                 return false
-
             } else {
-                ; Edit control is not empty
+                ; There is a selected text
 
-                ; Put Edit value in Clipboard in order to be able to use it another time
-                ; if you use the Windows multiple clipboard
-                A_Clipboard := this.EditControl.Value
+                ; NTD
             }
+
+        } else {
+            ; Edit control is not empty
+
+            ; Put Edit value in Clipboard in order to be able to use it another time
+            ; if you use the Windows multiple clipboard
+            A_Clipboard := this.EditControl.Value
+
+            ; Wait 1s for Clipboard to be established
+            ClipWait(1)
         }
 
         ; Either clipboard or edit control has content
 
         ; Hide the input window
         this.guiObj.Hide
+
         return true
     }
 
