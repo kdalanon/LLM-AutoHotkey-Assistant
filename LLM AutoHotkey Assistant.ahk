@@ -899,15 +899,6 @@ processInitialRequest(  promptName,
 }
 
 ; ----------------------------------------------------
-; Tracks active models (i.e. Opened Response Windows)
-; ----------------------------------------------------
-
-getActiveModels() {
-    static activeModels := Map()
-    return activeModels
-}
-
-; ----------------------------------------------------
 ; Custom messages and handlers for detecting
 ; Response Window states
 ; ----------------------------------------------------
@@ -955,49 +946,3 @@ responseWindowState(uniqueID, responseWindowhWnd, state, mainScriptHiddenhWnd) {
     }
 }
 
-; ----------------------------------------------------
-; Cursor and Tooltip management
-; ----------------------------------------------------
-
-manageCursorAndToolTip(action) {
-    switch action {
-        case "Update":
-            activeCount := 0
-            for key, data in getActiveModels() {
-                if data.isLoading {
-                    activeCount++
-                }
-            }
-
-            if (activeCount = 0) {
-                ToolTip
-                return
-            }
-
-            toolTipMessage := "Retrieving response for the following prompt"
-
-            ; Singular and plural forms of the word "prompt"
-            if (activeCount > 1) {
-                toolTipMessage .= "s"
-            }
-
-            toolTipMessage .= " (Press ESC to cancel):"
-            for key, data in getActiveModels() {
-                if (data.isLoading) {
-                    toolTipMessage .= "`n- " StrReplace(data.menuText,  "&", "") " `"" SubStr(data.userPrompt, 1 , 50) "...`"" " [" data.name "]"
-                }
-            }
-
-            ToolTipEX(toolTipMessage, 0)
-
-        case "Loading":
-            ; Change default arrow cursor (32512) to "working in background" cursor (32650)
-            ; Ensure that other cursors remain unchanged to preserve their functionality
-            Cursor := DllCall("LoadCursor", "uint", 0, "uint", 32650)
-            DllCall("SetSystemCursor", "Ptr", Cursor, "UInt", 32512)
-
-        case "Reset":
-            ToolTip
-            DllCall("SystemParametersInfo", "UInt", 0x57, "UInt", 0, "Ptr", 0, "UInt", 0)
-    }
-}

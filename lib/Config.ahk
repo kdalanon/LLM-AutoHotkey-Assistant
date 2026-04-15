@@ -70,7 +70,7 @@ DetectHiddenWindows true ; Enables detection of hidden windows for inter-process
 ; Constants
 ; ----------------------------------------------------
 
-global CLIPBOARD_WAIT_MS := 1000
+global CLIPBOARD_WAIT_MS := 500
 
 
 ; WARNING : Do not forget to update LLM AutoHotkey Assistant.ahk according to following numbers
@@ -98,6 +98,63 @@ getIconNb(iconName) {
 }
 
 ; ----------------------------------------------------
+; Tracks active models (i.e. Opened Response Windows)
+; ----------------------------------------------------
+
+getActiveModels() {
+    static activeModels := Map()
+    return activeModels
+}
+
+; ----------------------------------------------------
+; Cursor and Tooltip management
+; ----------------------------------------------------
+
+manageCursorAndToolTip(action) {
+    switch action {
+        case "Update":
+            activeCount := 0
+            for key, data in getActiveModels() {
+                if data.isLoading {
+                    activeCount++
+                }
+            }
+
+            if (activeCount = 0) {
+                ToolTip
+                return
+            }
+
+            toolTipMessage := "Retrieving response for the following prompt"
+
+            ; Singular and plural forms of the word "prompt"
+            if (activeCount > 1) {
+                toolTipMessage .= "s"
+            }
+
+            toolTipMessage .= " (Press ESC to cancel):"
+            for key, data in getActiveModels() {
+                if (data.isLoading) {
+                    toolTipMessage .= "`n- " StrReplace(data.menuText,  "&", "") " `"" SubStr(data.userPrompt, 1 , 50) "...`"" " [" data.name "]"
+                }
+            }
+
+            ToolTipEX(toolTipMessage, 0)
+
+        case "Loading":
+            ; Change default arrow cursor (32512) to "working in background" cursor (32650)
+            ; Ensure that other cursors remain unchanged to preserve their functionality
+            Cursor := DllCall("LoadCursor", "uint", 0, "uint", 32650)
+            DllCall("SetSystemCursor", "Ptr", Cursor, "UInt", 32512)
+
+        case "Reset":
+            ToolTip
+            DllCall("SystemParametersInfo", "UInt", 0x57, "UInt", 0, "Ptr", 0, "UInt", 0)
+    }
+}
+
+
+; ----------------------------------------------------
 ; Function to get selected text
 ; ----------------------------------------------------
 getSelectedText() {
@@ -111,11 +168,11 @@ getSelectedText() {
 
     ; Copy of the selected text in the clipboard
     A_Clipboard := ""
+    ; Ce Sleep est indispensable pour être capté par ClipboardHistory
     Sleep(CLIPBOARD_WAIT_MS)
 
     Send("^c")
-
-    ; Ce Sleep est indispensable (Le ClipWait(1, 0) n'a pas l'air d'attendre que le Ctrl+C soit établi !)
+    ; Ce Sleep est indispensable pour être capté par ClipboardHistory
     Sleep(CLIPBOARD_WAIT_MS)
 
     if !ClipWait(2, 0) {
