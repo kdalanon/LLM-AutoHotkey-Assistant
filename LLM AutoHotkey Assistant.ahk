@@ -488,6 +488,7 @@ customPromptSendButtonAction(*) {
                         , selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste
                         , selectedPrompt.HasProp("skipConfirmation") && selectedPrompt.skipConfirmation
                         , customPromptInputWindow.EditControl.Value
+                        , customPromptInputWindow.selectedText
     )
     customPromptInputWindow.EditControl.Value := ""
 }
@@ -653,7 +654,9 @@ promptMenuHandler(index, *) {
     ; Invert if CTRL is pressed
     shallShowPromptInputWindow := ctrlPressed ? !shallShowPromptInputWindow : shallShowPromptInputWindow
 
-    if (shallShowPromptInputWindow) or (getSelectedText() == "") {
+    selectedText := getSelectedText()
+
+    if (shallShowPromptInputWindow) or (selectedText == "") {
         ; Selected prompt ask for a custom prompt or no text is selected
 
         ; Save the prompt for future reference in customPromptSendButtonAction(*)
@@ -666,10 +669,11 @@ promptMenuHandler(index, *) {
         customPromptInputWindow.showInputWindow(selectedPrompt.HasProp("customPromptInitialMessage") ? selectedPrompt.customPromptInitialMessage : unset
                                               , selectedPrompt.promptName
                                               , "ahk_id " customPromptInputWindow.guiObj.hWnd
-                                              , selectedPrompt.HasProp("isCustomPromptCursorAtEnd") ? selectedPrompt.isCustomPromptCursorAtEnd : true)
+                                              , selectedPrompt.HasProp("isCustomPromptCursorAtEnd") ? selectedPrompt.isCustomPromptCursorAtEnd : true
+                                              , selectedText)
 
     } else {
-        ; Selected prompt does NOT ask for a custom prompt
+        ; Selected prompt does NOT ask for a custom prompt & there is a selected text
 
         ; Process initial request with the selected prompt details
         processInitialRequest(selectedPrompt.promptName, 
@@ -677,7 +681,8 @@ promptMenuHandler(index, *) {
             selectedPrompt.systemPrompt,
             selectedPrompt.APIModels, selectedPrompt.HasProp("copyAsMarkdown") && selectedPrompt.copyAsMarkdown,
             selectedPrompt.HasProp("isAutoPaste") && selectedPrompt.isAutoPaste,
-            selectedPrompt.HasProp("skipConfirmation") && selectedPrompt.skipConfirmation
+            selectedPrompt.HasProp("skipConfirmation") && selectedPrompt.skipConfirmation,
+            selectedText
         )
     }
 }
@@ -725,10 +730,11 @@ processInitialRequest(  promptName,
                         copyAsMarkdown, 
                         isAutoPaste, 
                         skipConfirmation, 
-                        customPromptMessage := unset) {
+                        customPromptMessage := unset,
+                        selectedText := "") {
 
     ; Récupérer le texte sélectionné
-    selectedText := getSelectedText()
+    ;selectedText := getSelectedText()
 
     if (selectedText == "") {
         ; No selected text

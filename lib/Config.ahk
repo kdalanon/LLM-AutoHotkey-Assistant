@@ -2,6 +2,14 @@
 
 ;******************************************************************************
 ;
+; ATTENTION : Ce fichier est #Include dans deux Process distincts : 
+;               - LLM AutoHotkey Assistant.ahk
+;               - Response Window.ahk
+;
+;******************************************************************************
+
+;******************************************************************************
+;
 ; Global Variables and Configuration
 ;
 ;******************************************************************************
@@ -62,6 +70,9 @@ DetectHiddenWindows true ; Enables detection of hidden windows for inter-process
 ; Constants
 ; ----------------------------------------------------
 
+global CLIPBOARD_WAIT_MS := 1000
+
+
 ; WARNING : Do not forget to update LLM AutoHotkey Assistant.ahk according to following numbers
 
 getIconNb(iconName) {
@@ -90,15 +101,24 @@ getIconNb(iconName) {
 ; Function to get selected text
 ; ----------------------------------------------------
 getSelectedText() {
-    
+
+    global CLIPBOARD_WAIT_MS
+
+    ; manageCursorAndToolTip("Loading")
+
     ; Backup clipboard before copying
     ClipSaved := ClipboardAll()   ; Save the entire clipboard to a variable of your choice.
 
     ; Copy of the selected text in the clipboard
     A_Clipboard := ""
+    Sleep(CLIPBOARD_WAIT_MS)
+
     Send("^c")
 
-    if !ClipWait(1) {
+    ; Ce Sleep est indispensable (Le ClipWait(1, 0) n'a pas l'air d'attendre que le Ctrl+C soit établi !)
+    Sleep(CLIPBOARD_WAIT_MS)
+
+    if !ClipWait(2, 0) {
         ; Clipboard did not receive any text within 1 second.
         
         selectedText := ""
@@ -109,9 +129,12 @@ getSelectedText() {
     }
 
     ; Restore clipboard
-    A_Clipboard := ClipSaved   ; Restore the original clipboard. Note the use of A_Clipboard (not ClipboardAll).
-    ClipSaved := ""  ; Free the memory in case the clipboard was very large.
-
+    A_Clipboard := ClipSaved    ; Restore the original clipboard. Note the use of A_Clipboard (not ClipboardAll).
+    Sleep(CLIPBOARD_WAIT_MS)
+    ClipSaved := ""             ; Free the memory in case the clipboard was very large.
+    
+    ; manageCursorAndToolTip("Reset")
+    
     ; Return the selected text
     return selectedText
 }
@@ -272,10 +295,10 @@ class InputWindow {
         }
     }
 
-    showInputWindow(message := "", title := unset, windowID := unset, isCustomPromptCursorAtEnd := true) {
+    showInputWindow(message := "", title := unset, windowID := unset, isCustomPromptCursorAtEnd := true, selectedText := "") {
 
         ; Retrieve the selected text before the pop-up opens
-        this.selectedText := getSelectedText()
+        this.selectedText := selectedText
 
         this.EditControl.Value := message
 
@@ -306,6 +329,8 @@ class InputWindow {
 
     validateInputAndHide(*) {
 
+        global CLIPBOARD_WAIT_MS
+
         if !this.EditControl.Value {
             ; Edit control is empty
 
@@ -325,12 +350,25 @@ class InputWindow {
         } else {
             ; Edit control is not empty
 
+            ; manageCursorAndToolTip("Loading")
+
+            ; Backup clipboard before copying
+            ClipSaved := ClipboardAll()   ; Save the entire clipboard to a variable of your choice.
+
             ; Put Edit value in Clipboard in order to be able to use it another time
             ; if you use the Windows multiple clipboard
             A_Clipboard := this.EditControl.Value
+            Sleep(CLIPBOARD_WAIT_MS)
 
-            ; Wait 1s for Clipboard to be established
-            ClipWait(1)
+            ; Wait max 1s for Clipboard to be established with text
+            ClipWait(1, 0)
+
+            ; Restore clipboard
+            A_Clipboard := ClipSaved   ; Restore the original clipboard. Note the use of A_Clipboard (not ClipboardAll).
+            Sleep(CLIPBOARD_WAIT_MS)
+            ClipSaved := ""  ; Free the memory in case the clipboard was very large.
+        
+            ; manageCursorAndToolTip("Reset")
         }
 
         ; Either clipboard or edit control has content
