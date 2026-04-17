@@ -966,3 +966,37 @@ responseWindowState(uniqueID, responseWindowhWnd, state, mainScriptHiddenhWnd) {
     }
 }
 
+; ----------------------------------------------------
+; Initialize "I'm in Trayling bar" GUI
+; ----------------------------------------------------
+
+iAmInTrayBarGui := Gui()
+iAmInTrayBarGui.Title := "LLM AutoHotkey Assistant"
+iAmInTrayBarGui.BackColor := "0xFFDF00"
+; iAmInTrayBarGui.SetFont("s10", "Cambria")
+iAmInTrayBarGui.Add("Text", "cBlack w320 +Center", "Hello, I'm `"LLM AutoHotkey Assistant`" !`n`nI'll be in the Trayling bar.`n`nShortcut : Alt+Shift+o`n(if not modified in config/Prompt.ahk)")
+iAmInTrayBarGui.Opt("+Owner")
+iAmInTrayBarGuiWidth := ""
+iAmInTrayBarGui.GetPos(, , &iAmInTrayBarGuiWidth)
+
+; Show GUI at the bottom, centered
+xCurrent := A_ScreenWidth / 2
+yCurrent := A_ScreenHeight / 3
+iAmInTrayBarGui.Show("xCenter y" yCurrent " NA")
+Sleep(4000)
+
+; Animation to trayling bar
+xTraylingBar := A_ScreenWidth * 80/100
+yTraylingBar := A_ScreenHeight * 90/100
+
+nbSteps := 20
+xDelta := (xTraylingBar - xCurrent) / nbSteps
+yDelta := (yTraylingBar - yCurrent) / nbSteps
+Loop nbSteps
+{
+    ; iAmInTrayBarGui.Move(X, Y, Width, Height)
+    iAmInTrayBarGui.Move(xCurrent + xDelta * A_Index, yCurrent + yDelta * A_Index, )
+    Sleep(40 - A_Index*2)
+}
+
+iAmInTrayBarGui.Hide
