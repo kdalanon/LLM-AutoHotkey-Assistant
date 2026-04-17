@@ -395,9 +395,21 @@ openHelpPdf() {
     Run(A_ScriptDir "\README.pdf")
 }
 
+suspendMenu := {
+    menuText: "&Suspend Assistant",
+    function: (*) => mainScriptHotkeyActions("suspendHotkey")
+    }
 
 trayMenuItems := [
     {
+    menuText: "&Show menus",
+    function: (*) => mainScriptHotkeyActions("showPromptMenu")
+    }
+   ,{
+    menuText: "",
+    function: (*) => {}
+    }
+   ,{
     menuText: "&Help",
     function: gHelpMenu
     }
@@ -413,10 +425,7 @@ trayMenuItems := [
     menuText: "",
     function: (*) => {}
     }
-   ,{
-    menuText: "&Suspend Assistant",
-    function: (*) => mainScriptHotkeyActions("suspendHotkey")
-    }
+   ,suspendMenu
    ,{
     menuText: "E&xit",
     function: (*) => ExitApp()
@@ -617,16 +626,27 @@ scriptSuspendStatus.GetPos(, , &scriptSuspendStatusWidth)
 ; ----------------------------------------------------
 
 toggleSuspend(*) {
+
+    ; Toggle suspend state
     Suspend -1
+
     if (A_IsSuspended) {
+        ; Is suspended
+        
         TraySetIconEmbed(ICON_OFF)
         A_IconTip := "LLM AutoHotkey Assistant - (Suspended)"
-
+        A_TrayMenu.Rename("&Suspend Assistant" , "&Resume Assistant")
+        
         ; Show GUI at the bottom, centered
         scriptSuspendStatus.Show("AutoSize x" (A_ScreenWidth - scriptSuspendStatusWidth) / 2.3 " y990 NA")
+        
     } else {
+        ; Is NOT suspended
+        
         TraySetIconEmbed(ICON_ON)
         A_IconTip := "LLM AutoHotkey Assistant"
+        A_TrayMenu.Rename("&Resume Assistant", "&Suspend Assistant")
+        
         scriptSuspendStatus.Hide()
     }
 }

@@ -213,14 +213,14 @@ TraySetIconEmbed(iconNb) {
         ; Script mode
 
         ; Use icon's relative path
-        TraySetIcon((A_ScriptName = "Response Window.ahk" ? "..\" : "") gMapIconNb2IconPath[iconNb])
+        TraySetIcon((A_ScriptName = "Response Window.ahk" ? "..\" : "") gMapIconNb2IconPath[iconNb], 1, true)
 
     } else {
         ; Compiled mode
 
         ; Use negative icon's Number 
         ; (see ahk v2 documentation : "If negative, the absolute value is assumed to be the resource ID of an icon within an executable file")
-        TraySetIcon(A_ScriptFullPath, -1 * iconNb)
+        TraySetIcon(A_ScriptFullPath, -1 * iconNb, true)
     }
 }
 
