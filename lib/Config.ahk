@@ -16,7 +16,7 @@
 
 global gVersion := "2.1.0"
 global gVersionStringPrefix := ""
-global gVersionStringSuffix := ": (LLM AutoHotkey Assistant " gVersion ")"
+global gVersionStringSuffix := "LLM AutoHotkey Assistant " gVersion
 
 ; By default use OpenRouter API endpoint
 global gLLM_BASE_URL := "https://openrouter.ai/api"

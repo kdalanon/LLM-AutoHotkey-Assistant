@@ -388,7 +388,7 @@ buildHelpMenu(gHelpMenu)
 buildHelpMenu(helpMenu) {
     helpMenu.Add("Open README.pdf", (*) => openHelpPdf())
     helpMenu.Add("Press CTRL+click on a menu item, to invert use of Selection or Chat window", (*) => {})
-    helpMenu.Add("About : " gVersionStringPrefix " " gVersionStringSuffix, (*) => {})
+    helpMenu.Add("About : " gVersionStringPrefix " : " gVersionStringSuffix, (*) => {})
 }
 
 openHelpPdf() {
@@ -971,13 +971,11 @@ responseWindowState(uniqueID, responseWindowhWnd, state, mainScriptHiddenhWnd) {
 ; ----------------------------------------------------
 
 iAmInTrayBarGui := Gui()
-iAmInTrayBarGui.Title := "LLM AutoHotkey Assistant"
+iAmInTrayBarGui.Title := gVersionStringSuffix
 iAmInTrayBarGui.BackColor := "0xFFDF00"
 ; iAmInTrayBarGui.SetFont("s10", "Cambria")
-iAmInTrayBarGui.Add("Text", "cBlack w320 +Center", "Hello, I'm `"LLM AutoHotkey Assistant`" !`n`nI'll be in the Trayling bar.`n`nShortcut : Alt+Shift+o`n(if not modified in config/Prompt.ahk)")
+iAmInTrayBarGui.Add("Text", "cBlack w370 +Center", "Hello, I'm `"LLM AutoHotkey Assistant`" !`n`nI'll be in the Trayling bar.`n`nShortcut : Alt+Shift+o`n(if not modified in config/Prompt.ahk)")
 iAmInTrayBarGui.Opt("+Owner")
-iAmInTrayBarGuiWidth := ""
-iAmInTrayBarGui.GetPos(, , &iAmInTrayBarGuiWidth)
 
 ; Show GUI at the bottom, centered
 xCurrent := A_ScreenWidth / 2
@@ -985,17 +983,42 @@ yCurrent := A_ScreenHeight / 3
 iAmInTrayBarGui.Show("xCenter y" yCurrent " NA")
 Sleep(4000)
 
+
+;
 ; Animation to trayling bar
-xTraylingBar := A_ScreenWidth * 80/100
-yTraylingBar := A_ScreenHeight * 90/100
+;
 
 nbSteps := 20
+
+; Récupérer la taille de la pop-up
+iAmInTrayBarGuiWidth := ""
+iAmInTrayBarGuiHeight := ""
+iAmInTrayBarGui.GetPos(, , &iAmInTrayBarGuiWidth, &iAmInTrayBarGuiHeight)
+
+; Trayling bar approximative position
+xTraylingBar := A_ScreenWidth * 90/100
+yTraylingBar := A_ScreenHeight * 90/100
+
+; Target width and height
+popupTargetWidth := 60
+popupTargetHeight := 40
+
+xStart := xCurrent - iAmInTrayBarGuiWidth/2
+yStart := yCurrent
+
 xDelta := (xTraylingBar - xCurrent) / nbSteps
 yDelta := (yTraylingBar - yCurrent) / nbSteps
+wDelta := (popupTargetWidth - iAmInTrayBarGuiWidth) / nbSteps
+hDelta := (popupTargetHeight - iAmInTrayBarGuiHeight) / nbSteps
+
 Loop nbSteps
 {
     ; iAmInTrayBarGui.Move(X, Y, Width, Height)
-    iAmInTrayBarGui.Move(xCurrent + xDelta * A_Index, yCurrent + yDelta * A_Index, )
+    iAmInTrayBarGui.Move(xStart + xDelta * A_Index
+                       , yCurrent + yDelta * A_Index
+                       , iAmInTrayBarGuiWidth + wDelta * A_Index
+                       , iAmInTrayBarGuiHeight + hDelta * A_Index)
+
     Sleep(40 - A_Index*2)
 }
 
