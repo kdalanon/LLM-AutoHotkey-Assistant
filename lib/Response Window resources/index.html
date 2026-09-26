@@ -1,6 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 	<head>
+		<script>
+			(function() {
+				var theme = localStorage.getItem('theme');
+				if (theme) {
+					document.documentElement.setAttribute('data-bs-theme', theme === 'Light' ? 'light' : 'dark');
+				}
+			})();
+		</script>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +33,21 @@
 		-->
 
         <!-- Additional stylesheets for markdown rendering -->
-		<link rel="stylesheet" href="./css/highlight/atom-one-dark.min.css">
+		<link id="highlight-dark-theme" rel="stylesheet" href="./css/highlight/atom-one-dark.min.css">
+		<link id="highlight-light-theme" rel="stylesheet" href="./css/highlight/atom-one-light.min.css" disabled>
+		<script>
+			(function() {
+				var currentTheme = document.documentElement.getAttribute('data-bs-theme');
+				var storedTheme = localStorage.getItem('theme');
+				var isLight = (currentTheme === 'light') || (storedTheme === 'Light');
+				var hlDark = document.getElementById('highlight-dark-theme');
+				var hlLight = document.getElementById('highlight-light-theme');
+				if (isLight && hlDark && hlLight) {
+					hlDark.disabled = true;
+					hlLight.disabled = false;
+				}
+			})();
+		</script>
         <link rel="stylesheet" href="./css/custom.css">
         <link rel="stylesheet" href="./css/katex.min.css">
         <link rel="stylesheet" href="./css/texmath.min.css">
@@ -35,8 +57,16 @@
 				--FauxTitleBarHeight: calc(33.25px);
 			}
 
+			html, body {
+				overflow-x: hidden;
+				max-width: 100vw;
+			}
+
 			main {
 				height: calc(100vh - (var(--FauxTitleBarHeight)));
+				min-width: 0;
+				max-width: 100vw;
+				overflow-x: hidden;
 			}
 
 			/* Make #page-content a flex container in column direction */
@@ -44,14 +74,26 @@
 				display: flex;
 				flex-direction: column;
 				height: 100%;
+				min-width: 0;
+				max-width: 100%;
 				padding-left: 1rem;
 				padding-right: 0.25rem;
+				overflow-x: hidden;
 			}
 
 			/* Make #content expand and be scrollable */
 			#content {
 				flex-grow: 1;
-				overflow: auto;
+				min-width: 0;
+				max-width: 100%;
+				overflow-y: auto;
+				overflow-x: hidden;
+				overflow-wrap: break-word;
+				word-break: normal;
+			}
+
+			#content:focus {
+				outline: none;
 			}
 			
 			/* These definitions are for the Web-based TitleBar */
@@ -226,15 +268,30 @@
 			
 			<!-- Page Content -->
 				<div class="flex-grow-1 flex-column bg-body-tertiary" id="page-content">
-					<div id="content" style="padding-right:0.5rem;">
+					<div id="content" tabindex="-1" style="padding-right:0.5rem; outline: none;">
                         <!-- Markdown content will be rendered here-->
                     </div>
-					<div class="d-flex justify-content-center gap-4 mt-3">
-						<button type="button" id="chatButton" onclick="ahkButtonClick(this)" class="btn btn-primary btn-lg">Cha<u>t</u></button>
-						<button type="button" id="retryButton" onclick="ahkButtonClick(this)" class="btn btn-danger btn-lg"><u>R</u>etry</button>
-						<button type="button" id="chatHistoryButton" onclick="ahkButtonClick(this)" class="btn btn-success btn-lg">Chat History</button>
-						<button type="button" id="copyButton" onclick="ahkButtonClick(this)" class="btn btn-secondary btn-lg"><u>C</u>opy</button>
-						<button type="button" id="pasteButton" onclick="ahkButtonClick(this)" class="btn btn-danger btn-lg">Copy & <u>P</u>aste</button>
+					<div class="response-toolbar-container d-flex justify-content-center gap-2 mt-3 mb-2 flex-wrap flex-shrink-0">
+						<button type="button" id="chatButton" onclick="ahkButtonClick(this)" class="btn-modern btn-modern-chat" title="Continuer la discussion (Alt+T)">
+							<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+							<span>Cha<u>t</u></span>
+						</button>
+						<button type="button" id="retryButton" onclick="ahkButtonClick(this)" class="btn-modern btn-modern-retry" title="Relancer la requête (Alt+R)">
+							<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+							<span><u>R</u>etry</span>
+						</button>
+						<button type="button" id="chatHistoryButton" onclick="ahkButtonClick(this)" class="btn-modern btn-modern-history" title="Afficher l'historique de discussion (Alt+H)">
+							<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+							<span>Chat <u>H</u>istory</span>
+						</button>
+						<button type="button" id="copyButton" onclick="ahkButtonClick(this)" class="btn-modern btn-modern-copy" title="Copier la réponse dans le presse-papier (Alt+C)">
+							<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+							<span><u>C</u>opy</span>
+						</button>
+						<button type="button" id="pasteButton" onclick="ahkButtonClick(this)" class="btn-modern btn-modern-paste" title="Coller dans l'application active et fermer (Alt+P)">
+							<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M12 11v6"></path><path d="M9 14l3 3 3-3"></path></svg>
+							<span><u>P</u>aste & Close</span>
+						</button>
 					</div>
 				</div>
 			<!-- End Page Content -->

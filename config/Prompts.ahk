@@ -13,6 +13,13 @@
 ^+p:: mainScriptHotkeyActions("suspendHotkey")
 
 ; ----------------------------------------------------
+; Default Models
+; ----------------------------------------------------
+
+LLM_DEFAULT_MODEL_CHAT := "google/gemini-2.0-flash-thinking-exp:free"
+LLM_DEFAULT_MODEL_CODE := "google/gemini-2.0-flash-thinking-exp:free"
+
+; ----------------------------------------------------
 ; OpenRouter API Key
 ; ----------------------------------------------------
 
@@ -34,64 +41,66 @@ prompts := [
          , "Language"
          , "Learning"
          , "&Auto paste"
+         , "---"
+         , "&Applications"
         ]
 }, {
     promptName: "Multi-model custom prompt",
     menuText: "&1 - Gemini, GPT-4o, Claude",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask. My first query is the following:",
-    APIModels: "
+    APIModels: 
     (
-    google/gemini-2.0-flash-thinking-exp:free,
-    openai/gpt-4o,
-    anthropic/claude-3.7-sonnet
-    )",
+    LLM_DEFAULT_MODEL_CHAT ","
+    "openai/gpt-4o,"
+    "anthropic/claude-3.7-sonnet"
+    ),
     isCustomPrompt: true,
     customPromptInitialMessage: "How can I leverage the power of AI in my everyday tasks?",
-    tags: ["&Custom prompts", "&Multi-models"]
+    tags: ["&Custom prompts", "Multi-models"]
 }, {
     promptName: "Rephrase",
     menuText: "&1 - Rephrase",
     systemPrompt: "Your task is to rephrase the following text or paragraph in English to ensure clarity, conciseness, and a natural flow. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The revision should preserve the tone, style, and formatting of the original text. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModels: "
+    APIModels: 
     (
-    google/gemini-2.0-flash-thinking-exp:free
-    )",
-    tags: ["&Text manipulation"]
+    LLM_DEFAULT_MODEL_CHAT
+    ),
+    tags: ["Text manipulation"]
 }, {
     promptName: "Summarize",
     menuText: "&2 - Summarize",
     systemPrompt: "Your task is to summarize the following article in English to ensure clarity, conciseness, and a natural flow. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The summary should preserve the tone, style, and formatting of the original text, and should be in its original language. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModels: "
+    APIModels: 
     (
-    google/gemini-2.0-flash-thinking-exp:free
-    )",
-    tags: ["&Text manipulation", "&Articles"]
+    LLM_DEFAULT_MODEL_CHAT
+    ),
+    tags: ["Text manipulation", "&Articles"]
 }, {
     promptName: "Translate to English",
     menuText: "&3 - Translate to English",
     systemPrompt: "Generate an English translation for the following text or paragraph, ensuring the translation accurately conveys the intended meaning or idea without excessive deviation. If there are abbreviations present, expand it when it's used for the first time, like so: OCR (Optical Character Recognition). The translation should preserve the tone, style, and formatting of the original text. If possible, split it into paragraphs to improve readability. Additionally, correct any grammar and spelling errors you come across. You should also answer follow-up questions if asked. Respond with the rephrased text only:",
-    APIModels: "
+    APIModels: 
     (
-    google/gemini-2.0-flash-thinking-exp:free
-    )",
-    tags: ["&Text manipulation", "Language"]
+    LLM_DEFAULT_MODEL_CHAT
+    ),
+    tags: ["Text manipulation", "Language"]
 }, {
     promptName: "Define",
     menuText: "&4 - Define",
     systemPrompt: "Provide and explain the definition of the following, providing analogies if needed. In addition, answer follow-up questions if asked:",
-    APIModels: "
+    APIModels: 
     (
-    google/gemini-2.0-flash-thinking-exp:free
-    )",
-    tags: ["&Text manipulation", "Learning"]
+    LLM_DEFAULT_MODEL_CHAT
+    ),
+    tags: ["Text manipulation", "Learning"]
 }, {
     promptName: "Auto-paste custom prompt",
     menuText: "&5 - Auto-paste custom prompt",
     systemPrompt: "You are a helpful assistant. Follow the instructions that I will provide or answer any questions that I will ask.",
-    APIModels: "
+    APIModels: 
     (
-    google/gemini-2.0-flash-thinking-exp:free
-    )",
+    LLM_DEFAULT_MODEL_CHAT
+    ),
     isCustomPrompt: true,
     isAutoPaste: true,
     tags: ["&Custom prompts", "&Auto paste"]
@@ -139,6 +148,23 @@ prompts := [
     google/gemini-2.0-flash-thinking-exp:free:online
     )",
     isCustomPrompt: true
+}, {
+    promptName: "OutlookNewEmail",
+    menuText: "&1 - New Email",
+    tags: ["&Applications"],
+    isApplicationLauncher: true,
+    appFullPath: "outlook.exe",
+    appParams: "/c ipm.note"
+}, {
+    promptName: "---",
+    tags: ["&Applications"]
+}, {
+    promptName: "Google",
+    menuText: "&2 - Open Google",
+    tags: ["&Applications"],
+    isApplicationLauncher: true,
+    appFullPath: "https://www.google.com",
+    appParams: ""
 }, {
     promptName: "Multi-line prompt example",
     menuText: "Multi-line prompt example",

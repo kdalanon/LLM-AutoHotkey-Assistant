@@ -1,8 +1,18 @@
 body {
-    font-family: "Arial", "TeX Gyre Pagella", "Latin Modern Roman 12", "Source Serif Pro", Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-    color: white;
-    background-color: #212529;
-    font-size: large;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+}
+
+[data-bs-theme="dark"] body {
+    color: #f1f5f9;
+    background-color: #1e2022;
+}
+
+[data-bs-theme="light"] body {
+    color: #1e293b;
+    background-color: #f8fafc;
 }
 
 kbd {
@@ -10,16 +20,38 @@ kbd {
     font-size: 0.9rem;
     border-radius: 3px;
     padding: 1px 4px;
+}
+
+[data-bs-theme="dark"] kbd {
     background-color: rgb(90, 90, 90);
     color: white;
 }
 
+[data-bs-theme="light"] kbd {
+    background-color: #e9ecef;
+    color: #212529;
+    border: 1px solid #ced4da;
+}
+
 /* Code blocks styling */
-pre.hljs {
+pre, pre.hljs {
     border-radius: 5px;
     padding: 10px;
-    overflow: auto;
     margin: 1em 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box;
+}
+
+[data-bs-theme="light"] pre,
+[data-bs-theme="light"] pre.hljs {
+    border: 1px solid #e1e4e8;
+}
+
+pre code, pre.hljs code {
+    white-space: pre;
+    word-break: normal;
 }
 
 code {
@@ -27,12 +59,75 @@ code {
     font-size: 0.9rem;
 }
 
+/* Scrollbar styling for code blocks and main content */
+pre::-webkit-scrollbar,
+#content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+pre::-webkit-scrollbar-track,
+#content::-webkit-scrollbar-track {
+    border-radius: 4px;
+}
+
+[data-bs-theme="dark"] pre::-webkit-scrollbar-track,
+[data-bs-theme="dark"] #content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+[data-bs-theme="dark"] pre::-webkit-scrollbar-thumb,
+[data-bs-theme="dark"] #content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+}
+
+[data-bs-theme="dark"] pre::-webkit-scrollbar-thumb:hover,
+[data-bs-theme="dark"] #content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+[data-bs-theme="light"] pre::-webkit-scrollbar-track,
+[data-bs-theme="light"] #content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-bs-theme="light"] pre::-webkit-scrollbar-thumb,
+[data-bs-theme="light"] #content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+}
+
+[data-bs-theme="light"] pre::-webkit-scrollbar-thumb:hover,
+[data-bs-theme="light"] #content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.45);
+}
+
+/* Tables and media responsiveness */
+table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 /* Inline code styling */
-:not(pre) > code {
+[data-bs-theme="dark"] :not(pre) > code {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
     padding: 2px 4px;
     color: #e6e6e6;
+}
+
+[data-bs-theme="light"] :not(pre) > code {
+    background-color: rgba(0, 0, 0, 0.06);
+    border-radius: 3px;
+    padding: 2px 4px;
+    color: #d63384;
 }
 
 /* Override Bootstrap's disabled button styles */
@@ -40,4 +135,388 @@ code {
 .btn:disabled {
   pointer-events: auto;
   cursor: not-allowed;
+}
+
+/* ====================================================
+   Modern Action Toolbar & Buttons
+   ==================================================== */
+
+.response-toolbar-container {
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+[data-bs-theme="dark"] .response-toolbar-container {
+    background: rgba(30, 32, 34, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+[data-bs-theme="light"] .response-toolbar-container {
+    background: rgba(248, 250, 252, 0.98);
+    border-top: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+.btn-modern {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.93rem;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    text-decoration: none;
+    line-height: 1.35;
+}
+
+.btn-modern:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.btn-modern .btn-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.btn-modern:hover .btn-icon {
+    transform: scale(1.1);
+}
+
+/* ====================================================
+   Dark theme - Modern pale / tinted button variants
+   (Substantial, semi-opaque pastel fills)
+   ==================================================== */
+
+/* Chat (Soft Blue) */
+[data-bs-theme="dark"] .btn-modern-chat,
+[data-bs-theme="dark"] .btn-modern-primary {
+    background-color: rgba(59, 130, 246, 0.32);
+    color: #bfdbfe;
+    border-color: rgba(96, 165, 250, 0.55);
+}
+[data-bs-theme="dark"] .btn-modern-chat:hover,
+[data-bs-theme="dark"] .btn-modern-primary:hover {
+    background-color: rgba(59, 130, 246, 0.46);
+    color: #ffffff;
+    border-color: rgba(147, 197, 253, 0.75);
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35);
+}
+
+/* Retry (Soft Rose / Coral) */
+[data-bs-theme="dark"] .btn-modern-retry {
+    background-color: rgba(244, 63, 94, 0.32);
+    color: #fecdd3;
+    border-color: rgba(251, 113, 133, 0.55);
+}
+[data-bs-theme="dark"] .btn-modern-retry:hover {
+    background-color: rgba(244, 63, 94, 0.46);
+    color: #ffffff;
+    border-color: rgba(253, 164, 175, 0.75);
+    box-shadow: 0 2px 10px rgba(244, 63, 94, 0.35);
+}
+
+/* Chat History (Soft Emerald / Mint) */
+[data-bs-theme="dark"] .btn-modern-history {
+    background-color: rgba(34, 197, 94, 0.30);
+    color: #bbf7d0;
+    border-color: rgba(74, 222, 128, 0.55);
+}
+[data-bs-theme="dark"] .btn-modern-history:hover {
+    background-color: rgba(34, 197, 94, 0.44);
+    color: #ffffff;
+    border-color: rgba(134, 239, 172, 0.75);
+    box-shadow: 0 2px 10px rgba(34, 197, 94, 0.35);
+}
+
+/* Copy (Soft Slate / Cool Grey) */
+[data-bs-theme="dark"] .btn-modern-copy,
+[data-bs-theme="dark"] .btn-modern-secondary {
+    background-color: rgba(148, 163, 184, 0.28);
+    color: #f1f5f9;
+    border-color: rgba(148, 163, 184, 0.50);
+}
+[data-bs-theme="dark"] .btn-modern-copy:hover,
+[data-bs-theme="dark"] .btn-modern-secondary:hover {
+    background-color: rgba(148, 163, 184, 0.42);
+    color: #ffffff;
+    border-color: rgba(203, 213, 225, 0.70);
+    box-shadow: 0 2px 10px rgba(148, 163, 184, 0.30);
+}
+
+/* Paste & Close (Soft Amber / Orange) */
+[data-bs-theme="dark"] .btn-modern-paste {
+    background-color: rgba(249, 115, 22, 0.32);
+    color: #fed7aa;
+    border-color: rgba(251, 146, 60, 0.55);
+}
+[data-bs-theme="dark"] .btn-modern-paste:hover {
+    background-color: rgba(249, 115, 22, 0.46);
+    color: #ffffff;
+    border-color: rgba(253, 186, 116, 0.75);
+    box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);
+}
+
+/* ====================================================
+   Light theme - Modern pale / pastel button variants
+   (Solid soft pastel fills)
+   ==================================================== */
+
+/* Chat (Sky Blue) */
+[data-bs-theme="light"] .btn-modern-chat,
+[data-bs-theme="light"] .btn-modern-primary {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-color: #93c5fd;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.10);
+}
+[data-bs-theme="light"] .btn-modern-chat:hover,
+[data-bs-theme="light"] .btn-modern-primary:hover {
+    background-color: #bfdbfe;
+    color: #1e3a8a;
+    border-color: #60a5fa;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.22);
+}
+
+/* Retry (Rose / Coral) */
+[data-bs-theme="light"] .btn-modern-retry {
+    background-color: #ffe4e6;
+    color: #be123c;
+    border-color: #fda4af;
+    box-shadow: 0 1px 2px rgba(225, 29, 72, 0.10);
+}
+[data-bs-theme="light"] .btn-modern-retry:hover {
+    background-color: #fecdd3;
+    color: #9f1239;
+    border-color: #fb7185;
+    box-shadow: 0 2px 8px rgba(225, 29, 72, 0.22);
+}
+
+/* Chat History (Sage / Emerald) */
+[data-bs-theme="light"] .btn-modern-history {
+    background-color: #dcfce7;
+    color: #15803d;
+    border-color: #86efac;
+    box-shadow: 0 1px 2px rgba(22, 163, 74, 0.10);
+}
+[data-bs-theme="light"] .btn-modern-history:hover {
+    background-color: #bbf7d0;
+    color: #166534;
+    border-color: #4ade80;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.22);
+}
+
+/* Copy (Slate / Cool Grey) */
+[data-bs-theme="light"] .btn-modern-copy,
+[data-bs-theme="light"] .btn-modern-secondary {
+    background-color: #f1f5f9;
+    color: #334155;
+    border-color: #cbd5e1;
+    box-shadow: 0 1px 2px rgba(71, 85, 105, 0.10);
+}
+[data-bs-theme="light"] .btn-modern-copy:hover,
+[data-bs-theme="light"] .btn-modern-secondary:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
+    border-color: #94a3b8;
+    box-shadow: 0 2px 8px rgba(71, 85, 105, 0.22);
+}
+
+/* Paste & Close (Amber / Orange) */
+[data-bs-theme="light"] .btn-modern-paste {
+    background-color: #ffedd5;
+    color: #c2410c;
+    border-color: #fdba74;
+    box-shadow: 0 1px 2px rgba(234, 88, 12, 0.10);
+}
+[data-bs-theme="light"] .btn-modern-paste:hover {
+    background-color: #fed7aa;
+    color: #9a3412;
+    border-color: #fb923c;
+    box-shadow: 0 2px 8px rgba(234, 88, 12, 0.22);
+}
+
+.btn-modern:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ====================================================
+   Modern Code Block Container & Copy Button
+   ==================================================== */
+
+.code-block-wrapper {
+    position: relative;
+    margin: 1.15rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+[data-bs-theme="dark"] .code-block-wrapper {
+    background-color: #181a1b;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="light"] .code-block-wrapper {
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+.code-block-wrapper pre,
+.code-block-wrapper pre.hljs {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+}
+
+.code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.78rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+    user-select: none;
+}
+
+[data-bs-theme="dark"] .code-block-header {
+    background-color: rgba(255, 255, 255, 0.04);
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-bs-theme="light"] .code-block-header {
+    background-color: #f1f5f9;
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.code-block-lang {
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    font-size: 0.73rem;
+}
+
+.code-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    font-size: 0.76rem;
+    font-weight: 500;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.code-copy-btn svg {
+    width: 13px;
+    height: 13px;
+}
+
+[data-bs-theme="dark"] .code-copy-btn {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .code-copy-btn:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-bs-theme="light"] .code-copy-btn {
+    background-color: #ffffff;
+    color: #475569;
+    border-color: #cbd5e1;
+}
+
+[data-bs-theme="light"] .code-copy-btn:hover {
+    background-color: #f8fafc;
+    color: #0f172a;
+    border-color: #94a3b8;
+}
+
+/* Streaming styles */
+.streaming-placeholder {
+    color: #adb5bd;
+    font-style: italic;
+    padding: 10px 0;
+}
+
+/* Reasoning / Thinking Block Styling */
+details.reasoning-block {
+    margin: 0.75rem 0 1.25rem 0;
+    border-radius: 8px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.93rem;
+    transition: background-color 0.2s ease;
+}
+
+[data-bs-theme="dark"] details.reasoning-block {
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: 4px solid #6c757d;
+}
+
+[data-bs-theme="light"] details.reasoning-block {
+    background-color: #f1f3f5;
+    border: 1px solid #dee2e6;
+    border-left: 4px solid #adb5bd;
+}
+
+summary.reasoning-summary {
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    padding: 2px 0;
+    outline: none;
+    display: list-item;
+}
+
+[data-bs-theme="dark"] summary.reasoning-summary {
+    color: #94a3b8;
+}
+
+[data-bs-theme="dark"] summary.reasoning-summary:hover {
+    color: #cbd5e1;
+}
+
+[data-bs-theme="light"] summary.reasoning-summary {
+    color: #64748b;
+}
+
+[data-bs-theme="light"] summary.reasoning-summary:hover {
+    color: #334155;
+}
+
+details.reasoning-block[open] > summary.reasoning-summary {
+    margin-bottom: 0.5rem;
+    border-bottom: 1px dashed rgba(108, 117, 125, 0.3);
+    padding-bottom: 0.35rem;
+}
+
+[data-bs-theme="dark"] details.reasoning-block > p,
+[data-bs-theme="dark"] details.reasoning-block > div,
+[data-bs-theme="dark"] details.reasoning-block li {
+    color: #94a3b8;
+}
+
+[data-bs-theme="light"] details.reasoning-block > p,
+[data-bs-theme="light"] details.reasoning-block > div,
+[data-bs-theme="light"] details.reasoning-block li {
+    color: #475569;
 }
