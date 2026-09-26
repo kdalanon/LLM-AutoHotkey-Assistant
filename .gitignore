@@ -1,2 +1,5 @@
 /LLM AutoHotkey Assistant.exe
 /.project
+*.log
+/build_info.txt
+/.vscode/launch.json

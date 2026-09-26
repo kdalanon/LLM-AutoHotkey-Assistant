@@ -284,11 +284,38 @@ It can also be done through the `tray menu > Suspend Assistant`
 > ![image](https://github.com/user-attachments/assets/e8611390-5fb3-4916-ac8f-774210b5a14d)
 
 
+### Managing Multiple Conversations (Sessions)
+
+When you have several open Response Windows (conversations), a **Sessions** menu lets you manage them easily.
+
+Open the prompt menu (press the hotkey) and look for the **Sessions** section at the bottom.
+
+For each open conversation, you'll see a sub-menu with the following options:
+
+- **Send Prompt** : Send a new message to that specific conversation
+- **Send Prompt to All** : Send the same message to all conversations using the same prompt type
+- **Open** : Bring that conversation window to the front (if it's behind other windows)
+- **Minimize** : Minimize that conversation window
+- **Close** : Close that conversation
+- **Toggle Favorite** : Mark or unmark this conversation as favorite (★)
+
+> [!TIP]
+> **Favorite conversations** are protected from deletion. When you use "Delete this and olders", favorite conversations are kept.
+
+> [!TIP]
+> **Keyboard shortcuts** : You can press the underlined letter shown in each menu item to activate it quickly.
+
+### Deleting Old Conversations
+
+You can delete a conversation along with all older conversations.
+
+A confirmation dialog will appear before deletion. Favorite conversations are never deleted.
+
 ### Hotkeys Summary
 
-- `Backtick` or `Alt+Shift+o` : Show prompt menu
+- `Alt + Shift + o` or `Backtick`: Show prompt menu
 - `Ctrl + S`: Will automatically save and reload the script when editing in Notepad (or any other editing tool that matches `LLM AutoHotkey Assistant.ahk` title window)
-- `CapsLock + backtick`: Suspend/resume hotkeys
+- `CapsLock + backtick` (or `Ctrl + Shift + u` / `Ctrl + Shift + p`) : Suspend/resume hotkeys
 - `ESC`: Cancel ongoing requests
 - `CTRL + W`: Close the following windows:
   - Custom prompt
@@ -596,6 +623,47 @@ Setting `skipConfirmation: true` will skip confirmation messages when closing th
 
 <div style="page-break-after: always;"></div>
 
+#### isApplicationLauncher
+
+Setting `isApplicationLauncher: true` will modify menu handling.
+
+Instead of defining a prompt to call an LLM, this allows you to use the menu system to create **shortcuts to** your own **applications** on your PC or to **call URLs** in a web browser.
+
+To indicate the parameters to use, you must fill in the following options :
+- **appFullPath** : the full (or relative) path. This can be :
+  - Either the path to the **.exe** or **.bat** file 
+    - `"myApp.exe"` or 
+    - `"C:\Program files\myApp\myApp.exe"`
+  - or a **URL** (`"https://www.google.com"`)
+- **appParams** : Params provided to the .exe on the command line (e.g. `"--param1 --param2"`)
+- **appWindowLaunchMode** : The state of the Application Window (`""`, `"Min"`, `"Max"` or `"Hide"`)
+  - **Omitted** or **Empty String** = Launch normally
+  - **Max** = Launch in maximized state
+  - **Min** = Launch in minimized state
+  - **Hide** = Launch with window hidden
+- **appWorkingDir** : (OPTIONAL) The path to the working directory
+
+Here are two examples :
+```autohotkey
+{
+    promptName: "OutlookNewEmail",
+    menuText: "&1 - New Email",
+    tags: ["&9 - Applications"],
+    isApplicationLauncher: true,
+    appFullPath: "outlook.exe",
+    appParams: "/c ipm.note"
+}, {
+    promptName: "Google",
+    menuText: "&2 - Open Google",
+    tags: ["&9 - Applications"],
+    isApplicationLauncher: true,
+    appFullPath: "https://www.google.com",
+    appParams: ""
+}
+```
+
+<div style="page-break-after: always;"></div>
+
 ## 📣 Share prompts and settings
 
 Do you have prompts and settings you'd like to share? [Check here](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/discussions/7) to share your prompts!
@@ -689,6 +757,24 @@ where `xxx` is the name of :
 
 You can add other icons by adding more lines like the one above.
 Don't forget to increment the icon number (`ICON_XXX`) for each new icon you add.
+
+
+### Can I configure a custom editor (Notepad++, VS Code) to edit Prompts.ahk?
+
+Yes! In `config/Preferences.ahk`, set `gEDITOR_PATH` to your editor executable path (and optionally `gEDITOR_ARGS` for command line flags):
+
+```autohotkey
+global gEDITOR_PATH := "C:\Program Files\Notepad++\notepad++.exe"
+global gEDITOR_ARGS := "-multiInst"
+```
+
+Or for VS Code:
+```autohotkey
+global gEDITOR_PATH := "C:\Users\" A_UserName "\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+global gEDITOR_ARGS := "-r"
+```
+
+If `gEDITOR_PATH` is omitted, empty, or if the specified executable cannot be found, the application will automatically fall back to Windows Notepad.
 
 
 ### Can I run the app using a portable installation of AutoHotkey?
