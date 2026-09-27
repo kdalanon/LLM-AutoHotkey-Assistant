@@ -1,0 +1,27 @@
+RELEASE NOTES "LLM AutoHotkey Assistant"
+========================================
+
+2.1.0
+    - [Config] : Support for external text editor for Prompts.ahk (gEDITOR_PATH, gEDITOR_ARGS in Preferences.ahk) with automatic fallback to Windows Notepad
+    - [Performance] : Pre-warming WebView2 in the background via independent satellite process with watchdog
+    - [Performance] : Faster selected text capture and faster InputWindow opening
+    - [UI] : Modernized graphical interface for Response Window and InputWindow (modern pastel buttons, "Paste & Close", refined styling)
+    - [UI] : Visual separation of Send button action and keyboard shortcut (Ctrl+Enter) in input window
+    - [UI] : Animated notification window when starting/reloading showing shortcut and tray bar location
+    - [UI] : Clamping response windows within screen boundaries (anti-offscreen positioning)
+    - [UI] : Dynamic reload confirmation banner when editing Prompts.ahk
+    - [Theme] : Instant theme switching (Dark, Light, System) via Options > Theme menu with real-time propagation
+    - [Reasoning] : Collapsible reasoning/thought display for deep thinking and reasoning models
+    - [Stream] : Real-time SSE streaming of LLM responses via WebView2 with immediate window display
+    - [UI] : Keyboard navigation in WebView2 (Esc to close, Page Up / Page Down scrolling, code block horizontal scrolling)
+    - [UI] : Dynamic history button label ("Show History" / "Hide History")
+    - [Sessions] : Sessions menu to manage and resume multiple conversations in reverse chronological order
+    - [Sessions] : Send follow-up prompt to a specific existing conversation
+    - [Sessions] : Session persistence in %APPDATA%\LLM AutoHotkey Assistant
+    - [Sessions] : Favorites management (★/☆) to protect important sessions from deletion
+    - [Sessions] : "Delete this and olders" batch cleanup with confirmation dialog
+    - [Sessions] : Window management from menu (Bring to Front, Minimize, Close)
+    - [Sessions] : Session reconnect after script reload
+    - [AppLauncher] : Application launcher menu items (launch .exe, .bat, or URLs with custom parameters and window state)
+    - [Architecture] : Modular codebase refactoring (lib/MainScript, lib/ResponseWindow, lib/Shared, class definitions)
+    - [Tests] : Comprehensive automated test suite (run_tests.ahk) and test checklist (docs/TESTS.md)

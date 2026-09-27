@@ -1,69 +1,116 @@
-#Include Config.ahk
+#Include Shared\SharedRoot.ahk
+
+#Include ResponseWindow\COTS\WebViewToo.ahk ; Allows for use of the WebView2 Framework within AHK to create Web-based GUIs
+
+#Include ResponseWindow\Utils\respWindowUtils.ahk
+#Include ResponseWindow\Utils\respWindowFileUtils.ahk
+#Include ResponseWindow\Utils\respWindowWeb.ahk
+#Include ResponseWindow\Gui\Handlers\respWindowHotkeyActions.ahk
+#Include ResponseWindow\Gui\Handlers\respWindowButtonActions.ahk
+#Include ResponseWindow\Gui\Handlers\respWindowInputWindowButtonActions.ahk
+#Include ResponseWindow\LLM\LlmCall.ahk
+#Include ResponseWindow\LLM\clsLlmResponse.ahk
+#Include ResponseWindow\CallBack\respWindowCallBackFunctions.ahk
+
 #SingleInstance Off
 #NoTrayIcon
 
 ; ----------------------------------------------------
-; Hotkeys
+; Hotkeys (Context-sensitive to current response window)
 ; ----------------------------------------------------
 
-~Esc:: subScriptHotkeyActions("Esc")
-~^w:: subScriptHotkeyActions("closeWindows")
+#HotIf isCurrentResponseWindowActive()
 
-subScriptHotkeyActions(action) {
-    switch action {
+!t:: respWindowHotkeyActions("chatButton")
+!r:: respWindowHotkeyActions("retryButton")
+!h:: 
+!l:: respWindowHotkeyActions("chatHistoryButton")
+!c:: respWindowHotkeyActions("copyButton")
+!p:: respWindowHotkeyActions("pasteButton")
 
-        ; Handles request cancellation based on Response Window state:
-        ;
-        ; Background window: Stop request, keep window open
-        ; Active window: Stop request, keep window open
-        ; Hidden window: Stop request only
-        case "Esc":
-            switch {
-                case WinExist(responseWindow.hWnd) && !(WinActive(responseWindow.hWnd))
-                && ProcessExist(manageState("cURL", "get")):
-                    manageState("cURL", "close")
-                    postWebMessage("responseWindowButtonsEnabled", true)
+~Esc:: respWindowHotkeyActions("Esc")
+~^w:: respWindowHotkeyActions("closeWindows")
 
-                case WinActive(responseWindow.hWnd):
-                    switch {
-                        case ProcessExist(manageState("cURL", "get")):
-                            manageState("cURL", "close")
-                            postWebMessage("responseWindowButtonsEnabled", true)
+#HotIf
 
-                        Default:
-                            buttonClickAction("Close")
-                    }
+#HotIf isOnlyResponseWindowActive()
 
-                case ProcessExist(manageState("cURL", "get")):
-                    manageState("cURL", "close")
-            }
+PgUp:: respWindowHotkeyActions("PgUp")
+PgDn:: respWindowHotkeyActions("PgDn")
 
-        case "closeWindows":
-            switch WinActive("A") {
-                case responseWindow.hWnd: buttonClickAction("Close")
-                case chatInputWindow.guiObj.hWnd: chatInputWindow.closeButtonAction()
-            }
+#HotIf
+
+; Chat history is not displayed (Latest Response is displayed) by default
+global gIsChatHistoryDisplayed := false
+
+
+; ----------------------------------------------------
+; Read Params file created by Main Script
+; ----------------------------------------------------
+
+if (A_Args.Length < 1) {
+    ; No args provided (case of debug)
+
+    debugFile := getSessionDir() "\LLM_Ahk_DEBUG_LAST_SESSION.json"
+    
+    if FileExist(debugFile) {
+        debugData := loadDebugState()
+        if IsSet(debugData) {
+            paramsForResponseWindowJsonFilePath := debugData["paramsForResponseWindowJsonFilePath"]
+            mainScriptHiddenhWnd := debugData["mainScriptHiddenhWnd"]
+            callingWindowHwnd := debugData["callingWindowHwnd"]
+            isSession := debugData["isSession"]
+        } else {
+            ExitApp()
+        }
+    } else {
+        ; Fallback to manual selection if no debug file
+        paramsForResponseWindowJsonFilePath := FileSelect(3, getSessionDir(), "Open a file", "Text Documents (LLM_Ahk_*_paramsForResponseWindow.json)")
+        if (paramsForResponseWindowJsonFilePath = "")
+            ExitApp()
+        
+        isSession := (MsgBox("Is this a session?", "Debug Mode", "YesNo") = "Yes")
+        mainScriptHiddenhWnd := WinExist("LLM AutoHotkey Assistant")
+        callingWindowHwnd := WinActive("A")
+    }
+
+} else {
+
+    ; Path to JSON file given as first argument
+    paramsForResponseWindowJsonFilePath := A_Args[1]
+    
+    ; hwnd of MainScript (= LLM AutoHotkey Assistant)
+    mainScriptHiddenhWnd := (A_Args.Length >= 2) ? A_Args[2] : 0
+    
+    ; hwnd of the Window from which, menu was triggered
+    callingWindowHwnd := (A_Args.Length >= 3) ? A_Args[3] : 0
+    
+    if (A_Args.Length >= 4) {
+
+        ; is a Response Window for a loaded Session
+        isSession := A_Args[4]
+    } else {
+        ; 4th arg is not defined
+        
+        ; is a Response Window for a loaded Session
+        isSession := false
     }
 }
 
-; ----------------------------------------------------
-; Read data from main script and start loading cursor
-; ----------------------------------------------------
+requestParams := jsongo.Parse(FileOpen(paramsForResponseWindowJsonFilePath, "r", "UTF-8").Read())
 
-requestParams := jsongo.Parse(FileOpen(A_Args[1], "r", "UTF-8").Read())
-startLoadingCursor(true)
+; ; Overwrite hwnd
+requestParams["mainScriptHiddenhWnd"] := mainScriptHiddenhWnd
+requestParams["callingWindowHwnd"] := callingWindowHwnd
+
 
 ; ----------------------------------------------------
 ; Change icon based on providerName
 ; ----------------------------------------------------
 
-TraySetIcon(FileExist(icon := "..\icons\" requestParams["providerName"] ".ico") ? icon : "..\icons\IconOn.ico")
+iconNb := getIconNb(requestParams["providerName"])
 
-; ----------------------------------------------------
-; Create new instance of OpenRouter class
-; ----------------------------------------------------
-
-router := OpenRouter(APIKey)
+TraySetIconEmbed((iconNb > 0) ? iconNb : ICON_ON)
 
 ; ----------------------------------------------------
 ; Create Response Window
@@ -71,169 +118,63 @@ router := OpenRouter(APIKey)
 
 ; Create the Webview Window
 responseWindow := WebViewToo(, , ,)
+
 responseWindow.OnEvent("Close", (*) => buttonClickAction("Close"))
-responseWindow.Load("..\Response Window resources\index.html")
 
-; Apply dark mode to title bar
-; Reference: https://www.autohotkey.com/boards/viewtopic.php?p=422034#p422034
-DllCall("Dwmapi\DwmSetWindowAttribute", "ptr", responseWindow.hWnd, "int", 20, "int*", true, "int", 4)
+; Apply theme to title bar and web document
+applyResponseWindowTheme(targetTheme := unset) {
+    if (IsSet(targetTheme)) {
+        global gTHEME := targetTheme
+    }
+    effectiveTheme := getEffectiveTheme(targetTheme?)
+    isDark := (effectiveTheme = "Dark")
 
-; Assign actions to click events
+    ; Update title bar dark mode attribute
+    DllCall("Dwmapi\DwmSetWindowAttribute", "ptr", responseWindow.hWnd, "int", 20, "int*", isDark, "int", 4)
+
+    ; Update web document theme asynchronously to prevent blocking during page initialization
+    try {
+        responseWindow.ExecuteScriptAsync("if (window.applyTheme) window.applyTheme('" effectiveTheme "');")
+    }
+    try {
+        callWebJavaScriptFunction("applyTheme", effectiveTheme)
+    }
+}
+
+; Set initial title bar theme attribute
+applyResponseWindowTheme()
+
+;
+; Assign actions to host objects BEFORE loading the page
+; so they are immediately available on DOMContentLoaded
+;
+
+; Define the function that will handle the action when a button is clicked
 responseWindow.AddHostObjectToScript("ButtonClick", { func: buttonClickAction })
-buttonClickAction(action) {
-    static chatHistoryButtonText := "Chat History"
 
-    switch action {
-        case "Chat": chatInputWindow.showInputWindow()
-        case "Copy":
-            if requestParams["copyAsMarkdown"] {
-                chatState := manageState("chat", "get")
-                A_Clipboard := (chatHistoryButtonText = "Chat History") ? chatState.latestResponse : chatState.chatHistory
-            }
+; Define the function that will handle stream events from WebView2
+responseWindow.AddHostObjectToScript("StreamEvent", { func: onStreamEvent })
 
-            postWebMessage("responseWindowCopyButtonAction", requestParams["copyAsMarkdown"])
-
-        case "Retry":
-            manageState("model", "remove")
-            postWebMessage("responseWindowButtonsEnabled", false)
-            startLoadingCursor(true)
-            chatHistoryJSONRequest := manageChatHistoryJSON("get")
-            router.removeLastAssistantMessage(&chatHistoryJSONRequest)
-            FileOpen(requestParams["chatHistoryJSONRequestFile"], "w", "UTF-8-RAW").Write(chatHistoryJSONRequest)
-            manageChatHistoryJSON("set", chatHistoryJSONRequest)
-            sendRequestToLLM(&chatHistoryJSONRequest)
-
-        case "Chat History", "Latest Response":
-            content := manageState("chat", "get")
-            data := [(action = "Chat History") ? content.chatHistory : content.latestResponse]
-            postWebMessage("renderMarkdown", data)
-            chatHistoryButtonText := (chatHistoryButtonText = "Chat History" ? "Latest Response" : "Chat History")
-
-        case "resetChatHistoryButtonText": chatHistoryButtonText := "Chat History"
-        case "Close":
-            if (!requestParams["skipConfirmation"]) {
-                if (MsgBox("End your chat session with " requestParams["responseWindowTitle"] "?",
-                    "Close " requestParams["responseWindowTitle"],
-                    "308 Owner" responseWindow.hWnd) != "Yes") {
-                    return true
-                }
-            }
-
-            ; Proceed with closing (either no warning needed or user clicked "Yes")
-            if (ProcessExist(manageState("cURL", "get"))) {
-                manageState("cURL", "close")
-
-                ; Sometimes the cURLOutputFile is still being accessed
-                ; Sleep here to make sure the file is not opened anymore
-                Sleep 100
-            }
-
-            deleteTempFiles()
-            startLoadingCursor(false)
-            postWebMessage("toggleButtonText", [true])
-
-            ; Sends a PostMessage to main script saying the
-            ; Response Window has been closed, then terminates
-            ; the Response Window script afterwards
-            CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_CLOSED,
-                requestParams["uniqueID"],
-                responseWindow.hWnd,
-                requestParams["mainScriptHiddenhWnd"])
-            ExitApp
-    }
+; Pre-inject initial theme attribute on document creation
+try {
+    effectiveTheme := getEffectiveTheme()
+    initialTheme := (effectiveTheme = "Light") ? "light" : "dark"
+    themeScript := "document.documentElement.setAttribute('data-bs-theme', '" initialTheme "'); "
+                 . "localStorage.setItem('theme', '" effectiveTheme "');"
+    responseWindow.AddScriptToExecuteOnDocumentCreatedAsync(themeScript)
 }
 
-showResponseWindow(responseWindowTextContent, initialRequest, noActivate := false) {
-    postWebMessage("renderMarkdown", [responseWindowTextContent, true])
-    buttonClickAction("resetChatHistoryButtonText")
-    if initialRequest {
-
-        ; Response Window's width and height
-        desiredW := 600
-        desiredH := 600
-
-        ; Calculate screen center
-        screenW := A_ScreenWidth
-        screenH := A_ScreenHeight
-
-        ; Define an X and Y coordinate variables
-        X := (screenW - desiredW) // 2
-        Y := (screenH - desiredH) // 4
-
-        ; Compute the arrangement of Response Windows based on the number of models:
-        ; If there is one Response Window, it will be in the center
-        ; If there are two, they will be side by side in the center
-        ; If there are three, they will be arranged in the center
-        ; If there are more than three, it will be the same as three for the first three,
-        ; then additional windows will be in the center as a stack and have a slight downward offset
-        switch requestParams["numberOfAPIModels"] {
-            case 1:
-                pos := Format("x{} y{} w{} h{}", X - 100, Y, desiredW, desiredH)
-
-            case 2:
-                X := (requestParams["APIModelsIndex"] = 1) ? (screenW // 2) - (desiredW * 1.3) : (screenW // 2)
-                pos := Format("x{} y{} w{} h{}", X, Y, desiredW, desiredH)
-
-            case 3:
-                switch requestParams["APIModelsIndex"] {
-                    case 1:
-                        ; Left
-                        X := (screenW // 2) - (desiredW * 1.6)
-
-                    case 2:
-                        ; Center
-                        X := (screenW - desiredW) // 2
-
-                    default:
-                        ; Right
-                        X := (screenW // 2) + (desiredW * 0.4)
-                }
-
-                pos := Format("x{} y{} w{} h{}", X, Y, desiredW, desiredH)
-
-            default:
-                if (requestParams["APIModelsIndex"] < 4) {
-                    switch requestParams["APIModelsIndex"] {
-                        case 1: X := (screenW // 2) - (desiredW * 1.6)
-                        case 2: X := (screenW - desiredW) // 2
-                        case 3: X := (screenW // 2) + (desiredW * 0.4)
-                    }
-                } else {
-                    X := (screenW - desiredW) // 2
-                    Y := Y + (requestParams["APIModelsIndex"] - 3) * 30
-                }
-
-                pos := Format("x{} y{} w{} h{}", X, Y, desiredW, desiredH)
-        }
-
-        responseWindow.Show(pos, requestParams["responseWindowTitle"])
-    }
-
-    ; Flash the Response Window if it is minimized or not active
-    (WinGetMinMax(responseWindow.hWnd) = -1) || noActivate ? responseWindow.Flash() : ""
-}
+; Load HTML document
+responseWindow.Load("Response Window resources\index.html")
 
 ; ----------------------------------------------------
-; Create Chat Input Window
+; Create a Chat Input Window (but do not show it yet)
 ; ----------------------------------------------------
 
-chatInputWindow := InputWindow("Send message to " requestParams["responseWindowTitle"], requestParams[
-    "skipConfirmation"])
-chatInputWindow.sendButtonAction(chatSendButtonAction)
+chatInputWindow := InputWindow("Send message to " requestParams["responseWindowTitle"], 
+                               requestParams["skipConfirmation"])
 
-chatSendButtonAction(*) {
-    if !chatInputWindow.validateInputAndHide() {
-        return
-    }
-
-    startLoadingCursor(true)
-    postWebMessage("responseWindowButtonsEnabled", false)
-    chatHistoryJSONRequest := manageChatHistoryJSON("get")
-    router.appendToChatHistory("user", chatInputWindow.EditControl.Value, &
-        chatHistoryJSONRequest, requestParams["chatHistoryJSONRequestFile"])
-    manageChatHistoryJSON("set", chatHistoryJSONRequest)
-    sendRequestToLLM(&chatHistoryJSONRequest)
-}
+chatInputWindow.registerSendButtonAction(chatSendButtonAction)
 
 ; ----------------------------------------------------
 ; Custom messages for detecting Response Windows
@@ -241,235 +182,42 @@ chatSendButtonAction(*) {
 ; the "Send message to all models" feature
 ; ----------------------------------------------------
 
-CustomMessages.registerHandlers("subScript", responseWindowSendToAllModels)
-CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_OPENED, requestParams["uniqueID"],
-    responseWindow.hWnd, requestParams["mainScriptHiddenhWnd"])
+; CallBack function triggered when receiving WM_SEND_TO_ALL_MODELS message
+CustomMessages.registerHandlers("subScript", onSentToAllModels)
 
-responseWindowSendToAllModels(uniqueID, lParam, msg, responseWindowhWnd) {
-    if (ProcessExist(manageState("cURL", "get"))) {
-        manageState("cURL", "close")
-    }
+; Register handler for WM_RESPONSE_WINDOW_PING
+OnMessage(CustomMessages.WM_RESPONSE_WINDOW_PING, onResponseWindowPing)
 
-    ; Re-read the updated JSON file and call sendRequestToLLM() again
-    chatHistoryJSONRequest := FileOpen(requestParams["chatHistoryJSONRequestFile"], "r", "UTF-8-RAW").Read()
-    startLoadingCursor(true)
-    manageChatHistoryJSON("set", chatHistoryJSONRequest)
-    postWebMessage("responseWindowButtonsEnabled", false)
-    sendRequestToLLM(&chatHistoryJSONRequest)
+; Register handler for WM_THEME_CHANGED
+OnMessage(CustomMessages.WM_THEME_CHANGED, onThemeChanged)
+
+; Tell MainScript that a Response Window just opened
+CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_OPENED, 
+                                         requestParams["uniqueID"],
+                                         responseWindow.hWnd, 
+                                         requestParams["mainScriptHiddenhWnd"])
+
+
+; ----------------------------------------------------
+; Run cURL command to LLM and process LLM response
+; ----------------------------------------------------
+
+chatHistoryAsJson := manageChatHistoryJSON("get")
+
+sendRequestToLLM(&chatHistoryAsJson, true, isSession)
+
+; ----------------------------------------------------
+; Window hotkeys
+; ----------------------------------------------------
+
+#HotIf WinActive("ahk_id " responseWindow.hWnd)
+F5:: {
+    ; F5 pressed when Response Window is active
+
+    ; Refresh WebView content
+    renderWebView()
+    callWebJavaScriptFunction("responseWindowButtonsEnabled", true)
 }
+#HotIf
 
-; ----------------------------------------------------
-; Run cURL command and process response
-; ----------------------------------------------------
 
-chatHistoryJSONRequest := manageChatHistoryJSON("get")
-sendRequestToLLM(&chatHistoryJSONRequest, true)
-
-sendRequestToLLM(&chatHistoryJSONRequest, initialRequest := false) {
-
-    ; Run the cURL command asynchronously and store the PID
-    Run(FileOpen(requestParams["cURLCommandFile"], "r", "UTF-8").Read(), , "Hide", &cURLPID)
-    manageState("cURL", "set", cURLPID)
-
-    ; Waits for the process to complete or be aborted
-    ; while allowing the script to process events
-    while (ProcessExist(cURLPID)) {
-        Sleep 250
-    }
-
-    ; If user cancels the process, exit
-    if !manageState("cURL", "get") {
-        manageState("cURL", "close")
-        startLoadingCursor(false)
-        if initialRequest {
-            deleteTempFiles()
-
-            ; Sends a message to main script saying the Response Window has been closed,
-            ; then terminates the Response Window script
-            CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_CLOSED,
-                requestParams["uniqueID"], responseWindow.hWnd, requestParams["mainScriptHiddenhWnd"])
-            ExitApp
-        }
-        Exit
-    }
-
-    ; Reset the PID as the process has completed
-    cURLPID := 0
-    manageState("cURL", "set", cURLPID)
-
-    ; Read the output after the process has completed
-    JSONResponseFromLLM := FileOpen(requestParams["cURLOutputFile"], "r", "UTF-8").Read()
-
-    ; Process the JSON response from the LLM API
-    try {
-        JSONResponseVar := jsongo.Parse(JSONResponseFromLLM)
-        responseFromLLM := router.extractJSONResponse(JSONResponseVar)
-
-        ; Get text after forward slash as responseFromLLM.model and replace colon (:) with dash (-)
-        responseFromLLM.model := StrReplace(SubStr(responseFromLLM.model, InStr(responseFromLLM.model, "/") + 1), ":",
-        "-")
-
-        manageState("model", "add", responseFromLLM.model)
-        router.appendToChatHistory("assistant",
-            responseFromLLM.response, &chatHistoryJSONRequest, requestParams["chatHistoryJSONRequestFile"])
-    } catch as e {
-        JSONResponseFromLLM := router.extractErrorResponse(JSONResponseVar)
-        responseFromLLM :=
-            "**⛔ Error parsing response**`n`n" e.Message
-            . "`n`n---`n`n**⚠️ Response from the API**`n`n"
-            . JSONResponseFromLLM.error
-            . "`n`n---`n`n"
-        errorCodes := {
-            400: "You may have specified an invalid API model. See [this guide](https://github.com/kdalanon/LLM-AutoHotkey-Assistant/blob/main/README.md#apimodels) on how to get the correct API models.",
-            401: "Authentication failed. Your API key or session might be invalid or expired. Check your keys [here](https://openrouter.ai/settings/keys), re-add it to the app, and try again.",
-            402: "Insufficient funds. Click [here](https://openrouter.ai/credits) to check your available credits.",
-            403: "Content flagged as inappropriate. Your input triggered content moderation and was rejected. Please revise your request and try again with different content.",
-            408: "Request timed out. The API request took too long to process. This might be due to network issues or server overload.",
-            429: "You've hit the rate limit of **" requestParams["singleAPIModelName"] "**. Try again after some time.",
-            502: "Service temporarily unavailable. The chosen model is either down or returned an invalid response. Please try again later or select a different model.",
-            503: "No suitable model available. There are no providers currently meeting your request requirements. Please try again later or adjust your routing settings."
-        }
-
-        responseFromLLM .= errorCodes.%JSONResponseFromLLM.code%
-        showResponseWindow(responseFromLLM, initialRequest)
-        postWebMessage("responseWindowButtonsEnabled", true)
-        startLoadingCursor(false)
-        Exit
-    }
-
-    ; Save Chat History and Latest Response so it can be viewed later
-    ; Begin by parsing the JSON string into an object
-    manageChatHistoryJSON("set", chatHistoryJSONRequest)
-    obj := jsongo.Parse(chatHistoryJSONRequest)
-
-    ; Get the messages array
-    messages := router.getMessages(obj)
-    totalMessages := messages.Length
-
-    ; Chat History - Iterate over each message in the 'messages' array
-    modelIndex := 1
-    for index, message in messages {
-        role := message.role
-        content := message.content
-
-        switch role {
-            case "system": chatHistory .= "**🔧 System Prompt**`n`n" content
-            case "user": chatHistory .= "`n`n---`n`n**🔵 You**`n`n" content
-            case "assistant": chatHistory .= "`n`n---`n`n**🟡 " manageState("model", "get")[modelIndex++] "**`n`n" content
-        }
-    }
-
-    ; Latest Response - Iterate backwards over each message in the 'messages' array to find the last assistant message
-    ; and calculate the current index starting from the end
-    loop totalMessages {
-        currentIndex := totalMessages - A_Index + 1  ;
-        msg := messages[currentIndex]
-        if (msg.role = "assistant") {
-            latestResponse := msg.content
-            break
-        }
-    }
-
-    manageState("chat", "add", { chatHistory: chatHistory, latestResponse: latestResponse })
-
-    if requestParams["isAutoPaste"] {
-        A_Clipboard := responseFromLLM.response
-        Send("^v")
-        startLoadingCursor(false)
-        CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_CLOSED, requestParams["uniqueID"],
-            responseWindow.hWnd, requestParams["mainScriptHiddenhWnd"])
-        deleteTempFiles()
-        ExitApp
-    } else {
-        showResponseWindow(responseFromLLM.response, initialRequest, !initialRequest && !(WinActive(responseWindow.hWnd
-        )))
-        postWebMessage("responseWindowButtonsEnabled", true)
-        startLoadingCursor(false)
-    }
-}
-
-; ----------------------------------------------------
-; Manage Chat History requests
-; ----------------------------------------------------
-
-manageChatHistoryJSON(action, data := unset) {
-    static JSONRequest := FileOpen(requestParams["chatHistoryJSONRequestFile"], "r", "UTF-8-RAW").Read()
-
-    switch action {
-        case "get": return JSONRequest
-        case "set": JSONRequest := data
-    }
-}
-
-;--------------------------------------------------
-; Combined state management for model history,
-; chat history, and cURL process
-;--------------------------------------------------
-
-manageState(component, action, data := {}) {
-    static state := {
-        modelHistory: [],
-        chatHistory: { chatHistory: "", latestResponse: "" },
-        cURLPID: 0
-    }
-
-    switch component {
-        case "model":
-            switch action {
-                case "get": return state.modelHistory
-                case "add": state.modelHistory.Push(data)
-                case "remove": (state.modelHistory.Length) ? state.modelHistory.Pop() : ""
-            }
-
-        case "chat":
-            switch action {
-                case "get": return state.chatHistory
-                case "add":
-                    state.chatHistory.chatHistory := data.chatHistory
-                    state.chatHistory.latestResponse := data.latestResponse
-            }
-
-        case "cURL":
-            switch action {
-                case "get": return state.cURLPID
-                case "set": state.cURLPID := data
-                case "close": ProcessClose(state.cURLPID), state.cURLPID := 0
-            }
-    }
-}
-
-; ----------------------------------------------------
-; Call main.js functions
-; ----------------------------------------------------
-
-postWebMessage(target, data := unset) {
-    msgObj := { target: target }
-
-    ; If data is provided, add it to the message object
-    msgObj.data := IsSet(data) ? data : unset
-
-    jsonStr := jsongo.Stringify(msgObj)
-    responseWindow.PostWebMessageAsJSON(jsonStr)
-}
-
-; ----------------------------------------------------
-; Deletes the files created by the main script
-; ----------------------------------------------------
-
-deleteTempFiles() {
-    FileDelete(requestParams["chatHistoryJSONRequestFile"])
-    FileDelete(requestParams["cURLCommandFile"])
-    FileExist(requestParams["cURLOutputFile"]) ? FileDelete(requestParams["cURLOutputFile"]) : ""
-    FileDelete(A_Args[1])
-}
-
-; ----------------------------------------------------
-; Start or stop loading cursor
-; ----------------------------------------------------
-
-startLoadingCursor(status) {
-    status ? CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_LOADING_START,
-        requestParams["uniqueID"], , requestParams["mainScriptHiddenhWnd"])
-            : CustomMessages.notifyResponseWindowState(CustomMessages.WM_RESPONSE_WINDOW_LOADING_FINISH,
-                requestParams["uniqueID"], , requestParams["mainScriptHiddenhWnd"])
-}

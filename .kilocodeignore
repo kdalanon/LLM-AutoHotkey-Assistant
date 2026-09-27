@@ -1,0 +1,8 @@
+# binary files
+**/*.exe
+**/*.pdf
+**/*.png
+**/*.jpg
+
+# Local secrets and scratch files
+.local-notes/
